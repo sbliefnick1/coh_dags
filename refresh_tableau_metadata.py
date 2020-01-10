@@ -35,6 +35,7 @@ table_assets_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_table_asset
 table_asset_sources_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_table_asset_sources.py'
 database_assets_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_database_assets.py'
 datasource_tables_bash = 'cd C:\\Anaconda\\ETL\\tableau && python TableauServerDSTables.py'
+workbook_datasources_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_workbook_datasources.py'
 
 tps = PythonOperator(
         task_id='refresh_tableau_permissions_stats',
@@ -120,5 +121,18 @@ dt = SSHOperator(ssh_conn_id='tableau_server',
                  command=datasource_tables_bash,
                  dag=dag)
 
+wd = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='tableau_workbook_datasources',
+                 command=workbook_datasources_bash,
+                 dag=dag)
+
+wdr = PythonOperator(
+        task_id='refresh_workbook_datasources',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '14f2e7b9-0b58-4e08-8a53-27d7a9817248'},
+        dag=dag
+        )
+
 tps >> tus
-u >> su >> v >> w >> s >> d >> g >> gu >> dm >> lr >> ta >> tas >> da >> dt
+u >> su >> v >> w >> s >> d >> g >> gu >> dm >> lr >> ta >> tas >> da >> dt >> wd
+wd >> wdr
