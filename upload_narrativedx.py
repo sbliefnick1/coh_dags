@@ -71,6 +71,7 @@ def query_narrativedx(service):
 
 
 queries = []
+next_ds = "{{ next_ds }}"
 for service in services:
     delete = PythonOperator(task_id=f'delete_older_{service}_file',
                             python_callable=delete_older_file,
@@ -86,8 +87,8 @@ for service in services:
 
     sftp = SFTPOperator(task_id=f'upload_{service}_to_sftp',
                         ssh_conn_id='coh_sftp',
-                        local_filepath=basepath.joinpath(f'NarrativeDX - {service} - {{ next_ds }}.csv'),
-                        remote_filepath=Path(f'/NarrativeDX - {service} - {{ next_ds }}.csv'),
+                        local_filepath=basepath.joinpath(f'NarrativeDX - {service} - {next_ds}.csv'),
+                        remote_filepath=Path(f'/NarrativeDX - {service} - {next_ds}.csv'),
                         operation='put',
                         create_intermediate_dirs=True,
                         dag=dag)
