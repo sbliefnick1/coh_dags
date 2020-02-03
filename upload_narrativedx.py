@@ -1,7 +1,7 @@
 import logging
 import os
-from pathlib import Path
 from datetime import date, datetime, timedelta
+from pathlib import Path
 from urllib.parse import quote_plus
 
 import pandas as pd
@@ -9,9 +9,9 @@ import pendulum
 import sqlalchemy as sa
 
 from airflow import DAG
+from airflow.contrib.operators.sftp_operator import SFTPOperator
 from airflow.models import Variable
 from airflow.operators.python_operator import PythonOperator
-from airflow.contrib.operators.sftp_operator import SFTPOperator
 
 from auxiliary.outils import get_json_secret
 
@@ -19,7 +19,7 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'start_date': datetime(2020, 1, 10, tzinfo=pendulum.timezone('America/Los_Angeles')),
-    'email': ['sbliefnick@coh.org', 'jharris@coh.org', 'ddeaville@coh.org'],
+    'email': ['sbliefnick@coh.org', 'ddeaville@coh.org'],
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 1,
@@ -27,7 +27,7 @@ default_args = {
     }
 
 # runs on the 10th to make sure we have all of the previous month's data
-dag = DAG('upload_narrativedx', default_args=default_args, catchup=False, schedule_interval='0 7 10 * *')
+dag = DAG('upload_narrativedx', default_args=default_args, catchup=False, schedule_interval='0 10 10 * *')
 
 services = ['AS', 'IN', 'ON', 'MD']
 basepath = Path('/var/nfsshare/files/narrativedx/')
@@ -92,8 +92,6 @@ for service in services:
                         operation='put',
                         create_intermediate_dirs=True,
                         dag=dag)
-
-    # send to archive if necessary
 
     # set each query downstream from the previous one in order not to slam the db
     if len(queries) > 0:
