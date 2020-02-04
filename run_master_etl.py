@@ -88,8 +88,8 @@ for p in no_dep_procs.proc_name:
 
 # create final email task
 email = EmailOperator(task_id='email_edw',
-                      to=['bdilsizian@coh.org', 'rdwivedi@coh.org', 'fgriarte@coh.org', 'mkaza@coh.org'],
-                      cc=['ddeaville@coh.org'],
+                      to=['bdilsizian@coh.org', 'rdwivedi@coh.org', 'fgriarte@coh.org', 'mkaza@coh.org',
+                          'ddeavill@coh.org'],
                       subject='EBI ETL {{ next_ds }} Complete',
                       html_content='-',
                       dag=dag)
