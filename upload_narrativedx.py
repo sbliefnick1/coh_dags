@@ -31,12 +31,13 @@ dag = DAG('upload_narrativedx', default_args=default_args, catchup=False, schedu
 
 services = ['AS', 'IN', 'ON', 'MD']
 basepath = Path('/var/nfsshare/files/narrativedx/')
-ds = "{{ ds }}"
-next_ds = "{{ next_ds }}"
+today = date.today()
+exec_date = today.strftime('%Y%m%d')
+last_month = today.replace(month=(today.month - 1)).strftime('%Y%m%d')
 
 
 def delete_older_file(service):
-    path = basepath.joinpath(f'NarrativeDX - {service} - {ds}.csv')
+    path = basepath.joinpath(f'NarrativeDX - {service} - {last_month}.csv')
 
     try:
         os.remove(path)
@@ -69,7 +70,7 @@ def query_narrativedx(service):
     sql = sql.format(start_date=start_date, end_date=end_date, surv=service)
     df = pd.read_sql(sql, ppw_engine)
 
-    df.to_csv(basepath.joinpath(f'NarrativeDX - {service} - {next_ds}.csv'))
+    df.to_csv(basepath.joinpath(f'NarrativeDX - {service} - {exec_date}.csv'))
 
 
 queries = []
@@ -86,8 +87,8 @@ for service in services:
 
     sftp = SFTPOperator(task_id=f'upload_{service}_to_sftp',
                         ssh_conn_id='coh_sftp',
-                        local_filepath=basepath.joinpath(f'NarrativeDX - {service} - {next_ds}.csv'),
-                        remote_filepath=Path(f'/NarrativeDX - {service} - {next_ds}.csv'),
+                        local_filepath=basepath.joinpath(f'NarrativeDX - {service} - {exec_date}.csv'),
+                        remote_filepath=Path(f'/NarrativeDX - {service} - {exec_date}.csv'),
                         operation='put',
                         create_intermediate_dirs=True,
                         dag=dag)
