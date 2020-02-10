@@ -31,10 +31,12 @@ dag = DAG('upload_narrativedx', default_args=default_args, catchup=False, schedu
 
 services = ['AS', 'IN', 'ON', 'MD']
 basepath = Path('/var/nfsshare/files/narrativedx/')
+ds = "{{ ds }}"
+next_ds = "{{ next_ds }}"
 
 
 def delete_older_file(service):
-    path = basepath.joinpath(f'NarrativeDX - {service} - {{ ds }}.csv')
+    path = basepath.joinpath(f'NarrativeDX - {service} - {ds}.csv')
 
     try:
         os.remove(path)
@@ -61,28 +63,25 @@ def query_narrativedx(service):
 
     # get custom dates if they exist in Airflow variables, otherwise do first and last day of prev month
     first_of_month = date.today().replace(day=1)
-    end_date = Variable.get('narrativedx_end_date', default=first_of_month - timedelta(days=1))
-    start_date = Variable.get('narrativedx_start_date', default=first_of_month - timedelta(days=end_date.day))
+    end_date = Variable.get('narrativedx_end_date', default_var=first_of_month - timedelta(days=1))
+    start_date = Variable.get('narrativedx_start_date', default_var=first_of_month - timedelta(days=end_date.day))
 
     sql = sql.format(start_date=start_date, end_date=end_date, surv=service)
     df = pd.read_sql(sql, ppw_engine)
 
-    df.to_csv(basepath.joinpath(f'NarrativeDX - {service} - {{ next_ds }}.csv'))
+    df.to_csv(basepath.joinpath(f'NarrativeDX - {service} - {next_ds}.csv'))
 
 
 queries = []
-next_ds = "{{ next_ds }}"
 for service in services:
     delete = PythonOperator(task_id=f'delete_older_{service}_file',
                             python_callable=delete_older_file,
                             op_kwargs={'service': service},
-                            provide_context=True,
                             dag=dag)
 
     query = PythonOperator(task_id=f'query_narrativedx_{service}',
                            python_callable=query_narrativedx,
                            op_kwargs={'service': service},
-                           provide_context=True,
                            dag=dag)
 
     sftp = SFTPOperator(task_id=f'upload_{service}_to_sftp',
