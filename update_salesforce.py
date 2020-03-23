@@ -34,7 +34,9 @@ datasources = [
     {'task_id': 'refresh_salesforce_new_patient_leakage',
      'datasource_id': '5B768E79-F89A-4B8F-8F83-2D87A641DC1D'},
     {'task_id': 'refresh_remedy_force_incident',
-     'datasource_id': '3F3A843B-CEE9-48B3-A045-658233E1437F'}
+     'datasource_id': '3F3A843B-CEE9-48B3-A045-658233E1437F'},
+    {'task_id': 'refresh_provider_loa_submission',
+     'datasource_id': '1f573034-ea9c-4ce2-9d1f-aeeda8e90c65'},
     ]
 
 for d in datasources:
