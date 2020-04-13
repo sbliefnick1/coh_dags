@@ -54,6 +54,8 @@ for ds in unique_ds.ds_name:
     ds_id = unique_ds.loc[unique_ds.ds_name == ds, 'id'].values[0]
     if ds == 'pb_tdl_transactions':
         weight = 0
+    elif 'appointment' in ds:
+        weight = 2
     else:
         weight = 1
     o = PythonOperator(
