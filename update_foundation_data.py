@@ -23,6 +23,7 @@ dag = DAG('update_foundation_data', default_args=default_args, catchup=False, sc
 
 t1_bash = 'cd C:\\Anaconda\\ETL\\foundation && python DSS_D_Data.py'
 t2_bash = 'cd C:\\Anaconda\\ETL\\foundation && python LU_Physicians.py'
+t4_bash = 'cd C:\\Anaconda\\ETL\\misc_etl && python CovidWaiverData.py'
 
 t1 = SSHOperator(ssh_conn_id='tableau_server',
                  task_id='refresh_dss_d_data',
@@ -41,4 +42,10 @@ t3 = PythonOperator(
         dag=dag
         )
 
+t4 = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='refresh_covid_waiver',
+                 command=t4_bash,
+                 dag=dag)
+
 t2 >> t1 >> t3
+t4
