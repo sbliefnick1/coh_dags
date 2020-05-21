@@ -44,7 +44,7 @@ default_args = {
     'retries': 1,
     'retry_delay': timedelta(minutes=5)}
 
-dag = DAG('probe_db_access', default_args=default_args, schedule_interval='0 5 * * *', catchup=False)
+dag = DAG('probe_db_access', default_args=default_args, schedule_interval='30 4 * * *', catchup=False)
 
 t1 = PythonOperator(task_id='attempt_to_connect',
                     python_callable=attempt_connection,
