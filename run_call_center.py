@@ -19,7 +19,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('run_call_center', default_args=default_args, catchup=False, schedule_interval='0 5 * * *')
+dag = DAG('run_call_center', default_args=default_args, catchup=False, schedule_interval='40 5 * * *')
 
 deps = ExternalTaskSensor(
         external_dag_id='run_daily_census',

@@ -27,7 +27,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('get_etl_deps', default_args=default_args, catchup=False, schedule_interval='0 5 * * *')
+dag = DAG('get_etl_deps', default_args=default_args, catchup=False, schedule_interval='35 5 * * *')
 
 ebi = get_json_secret('ebi_db_conn')['db_connections']['fi_dm_ebi']
 pg = get_json_secret('ebi_db_conn')['db_connections']['tableau_pg']
@@ -294,4 +294,5 @@ query_and_save_deps = PythonOperator(task_id='query_and_save_deps',
 #                           dag=dag)
 
 #connect >> get_ds >> join_pg_data >> download_ds >> join_data >> query_and_save_deps
-connect >> query_and_save_deps
+#connect >> 
+query_and_save_deps

@@ -20,7 +20,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('run_call_light_etl', default_args=default_args, catchup=False, schedule_interval='0 5 * * *')
+dag = DAG('run_call_light_etl', default_args=default_args, catchup=False, schedule_interval='40 5 * * *')
 
 conn_id = 'ebi_datamart'
 pool_id = 'ebi_etl_pool'
