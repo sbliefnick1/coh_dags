@@ -257,10 +257,10 @@ def join_ebi_data(mssql_engine, **context):
     df.to_sql('EBI_View_Datasource_Crosswalk', mssql_engine, if_exists='replace', index=False)
 
 
-connect = ExternalTaskSensor(external_dag_id='probe_db_access',
-                             external_task_id='attempt_to_connect',
-                             task_id='wait_for_access',
-                             dag=dag)
+#connect = ExternalTaskSensor(external_dag_id='probe_db_access',
+#                             external_task_id='attempt_to_connect',
+#                             task_id='wait_for_access',
+#                             dag=dag)
 
 query_and_save_deps = PythonOperator(task_id='query_and_save_deps',
                                      python_callable=query_and_save,
