@@ -27,7 +27,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('get_etl_deps', default_args=default_args, catchup=False, schedule_interval='35 5 * * *')
+dag = DAG('get_etl_deps', default_args=default_args, catchup=False, schedule_interval='30 23 * * *')
 
 ebi = get_json_secret('ebi_db_conn')['db_connections']['fi_dm_ebi']
 pg = get_json_secret('ebi_db_conn')['db_connections']['tableau_pg']

@@ -63,8 +63,14 @@ AVV = PythonOperator(
         dag=dag
         )
 
-deps >> ACC
-deps >> ACCA
-deps >> AAGP
-deps >> AAGPH
-deps >> AVV
+#deps >> ACC
+#deps >> ACCA
+#deps >> AAGP
+#deps >> AAGPH
+#deps >> AVV
+
+ACC
+ACCA
+AAGP
+AAGPH
+AVV

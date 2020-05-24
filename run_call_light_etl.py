@@ -114,8 +114,8 @@ RCLR = PythonOperator(
         dag=dag
         )
 
-deps >> CLT
-deps >> CLC
+#deps >> CLT
+#deps >> CLC
 CLC >> CLCT
 CLT >> CLM
 CLCT >> CLM

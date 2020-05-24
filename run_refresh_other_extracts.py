@@ -60,4 +60,5 @@ for d in datasources:
             dag=dag
             )
 
-    deps >> task
+    #deps >>
+    task

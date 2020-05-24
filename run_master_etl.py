@@ -86,7 +86,8 @@ deps = ExternalTaskSensor(
         )
 
 for p in no_dep_procs.proc_name:
-    deps >> sql_ops[p]
+    #deps >> 
+    sql_ops[p]
 
 # create final email task
 email = EmailOperator(task_id='email_edw',
@@ -98,4 +99,4 @@ email = EmailOperator(task_id='email_edw',
                       dag=dag)
 
 for ds in python_ops:
-    python_ops[ds] >> email
+    python_ops[ds] #>> email
