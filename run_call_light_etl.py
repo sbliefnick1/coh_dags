@@ -25,12 +25,12 @@ dag = DAG('run_call_light_etl', default_args=default_args, catchup=False, schedu
 conn_id = 'ebi_datamart'
 pool_id = 'ebi_etl_pool'
 
-deps = ExternalTaskSensor(
-        external_dag_id='run_daily_census',
-        external_task_id='refresh_daily_census',
-        task_id='wait_for_daily_census',
-        dag=dag
-        )
+#deps = ExternalTaskSensor(
+#        external_dag_id='run_daily_census',
+#        external_task_id='refresh_daily_census',
+#        task_id='wait_for_daily_census',
+#        dag=dag
+#        )
 
 CLT = MsSqlOperator(
         sql='EXEC EBI_CallLight_tmp_Logic;',
