@@ -90,13 +90,13 @@ for p in no_dep_procs.proc_name:
     sql_ops[p]
 
 # create final email task
-#email = EmailOperator(task_id='email_edw',
-#                      to=['bdilsizian@coh.org', 'rdwivedi@coh.org', 'fgriarte@coh.org', 'mkaza@coh.org',
-#                          'ddeaville@coh.org', 'wtam@coh.org', 'elee@coh.org', 'fturrubiartes@coh.org'],
-#                      cc=['sbliefnick@coh.org'],
-#                      subject='EBI ETL {{ next_ds }} Complete',
-#                      html_content='-',
-#                      dag=dag)
+email = EmailOperator(task_id='email_edw',
+                      to=['bdilsizian@coh.org', 'rdwivedi@coh.org', 'fgriarte@coh.org', 'mkaza@coh.org',
+                          'ddeaville@coh.org', 'wtam@coh.org', 'elee@coh.org', 'fturrubiartes@coh.org'],
+                      cc=['sbliefnick@coh.org'],
+                      subject='EBI ETL {{ next_ds }} Complete',
+                      html_content='-',
+                      dag=dag)
 
 for ds in python_ops:
-    python_ops[ds] #>> email
+    python_ops[ds] >> email
