@@ -78,25 +78,25 @@ for ds in unique_ds.ds_name:
         sql_ops[p] >> python_ops[ds]
 
 # create sensor to wait for etl dependencies to be in json
-deps = ExternalTaskSensor(
-        external_dag_id='get_etl_deps',
-        external_task_id='query_and_save_deps',
-        task_id='wait_for_dependencies_file',
-        dag=dag
-        )
+#deps = ExternalTaskSensor(
+#        external_dag_id='get_etl_deps',
+#        external_task_id='query_and_save_deps',
+#        task_id='wait_for_dependencies_file',
+#        dag=dag
+#        )
 
 for p in no_dep_procs.proc_name:
     #deps >> 
     sql_ops[p]
 
 # create final email task
-email = EmailOperator(task_id='email_edw',
-                      to=['bdilsizian@coh.org', 'rdwivedi@coh.org', 'fgriarte@coh.org', 'mkaza@coh.org',
-                          'ddeaville@coh.org', 'wtam@coh.org', 'elee@coh.org', 'fturrubiartes@coh.org'],
-                      cc=['sbliefnick@coh.org'],
-                      subject='EBI ETL {{ next_ds }} Complete',
-                      html_content='-',
-                      dag=dag)
+#email = EmailOperator(task_id='email_edw',
+#                      to=['bdilsizian@coh.org', 'rdwivedi@coh.org', 'fgriarte@coh.org', 'mkaza@coh.org',
+#                          'ddeaville@coh.org', 'wtam@coh.org', 'elee@coh.org', 'fturrubiartes@coh.org'],
+#                      cc=['sbliefnick@coh.org'],
+#                      subject='EBI ETL {{ next_ds }} Complete',
+#                      html_content='-',
+#                      dag=dag)
 
 for ds in python_ops:
     python_ops[ds] #>> email

@@ -21,12 +21,12 @@ default_args = {
 
 dag = DAG('run_call_center', default_args=default_args, catchup=False, schedule_interval='40 5 * * *')
 
-deps = ExternalTaskSensor(
-        external_dag_id='run_daily_census',
-        external_task_id='refresh_daily_census',
-        task_id='wait_for_daily_census',
-        dag=dag
-        )
+#deps = ExternalTaskSensor(
+#        external_dag_id='run_daily_census',
+#        external_task_id='refresh_daily_census',
+#        task_id='wait_for_daily_census',
+#        dag=dag
+#        )
 
 ACC = PythonOperator(
         task_id='refresh_avaya_call_center',
