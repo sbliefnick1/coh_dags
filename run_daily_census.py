@@ -21,12 +21,12 @@ default_args = {
 
 dag = DAG('run_daily_census', default_args=default_args, catchup=False, schedule_interval='35 5 * * *')
 
-deps = ExternalTaskSensor(
-        external_dag_id='get_etl_deps',
-        external_task_id='query_and_save_deps',
-        task_id='wait_for_dependencies_file',
-        dag=dag
-        )
+#deps = ExternalTaskSensor(
+#        external_dag_id='get_etl_deps',
+#        external_task_id='query_and_save_deps',
+#        task_id='wait_for_dependencies_file',
+#        dag=dag
+#        )
 
 RDC = PythonOperator(
         task_id='refresh_daily_census',
