@@ -5,6 +5,7 @@ import pendulum
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.sensors import ExternalTaskSensor
+from airflow.contrib.operators.ssh_operator import SSHOperator
 
 from auxiliary.outils import refresh_tableau_extract
 
@@ -28,6 +29,8 @@ dag = DAG('run_refresh_other_extracts', default_args=default_args, catchup=False
 #        task_id='wait_for_daily_census',
 #        dag=dag
 #        )
+
+telehlth_bash = 'cd C:\\Anaconda\\ETL\\tableau && python TableauOutofStateApptProvs.py'
 
 datasources = [
     {'task_id': 'refresh_clinical_trials_catchment',
@@ -60,5 +63,11 @@ for d in datasources:
             dag=dag
             )
 
-    #deps >>
     task
+
+sync = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='Sync_Telehealth_Providers',
+                 command=telehlth_bash,
+                 dag=dag)
+
+sync
