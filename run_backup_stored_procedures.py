@@ -20,10 +20,16 @@ default_args = {
 dag = DAG('run_backup_stored_procedures', default_args=default_args, catchup=False, schedule_interval='0 21 * * *')
 
 t1_bash = 'python C:\\Anaconda\\ETL\\fi_dm_ebi\\backup_stored_procedures.py'
+t2_bash = 'python C:\\Anaconda\\ETL\\misc_etl\\EBIDictionary.py'
 
 t1 = SSHOperator(ssh_conn_id='tableau_server',
                  task_id='run_backup',
                  command=t1_bash,
+                 dag=dag)
+
+t2 = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='refresh_dictionary',
+                 command=t2_bash,
                  dag=dag)
 
 # backup_stored_procedures.py
