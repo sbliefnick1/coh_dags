@@ -36,6 +36,8 @@ table_asset_sources_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_tabl
 database_assets_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_database_assets.py'
 datasource_tables_bash = 'cd C:\\Anaconda\\ETL\\tableau && python TableauServerDSTables.py'
 workbook_datasources_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_workbook_datasources.py'
+customized_views_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_customized_views.py'
+subscriptions_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_subscriptions.py'
 
 tps = PythonOperator(
         task_id='refresh_tableau_permissions_stats',
@@ -133,6 +135,16 @@ wdr = PythonOperator(
         dag=dag
         )
 
+cv = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='tableau_customized_views',
+                 command=customized_views_bash,
+                 dag=dag)
+
+sb = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='tableau_subscriptions',
+                 command=subscriptions_bash,
+                 dag=dag)
+
 tps >> tus
-u >> su >> v >> w >> s >> d >> g >> gu >> dm >> lr >> ta >> tas >> da >> dt >> wd
+u >> su >> v >> w >> s >> d >> g >> gu >> dm >> lr >> ta >> tas >> da >> cv >> sb >> dt >> wd
 wd >> wdr
