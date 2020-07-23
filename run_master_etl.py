@@ -97,5 +97,5 @@ email = EmailOperator(task_id='email_edw',
                       html_content='-',
                       dag=dag)
 
-# for ds in python_ops:
-#     python_ops[ds] >> email
+for ds in python_ops:
+    python_ops[ds] >> email
