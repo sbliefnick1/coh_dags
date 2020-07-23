@@ -78,16 +78,15 @@ for ds in unique_ds.ds_name:
         sql_ops[p] >> python_ops[ds]
 
 # create sensor to wait for etl dependencies to be in json
-#deps = ExternalTaskSensor(
+# deps = ExternalTaskSensor(
 #        external_dag_id='get_etl_deps',
 #        external_task_id='query_and_save_deps',
 #        task_id='wait_for_dependencies_file',
 #        dag=dag
 #        )
 
-for p in no_dep_procs.proc_name:
-    #deps >> 
-    sql_ops[p]
+# for p in no_dep_procs.proc_name:
+    # deps >> sql_ops[p]
 
 # create final email task
 email = EmailOperator(task_id='email_edw',
