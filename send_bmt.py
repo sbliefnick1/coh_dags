@@ -38,7 +38,7 @@ tasks = []
 for t in tasks_to_wait_for:
     task = ExternalTaskSensor(external_dag_id='run_master_etl',
                               external_task_id='exec_ebi_{}_logic'.format(t),
-                              execution_delta=timedelta(days=-6, hours=7),
+                              execution_delta=timedelta(days=-6, hours=7, minutes=20),
                               task_id='wait_for_{}'.format(t),
                               dag=dag)
     tasks.append(task)
