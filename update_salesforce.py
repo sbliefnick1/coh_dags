@@ -29,8 +29,8 @@ t1 = SSHOperator(ssh_conn_id='tableau_server',
                  dag=dag)
 
 datasources = [
-    {'task_id': 'refresh_remedy_force_incident_trend',
-     'datasource_id': 'B5C928D5-D60B-4ECA-A3F5-AF14078A8629'},
+    #{'task_id': 'refresh_remedy_force_incident_trend',
+    # 'datasource_id': 'B5C928D5-D60B-4ECA-A3F5-AF14078A8629'},
     {'task_id': 'refresh_salesforce_new_patient_leakage',
      'datasource_id': '5B768E79-F89A-4B8F-8F83-2D87A641DC1D'},
     {'task_id': 'refresh_remedy_force_incident',
