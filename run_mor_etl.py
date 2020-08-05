@@ -91,15 +91,6 @@ MTSR = PythonOperator(
         dag=dag
         )
 
-MF = MsSqlOperator(
-        sql='EXEC EBI_MOR_FTE_wSecurity_Logic;',
-        task_id='mor_fte_w_security',
-        autocommit=True,
-        mssql_conn_id=conn_id,
-        pool=pool_id,
-        dag=dag
-        )
-
 MFR = PythonOperator(
         task_id='refresh_mor_fte_w_security',
         python_callable=refresh_tableau_extract,
@@ -153,6 +144,5 @@ MA >> MTS
 BFB >> MSS
 MSS >> MSSR
 MTS >> MTSR
-MF >> MFR
 CPS >> CP
 CP >> CPR
