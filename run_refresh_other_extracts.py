@@ -41,18 +41,20 @@ datasources = [
      'datasource_id': '85460963-7e81-4e5d-aaff-1a044cdc6c80'},
     {'task_id': 'refresh_pb_denials',
      'datasource_id': '66174e43-9ae5-43a8-b785-1080cf651b10'},
-    # {'task_id': 'refresh_car_t',
-    # 'datasource_id': '93b1a1f9-9c6c-45a3-8803-76d6d1572e94'},
     {'task_id': 'refresh_direct_cost_medication',
      'datasource_id': '9733efff-5ea1-4f73-8062-fb00b9c30ced'},
     {'task_id': 'refresh_direct_cost_supplies_implants',
      'datasource_id': 'c417926a-4646-48ed-b889-6a89fe590f64'},
     {'task_id': 'refresh_arhb_payor_metrics',
      'datasource_id': '46da3492-9204-401e-b46f-a31ba2aaf75d'},
-    # {'task_id': 'scm_acctgline_supply_spend',
-    #  'datasource_id': 'd10c10a6-22c0-45c9-8a00-867cc32254e1'},
+    {'task_id': 'corp_acct_ap_payments_and_scheduled_payments',
+      'datasource_id': 'e9a34a6d-b74f-4584-b924-8298b35fb2ad'},
     {'task_id': 'refresh_daily_its_calls_and_tickets',
-     'datasource_id': '9b0f200d-4eb6-4c8c-a581-0c0383b6d1ff'}
+     'datasource_id': '9b0f200d-4eb6-4c8c-a581-0c0383b6d1ff'},
+    {'task_id': 'refresh_capital_project_security_check',
+     'datasource_id': '23d5115f-eadc-4366-95b7-2a82aa710056'},
+    {'task_id': 'refresh_revenue_cycle_pb_workqueue_telehealth',
+     'datasource_id': '3fd8f8f1-439c-499c-9649-e15a3251bd35'}
     ]
 
 for d in datasources:

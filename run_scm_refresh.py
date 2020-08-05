@@ -244,7 +244,15 @@ pce = PythonOperator(
         dag=dag
         )
 
+scws = PythonOperator(
+        task_id='refresh_scm_cspt_warehouse_stock',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '51db78e8-b319-4b8d-9c59-b4758cefdd9b'},
+        dag=dag
+        )
+
 si >> sv
+si >> scws
 
 sv >> vch
 sv >> vchw

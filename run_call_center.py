@@ -63,6 +63,13 @@ AVV = PythonOperator(
         dag=dag
         )
 
+ACCAT = PythonOperator(
+        task_id='refresh_avaya_call_center_agents_trace',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': 'd79bb359-8404-4db1-867e-8ca5ac9069d2'},
+        dag=dag
+        )
+
 #deps >> ACC
 #deps >> ACCA
 #deps >> AAGP
@@ -74,3 +81,4 @@ ACCA
 AAGP
 AAGPH
 AVV
+ACCAT
