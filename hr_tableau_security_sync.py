@@ -20,6 +20,7 @@ dag = DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, 
 
 hr_bash = 'cd C:\\Anaconda\\ETL\\tableau && python hr_security.py'
 epic_bash = 'cd C:\\Anaconda\\ETL\\tableau && python TableauEpicSecuritySync.py'
+unlicense_bash = 'cd C:\\Anaconda\\ETL\\tableau && python Unlicense_Users.py'
 
 t1 = SSHOperator(ssh_conn_id='tableau_server',
                  task_id='Sync_HR_Users_And_Groups',
@@ -29,4 +30,9 @@ t1 = SSHOperator(ssh_conn_id='tableau_server',
 t2 = SSHOperator(ssh_conn_id='tableau_server',
                  task_id='Sync_Epic_Users_And_Groups',
                  command=epic_bash,
+                 dag=dag)
+
+t3 = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='Unlicense_Tableau_Users',
+                 command=unlicense_bash,
                  dag=dag)
