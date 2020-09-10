@@ -13,7 +13,7 @@ from auxiliary.outils import get_json_secret
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2020, 9, 9, tzinfo=pendulum.timezone('America/Los_Angeles')),
+    'start_date': datetime(2020, 9, 7, tzinfo=pendulum.timezone('America/Los_Angeles')),
     'email': ['jharris@coh.org'],
     'email_on_failure': True,
     'email_on_retry': False,
@@ -64,3 +64,5 @@ bs = PythonOperator(
         python_callable=backup,
         dag=dag
         )
+
+bs
