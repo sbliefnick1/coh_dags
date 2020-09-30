@@ -48,7 +48,7 @@ datasources = [
     {'task_id': 'refresh_arhb_payor_metrics',
      'datasource_id': '46da3492-9204-401e-b46f-a31ba2aaf75d'},
     {'task_id': 'refresh_corporate_accounting_accounts_payable',
-      'datasource_id': '4ec6473a-1a5f-93fa-64fb-a019e985e71e'},
+      'datasource_id': 'c30f1707-ad4a-449c-8150-111575700865'},
     {'task_id': 'refresh_daily_its_calls_and_tickets',
      'datasource_id': '9b0f200d-4eb6-4c8c-a581-0c0383b6d1ff'},
     {'task_id': 'refresh_capital_project_security_check',
