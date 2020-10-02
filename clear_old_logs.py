@@ -23,3 +23,5 @@ clear_cmd = "sudo find /var/nfsshare/logs -mtime +90 | sudo xargs rm -rf; df -h"
 clear = BashOperator(task_id='clear_old_logs',
                      bash_command=clear_cmd,
                      dag=dag)
+
+clear
