@@ -18,7 +18,7 @@ default_args = {
 
 dag = DAG('clear_old_logs', default_args=default_args, catchup=False, schedule_interval='0 1 * * *')
 
-clear_cmd = "sudo find /var/nfsshare/logs -mtime +90 | sudo xargs rm -rf; df -h"
+clear_cmd = "find /var/nfsshare/logs -mtime +90 | xargs rm -rf; df -h"
 
 clear = BashOperator(task_id='clear_old_logs',
                      bash_command=clear_cmd,
