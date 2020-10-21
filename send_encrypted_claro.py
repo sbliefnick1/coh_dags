@@ -14,7 +14,7 @@ from auxiliary.outils import get_json_secret
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2020, 9, 15, tzinfo=pendulum.timezone('America/Los_Angeles')),
+    'start_date': datetime(2020, 10, 15, tzinfo=pendulum.timezone('America/Los_Angeles')),
     'email': ['sbliefnick@coh.org'],
     'email_on_failure': True,
     'email_on_retry': False,
@@ -22,19 +22,20 @@ default_args = {
     'retry_delay': timedelta(minutes=3),
     }
 
-dag = DAG('encrypt_claro', default_args=default_args, catchup=False, schedule_interval=None)
+dag = DAG('send_encrypted_claro', default_args=default_args, catchup=False, schedule_interval='0 9 15 * *')
 
 pw = get_json_secret('ebi_db_conn')['db_connections']['fi_dm_ebi']['password']
 basepath = Path('/var/nfsshare/gpg')
 output_file = 'Claro_Patient_Account_File_Extract_{{ ds_nodash }}.txt'
 output_path = f'C:\\Airflow\\claro\\{output_file}'
 claro_server = Variable.get('claro_server')
-# TODO: replace with prod variable
-airflow_server_prod = Variable.get('airflow_server_dev')
+airflow_server_prod = Variable.get('airflow_server_prod')
+
+clear_cmd = 'rm -rf /var/nfsshare/gpg/Claro_Patient_Account_File_Extract_*'
 
 # -l 30 raises login timeout since it seems to be finicky
 query_cmd = (f'sqlcmd -S {claro_server} -d Clarity_PRD_Report '
-             f'-Q "set nocount on; select * from coh.Claro_Patient_Account_File" '
+             f'-Q "set nocount on; exec coh.sp_Claro_Patient_Account_File_Extract; select * from coh.Claro_Patient_Account_File" '
              f'-o {output_path} '
              f'-s"|" -W -X -I -l 30')
 
@@ -42,6 +43,10 @@ copy_cmd = f'pscp -pw {pw} {output_path} {airflow_server_prod}:{basepath}'
 
 encrypt_cmd = (f"gpg --homedir {basepath}/.gnupg  --encrypt --batch --yes --trust-model always -r "
                f"claro2020@clarohealthcare.com {basepath}/{output_file}")
+
+clear = BashOperator(task_id='clear_old_files',
+                     bash_command=clear_cmd,
+                     dag=dag)
 
 query = SSHOperator(ssh_conn_id='tableau_server',
                     task_id='query_claro',
@@ -64,5 +69,4 @@ sftp = SFTPOperator(task_id='upload_claro_to_sftp',
                     create_intermediate_dirs=True,
                     dag=dag)
 
-# query >> copy >> encrypt
-query >> copy >> encrypt >> sftp
+clear >> query >> copy >> encrypt >> sftp
