@@ -88,7 +88,7 @@ for service in services:
     sftp = SFTPOperator(task_id=f'upload_{service}_to_sftp',
                         ssh_conn_id='coh_sftp',
                         local_filepath=str(basepath.joinpath(f'NarrativeDX - {service} - {exec_date}.csv')),
-                        remote_filepath=f'/NarrativeDX - {service} - {exec_date}.csv',
+                        remote_filepath=f'/sftp/NarrativeDX - {service} - {exec_date}.csv',
                         operation='put',
                         create_intermediate_dirs=True,
                         dag=dag)
