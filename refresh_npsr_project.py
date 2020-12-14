@@ -25,6 +25,3 @@ r = SSHOperator(ssh_conn_id='tableau_server',
                 task_id='refresh_data',
                 command=refresh_bash,
                 dag=dag)
-
-
-r >> s
