@@ -169,7 +169,7 @@ def backup():
     now = datetime.now()
     now = now.strftime("%Y%m%dT%H%M%S")
     writep = "backup-" + now + ".tsbak"
-    backup_url = backup_endpoint + "?writePath=" + writep + "&jobTimeoutSeconds=7200"
+    backup_url = backup_endpoint + "?writePath=" + writep + "&jobTimeoutSeconds=14400"
 
     login_resp = session.post(login_url, data=body, headers=headers, verify=False)
     backup_resp = session.post(backup_url)
