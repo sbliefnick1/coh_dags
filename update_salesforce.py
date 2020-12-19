@@ -37,6 +37,8 @@ datasources = [
      'datasource_id': '3F3A843B-CEE9-48B3-A045-658233E1437F'},
     {'task_id': 'refresh_provider_loa_submission',
      'datasource_id': '1f573034-ea9c-4ce2-9d1f-aeeda8e90c65'},
+    {'task_id': 'refresh_ehs_risk_assessment',
+     'datasource_id': '7dd7721b-908b-4e69-b701-225ca78a1e8c'},
     ]
 
 for d in datasources:
