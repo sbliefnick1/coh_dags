@@ -19,7 +19,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2),
     }
 
-dag = DAG('update_foundation_data', default_args=default_args, catchup=False, schedule_interval='30 21 * * *')
+dag = DAG('update_foundation_data', default_args=default_args, catchup=False, schedule_interval='00 21 * * *')
 
 t1_bash = 'cd C:\\Anaconda\\ETL\\foundation && python DSS_D_Data.py'
 t2_bash = 'cd C:\\Anaconda\\ETL\\foundation && python LU_Physicians.py'
