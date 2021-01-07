@@ -33,7 +33,9 @@ services = ['AS', 'IN', 'ON', 'MD']
 basepath = Path('/var/nfsshare/files/narrativedx/')
 today = date.today()
 exec_date = today.strftime('%Y%m%d')
-last_month = today.replace(month=(today.month - 1)).strftime('%Y%m%d')
+# account for january
+prev = 12 if today.month - 1 == 0 else today.month - 1
+last_month = today.replace(month=prev).strftime('%Y%m%d')
 
 
 def delete_older_file(service):
