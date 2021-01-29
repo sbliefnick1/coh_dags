@@ -30,20 +30,19 @@ output_file = 'Claro_Patient_Account_File_Extract_{{ next_ds_nodash }}.txt'
 output_path = f'C:\\Airflow\\claro\\{output_file}'
 claro_server = Variable.get('claro_server')
 airflow_server_prod = Variable.get('airflow_server_prod')
-query_sql = 'set nocount on; exec coh.sp_Claro_Patient_Account_File_Extract; ' + Variable.get('claro_query')
 
 clear_cmd = 'rm -rf /var/nfsshare/files/Claro_Patient_Account_File_Extract_*'
 
 # -l 30 raises login timeout since it seems to be finicky
 # -h -1 removes header row and line of dashes underneath
 query_cmd = (f'sqlcmd -S {claro_server} -d Clarity_PRD_Report '
-             f'-Q "{query_sql}" '
+             f'-i {Variable.get("claro_query_filepath")} '
              f'-o {output_path} '
              f'-s"|" -W -X -I -l 30 -h -1')
 
 copy_cmd = f'pscp -pw {pw} {output_path} {airflow_server_prod}:{basepath}/files'
 
-encrypt_cmd = (f"gpg --homedir {basepath}/gpg/.gnupg  --encrypt --batch --yes --trust-model always -r "
+encrypt_cmd = (f"gpg --encrypt --batch --yes --trust-model always -r "
                f"claro2020@clarohealthcare.com {basepath}/files/{output_file}")
 
 # clear = BashOperator(task_id='clear_old_files',
