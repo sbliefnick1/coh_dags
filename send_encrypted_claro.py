@@ -42,7 +42,7 @@ query_cmd = (f'sqlcmd -S {claro_server} -d Clarity_PRD_Report '
 
 copy_cmd = f'pscp -pw {pw} {output_path} {airflow_server_prod}:{basepath}/files'
 
-encrypt_cmd = (f"gpg --encrypt --batch --yes --trust-model always -r "
+encrypt_cmd = (f"gpg --encrypt -vv --batch --yes --trust-model always -r "
                f"claro2020@clarohealthcare.com {basepath}/files/{output_file}")
 
 # clear = BashOperator(task_id='clear_old_files',
