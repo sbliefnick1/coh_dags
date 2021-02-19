@@ -2,13 +2,11 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import pendulum
-
 from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
-from airflow.contrib.operators.ssh_operator import SSHOperator
-from airflow.contrib.operators.sftp_operator import SFTPOperator
 from airflow.models import Variable
-
+from airflow.operators.bash import BashOperator
+from airflow.providers.sftp.operators.sftp import SFTPOperator
+from airflow.providers.ssh.operators.ssh import SSHOperator
 from auxiliary.outils import get_json_secret
 
 default_args = {

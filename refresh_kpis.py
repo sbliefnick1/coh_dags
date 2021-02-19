@@ -1,11 +1,9 @@
 from datetime import datetime, timedelta
 
 import pendulum
-
 from airflow import DAG
-from airflow.operators.mssql_operator import MsSqlOperator
-from airflow.operators.python_operator import PythonOperator
-
+from airflow.operators.python import PythonOperator
+from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
 from auxiliary.outils import refresh_tableau_extract
 
 default_args = {

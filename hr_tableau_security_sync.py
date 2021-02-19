@@ -1,9 +1,8 @@
 from datetime import timedelta, datetime
 
 import pendulum
-
 from airflow import DAG
-from airflow.contrib.operators.ssh_operator import SSHOperator
+from airflow.providers.ssh.operators.ssh import SSHOperator
 
 default_args = {
     'owner': 'airflow',

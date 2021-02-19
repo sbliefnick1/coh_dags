@@ -4,12 +4,10 @@ from urllib.parse import quote_plus
 
 import pendulum
 import sqlalchemy as sa
-from sqlalchemy.exc import ProgrammingError
-
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-
+from airflow.operators.python import PythonOperator
 from auxiliary.outils import get_json_secret
+from sqlalchemy.exc import ProgrammingError
 
 
 def attempt_connection(db_engine):

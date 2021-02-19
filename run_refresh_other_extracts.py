@@ -1,12 +1,9 @@
 from datetime import datetime, timedelta
 
 import pendulum
-
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from airflow.operators.sensors import ExternalTaskSensor
-from airflow.contrib.operators.ssh_operator import SSHOperator
-
+from airflow.operators.python import PythonOperator
+from airflow.providers.ssh.operators.ssh import SSHOperator
 from auxiliary.outils import refresh_tableau_extract
 
 default_args = {
@@ -23,7 +20,7 @@ default_args = {
 
 dag = DAG('run_refresh_other_extracts', default_args=default_args, catchup=False, schedule_interval='40 5 * * *')
 
-#deps = ExternalTaskSensor(
+# deps = ExternalTaskSensor(
 #        external_dag_id='run_daily_census',
 #        external_task_id='refresh_daily_census',
 #        task_id='wait_for_daily_census',
@@ -48,7 +45,7 @@ datasources = [
     {'task_id': 'refresh_arhb_payor_metrics',
      'datasource_id': '46da3492-9204-401e-b46f-a31ba2aaf75d'},
     {'task_id': 'refresh_corporate_accounting_accounts_payable',
-      'datasource_id': 'c30f1707-ad4a-449c-8150-111575700865'},
+     'datasource_id': 'c30f1707-ad4a-449c-8150-111575700865'},
     {'task_id': 'refresh_daily_its_calls_and_tickets',
      'datasource_id': '9b0f200d-4eb6-4c8c-a581-0c0383b6d1ff'},
     {'task_id': 'refresh_capital_project_security_check',
@@ -68,8 +65,8 @@ for d in datasources:
     task
 
 sync = SSHOperator(ssh_conn_id='tableau_server',
-                 task_id='Sync_Telehealth_Providers',
-                 command=telehlth_bash,
-                 dag=dag)
+                   task_id='Sync_Telehealth_Providers',
+                   command=telehlth_bash,
+                   dag=dag)
 
 sync

@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta
 
 import pendulum
-
 from airflow import DAG
-from airflow.contrib.operators.ssh_operator import SSHOperator
+from airflow.providers.ssh.operators.ssh import SSHOperator
 
 default_args = {
     'owner': 'airflow',
@@ -19,7 +18,6 @@ default_args = {
 dag = DAG('refresh_npsr_project', default_args=default_args, catchup=False, schedule_interval='0 8 * * *')
 
 refresh_bash = 'cd C:\\Anaconda\\ETL\\npsr && python full_data_refresh.py'
-
 
 r = SSHOperator(ssh_conn_id='tableau_server',
                 task_id='refresh_data',

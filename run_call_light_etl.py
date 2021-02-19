@@ -1,12 +1,9 @@
 from datetime import datetime, timedelta
 
 import pendulum
-
 from airflow import DAG
-from airflow.operators.mssql_operator import MsSqlOperator
-from airflow.operators.python_operator import PythonOperator
-from airflow.operators.sensors import ExternalTaskSensor
-
+from airflow.operators.python import PythonOperator
+from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
 from auxiliary.outils import refresh_tableau_extract
 
 default_args = {
@@ -25,7 +22,7 @@ dag = DAG('run_call_light_etl', default_args=default_args, catchup=False, schedu
 conn_id = 'ebi_datamart'
 pool_id = 'ebi_etl_pool'
 
-#deps = ExternalTaskSensor(
+# deps = ExternalTaskSensor(
 #        external_dag_id='run_daily_census',
 #        external_task_id='refresh_daily_census',
 #        task_id='wait_for_daily_census',
@@ -114,8 +111,8 @@ RCLR = PythonOperator(
         dag=dag
         )
 
-#deps >> CLT
-#deps >> CLC
+# deps >> CLT
+# deps >> CLC
 CLC >> CLCT
 CLT >> CLM
 CLCT >> CLM

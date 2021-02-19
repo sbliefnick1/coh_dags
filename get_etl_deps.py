@@ -1,20 +1,17 @@
-from pathlib import Path
-from datetime import datetime, timedelta
 import logging
 import re
+from datetime import datetime, timedelta
+from pathlib import Path
 from urllib.parse import quote_plus
 
 import pandas as pd
 import pendulum
 import sqlalchemy as sa
-from tableaudocumentapi import Datasource
 import tableauserverclient as TSC
-
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from airflow.operators.sensors import ExternalTaskSensor
-
+from airflow.operators.python import PythonOperator
 from auxiliary.outils import get_json_secret
+from tableaudocumentapi import Datasource
 
 default_args = {
     'owner': 'airflow',
@@ -257,7 +254,7 @@ def join_ebi_data(mssql_engine, **context):
     df.to_sql('EBI_View_Datasource_Crosswalk', mssql_engine, if_exists='replace', index=False)
 
 
-#connect = ExternalTaskSensor(external_dag_id='probe_db_access',
+# connect = ExternalTaskSensor(external_dag_id='probe_db_access',
 #                             external_task_id='attempt_to_connect',
 #                             task_id='wait_for_access',
 #                             dag=dag)
@@ -267,19 +264,19 @@ query_and_save_deps = PythonOperator(task_id='query_and_save_deps',
                                      op_kwargs={'db_engine': ppw_engine},
                                      dag=dag)
 
-#get_ds = PythonOperator(task_id='get_datasources',
+# get_ds = PythonOperator(task_id='get_datasources',
 #                        python_callable=get_datasources,
 #                        op_kwargs={'tableau_server': server,
 #                                   'tableau_authentication': auth},
 #                        dag=dag)
 
-#join_pg_data = PythonOperator(task_id='join_postgres_data',
+# join_pg_data = PythonOperator(task_id='join_postgres_data',
 #                              python_callable=join_postgres_data,
 #                              provide_context=True,
 #                              op_kwargs={'postgres_engine': tpg_engine},
 #                              dag=dag)
 
-#download_ds = PythonOperator(task_id='download_datasources',
+# download_ds = PythonOperator(task_id='download_datasources',
 #                             python_callable=download_datasources,
 #                             provide_context=True,
 #                             op_kwargs={'tableau_server': server,
@@ -287,12 +284,12 @@ query_and_save_deps = PythonOperator(task_id='query_and_save_deps',
 #                                        'directory': ds_folder},
 #                             dag=dag)
 
-#join_data = PythonOperator(task_id='join_ebi_data',
+# join_data = PythonOperator(task_id='join_ebi_data',
 #                           python_callable=join_ebi_data,
 #                           provide_context=True,
 #                           op_kwargs={'mssql_engine': ppw_engine},
 #                           dag=dag)
 
-#connect >> get_ds >> join_pg_data >> download_ds >> join_data >> query_and_save_deps
-#connect >> 
+# connect >> get_ds >> join_pg_data >> download_ds >> join_data >> query_and_save_deps
+# connect >>
 query_and_save_deps

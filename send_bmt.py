@@ -1,13 +1,11 @@
 from datetime import datetime, timedelta
 
 import pendulum
-
 from airflow import DAG
-from airflow.operators.email_operator import EmailOperator
-from airflow.operators.sensors import ExternalTaskSensor
-from airflow.contrib.operators.ssh_operator import SSHOperator
 from airflow.models import Variable
-
+from airflow.operators.email import EmailOperator
+from airflow.providers.ssh.operators.ssh import SSHOperator
+from airflow.sensors.external_task import ExternalTaskSensor
 from auxiliary.outils import get_json_secret
 
 default_args = {

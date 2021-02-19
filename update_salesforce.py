@@ -1,11 +1,9 @@
 from datetime import timedelta, datetime
 
 import pendulum
-
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from airflow.contrib.operators.ssh_operator import SSHOperator
-
+from airflow.operators.python import PythonOperator
+from airflow.providers.ssh.operators.ssh import SSHOperator
 from auxiliary.outils import refresh_tableau_extract
 
 default_args = {
