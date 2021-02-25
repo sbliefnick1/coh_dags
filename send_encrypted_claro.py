@@ -75,7 +75,7 @@ output_path_roster = f'C:\\Airflow\\claro\\{output_file_roster}'
 query_cmd_roster = (f'sqlcmd -S {claro_server} -d Clarity_PRD_Report '
                     f'-i {Variable.get("claro_query_filepath_roster")} '
                     f'-o {output_path_roster} '
-                    f'-s"|" -W -X -I -l 30 -h -1')
+                    f'-s"," -W -X -I -l 30 -h -1')
 
 copy_cmd_roster = f'pscp -pw {pw} {output_path_roster} {airflow_server_prod}:{basepath}/files'
 
