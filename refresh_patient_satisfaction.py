@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta
 
 import pendulum
-
 from airflow import DAG
-from airflow.contrib.operators.ssh_operator import SSHOperator
-from airflow.operators.mssql_operator import MsSqlOperator
+from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
+from airflow.providers.ssh.operators.ssh import SSHOperator
 
 default_args = {
     'owner': 'airflow',

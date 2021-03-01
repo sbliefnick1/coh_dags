@@ -1,13 +1,11 @@
-from datetime import datetime, timedelta
-import pendulum
-
-from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from airflow.models import Variable
-
-import requests
 import json
+from datetime import datetime, timedelta
 
+import pendulum
+import requests
+from airflow import DAG
+from airflow.models import Variable
+from airflow.operators.python import PythonOperator
 from auxiliary.outils import get_json_secret
 
 default_args = {

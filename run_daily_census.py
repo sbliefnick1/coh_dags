@@ -1,11 +1,8 @@
 from datetime import datetime, timedelta
 
 import pendulum
-
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from airflow.operators.sensors import ExternalTaskSensor
-
+from airflow.operators.python import PythonOperator
 from auxiliary.outils import refresh_tableau_extract
 
 default_args = {
@@ -21,7 +18,7 @@ default_args = {
 
 dag = DAG('run_daily_census', default_args=default_args, catchup=False, schedule_interval='35 5 * * *')
 
-#deps = ExternalTaskSensor(
+# deps = ExternalTaskSensor(
 #        external_dag_id='get_etl_deps',
 #        external_task_id='query_and_save_deps',
 #        task_id='wait_for_dependencies_file',
@@ -35,5 +32,5 @@ RDC = PythonOperator(
         dag=dag
         )
 
-#deps >> 
+# deps >>
 RDC

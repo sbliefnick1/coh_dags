@@ -2,13 +2,10 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 import pendulum
-
 from airflow import DAG
-from airflow.operators.mssql_operator import MsSqlOperator
-from airflow.operators.python_operator import PythonOperator
-from airflow.operators.sensors import ExternalTaskSensor
-from airflow.operators.email_operator import EmailOperator
-
+from airflow.operators.email import EmailOperator
+from airflow.operators.python import PythonOperator
+from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
 from auxiliary.outils import refresh_tableau_extract
 
 default_args = {
@@ -86,7 +83,7 @@ for ds in unique_ds.ds_name:
 #        )
 
 # for p in no_dep_procs.proc_name:
-    # deps >> sql_ops[p]
+# deps >> sql_ops[p]
 
 # create final email task
 email = EmailOperator(task_id='email_edw',

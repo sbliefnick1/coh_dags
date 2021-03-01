@@ -7,12 +7,10 @@ from urllib.parse import quote_plus
 import pandas as pd
 import pendulum
 import sqlalchemy as sa
-
 from airflow import DAG
-from airflow.contrib.operators.sftp_operator import SFTPOperator
 from airflow.models import Variable
-from airflow.operators.python_operator import PythonOperator
-
+from airflow.operators.python import PythonOperator
+from airflow.providers.sftp.operators.sftp import SFTPOperator
 from auxiliary.outils import get_json_secret
 
 default_args = {

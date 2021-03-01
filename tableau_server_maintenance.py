@@ -1,16 +1,14 @@
+import json
 from datetime import datetime, timedelta
-import pendulum
-
-from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from airflow.models import Variable
 
 import pandas as pd
+import pendulum
+import requests
 import sqlalchemy as sa
 import tableauserverclient as TSC
-import requests
-import json
-
+from airflow import DAG
+from airflow.models import Variable
+from airflow.operators.python import PythonOperator
 from auxiliary.outils import get_json_secret
 
 default_args = {
@@ -58,8 +56,8 @@ from workbooks w
         on w.id = lv.workbook_id
 where s.name = 'EBI'
     and p.name in('Production','Staging')
-    and (date_part('day',NOW() - lv.last_viewed_datetime) > 90
-        or date_part('day',NOW() - lv.last_viewed_datetime)  is null)
+    and (date_part('day',now() - lv.last_viewed_datetime) > 90
+        or date_part('day',now() - lv.last_viewed_datetime)  is null)
     and not exists(
                     select 1
                         from tags t
@@ -91,8 +89,8 @@ from workbooks w
         on w.id = lv.workbook_id
 where s.name = 'EBI'
     and p.name in('Production','Staging')
-    and (date_part('day',NOW() - lv.last_viewed_datetime) > 90
-        or date_part('day',NOW() - lv.last_viewed_datetime)  is null)
+    and (date_part('day',now() - lv.last_viewed_datetime) > 90
+        or date_part('day',now() - lv.last_viewed_datetime)  is null)
     and not exists(
                     select 1
                         from tags t
