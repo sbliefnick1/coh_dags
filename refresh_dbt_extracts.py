@@ -36,7 +36,7 @@ def refresh_extracts():
 
     with server.auth.sign_in(tableau_auth):
         ds_ls = server.metadata.query(query)['data']['tags'][0]['publishedDatasources']
-        [server.datasources.get_by_id(ds['luid']).refresh() for ds in ds_ls]
+        [server.datasources.refresh(server.datasources.get_by_id(ds['luid'])) for ds in ds_ls]
 
 r = PythonOperator(
         task_id='refresh_dbt_extracts',
