@@ -18,8 +18,14 @@ default_args = {
 dag = DAG('refresh_npsr_project', default_args=default_args, catchup=False, schedule_interval='0 8 * * *')
 
 refresh_bash = 'cd C:\\Anaconda\\ETL\\npsr && python full_data_refresh.py'
+refresh_aa_bash = 'cd C:\\Anaconda\\ETL\\npsr && python refresh_applied_ai_data.py'
 
 r = SSHOperator(ssh_conn_id='tableau_server',
                 task_id='refresh_data',
                 command=refresh_bash,
+                dag=dag)
+
+ra = SSHOperator(ssh_conn_id='tableau_server',
+                task_id='refresh_applied_ai_data',
+                command=refresh_aa_bash,
                 dag=dag)
