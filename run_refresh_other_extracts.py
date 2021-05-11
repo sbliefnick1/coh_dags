@@ -38,10 +38,6 @@ datasources = [
      'datasource_id': '85460963-7e81-4e5d-aaff-1a044cdc6c80'},
     {'task_id': 'refresh_pb_denials',
      'datasource_id': '66174e43-9ae5-43a8-b785-1080cf651b10'},
-    {'task_id': 'refresh_direct_cost_medication',
-     'datasource_id': '9733efff-5ea1-4f73-8062-fb00b9c30ced'},
-    {'task_id': 'refresh_direct_cost_supplies_implants',
-     'datasource_id': 'c417926a-4646-48ed-b889-6a89fe590f64'},
     {'task_id': 'refresh_arhb_payor_metrics',
      'datasource_id': '46da3492-9204-401e-b46f-a31ba2aaf75d'},
     {'task_id': 'refresh_corporate_accounting_accounts_payable',
@@ -53,7 +49,9 @@ datasources = [
     {'task_id': 'refresh_revenue_cycle_pb_workqueue_telehealth',
      'datasource_id': '3fd8f8f1-439c-499c-9649-e15a3251bd35'},
     {'task_id': 'refresh_cash_forecast',
-     'datasource_id': '8162e40a-b2d6-4930-b147-018b44d63897'}
+     'datasource_id': '8162e40a-b2d6-4930-b147-018b44d63897'},
+    {'task_id': 'refresh_corporate_accounting_expense_reimbursement',
+     'datasource_id': 'bb771489-e5a1-45c0-943b-7c8a02ad7aac'}
     ]
 
 for d in datasources:
