@@ -17,7 +17,7 @@ default_args = {
 
 dag = DAG('refresh_npsr_project', default_args=default_args, catchup=False, schedule_interval='0 7 * * *')
 
-git_pull_bash = 'cd C:\\Anaconda\\ETL\\npsr\\clinical_data_model && git pull'
+git_pull_bash = 'cd C:\\Anaconda\\ETL\\npsr\\clinical_revenue_model && git pull'
 refresh_bash = 'cd C:\\Anaconda\\ETL\\npsr && python full_data_refresh.py'
 refresh_aa_bash = 'cd C:\\Anaconda\\ETL\\npsr && python refresh_applied_ai_data.py'
 
