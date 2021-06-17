@@ -37,6 +37,7 @@ check_max_census_date = SqlSensor(
         conn_id='ebi_datamart',
         sql='select max(CensusDate) from vw_EBI_Daily_Census',
         success=check_date,
+        dag=dag,
         )
 
 RDC = PythonOperator(
