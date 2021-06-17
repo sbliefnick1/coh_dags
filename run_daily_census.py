@@ -3,7 +3,14 @@ from datetime import datetime, timedelta
 import pendulum
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.sensors.sql import SqlSensor
 from auxiliary.outils import refresh_tableau_extract
+
+
+def check_date(d):
+    # check that max census date is yesterday
+    return (datetime.today() + timedelta(days=-1)).strftime('%Y-%m-%d') == d
+
 
 default_args = {
     'owner': 'airflow',
@@ -25,6 +32,13 @@ dag = DAG('run_daily_census', default_args=default_args, catchup=False, schedule
 #        dag=dag
 #        )
 
+check_max_census_date = SqlSensor(
+        task_id='check_max_census_date',
+        conn_id='ebi_datamart',
+        sql='select max(CensusDate) from vw_EBI_Daily_Census',
+        success=check_date,
+        )
+
 RDC = PythonOperator(
         task_id='refresh_daily_census',
         python_callable=refresh_tableau_extract,
@@ -33,4 +47,4 @@ RDC = PythonOperator(
         )
 
 # deps >>
-RDC
+check_max_census_date >> RDC
