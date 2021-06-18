@@ -35,7 +35,7 @@ dag = DAG('run_daily_census', default_args=default_args, catchup=False, schedule
 check_max_census_date = SqlSensor(
         task_id='check_max_census_date',
         conn_id='ebi_datamart',
-        sql='select max(CensusDate) from vw_EBI_Daily_Census',
+        sql='select MAX(EFFECTIVE_TIME) from CLARITY_CLARITY_ADT where EVENT_TYPE_C = 6',
         success=check_date,
         dag=dag,
         )
