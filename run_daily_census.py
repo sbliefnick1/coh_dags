@@ -9,7 +9,7 @@ from auxiliary.outils import refresh_tableau_extract
 
 def check_date(d):
     # check that max census date is yesterday
-    return (datetime.today() + timedelta(days=-1)).strftime('%Y-%m-%d') == d
+    return (datetime.today() + timedelta(days=-1)).strftime('%Y-%m-%d') == d.strftime('%Y-%m-%d')
 
 
 default_args = {
