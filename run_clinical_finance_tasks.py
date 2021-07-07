@@ -15,7 +15,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('run_clinical_finance_tasks', default_args=default_args, catchup=False, schedule_interval='0 5 35 * *')
+dag = DAG('run_clinical_finance_tasks', default_args=default_args, catchup=False, schedule_interval='35 5 * * *')
 
 refresh_maps_bash = 'cd C:\\Anaconda\\ETL\\clinical_finance\\clinical_revenue_model\\cfin_maps_to_ebi.py'
 
