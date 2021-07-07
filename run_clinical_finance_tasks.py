@@ -17,7 +17,7 @@ default_args = {
 
 dag = DAG('run_clinical_finance_tasks', default_args=default_args, catchup=False, schedule_interval='35 5 * * *')
 
-refresh_maps_bash = 'cd C:\\Anaconda\\ETL\\clinical_finance\\cfin_maps_to_ebi.py'
+refresh_maps_bash = 'cd C:\\Anaconda\\ETL\\clinical_finance && cfin_maps_to_ebi.py'
 
 m = SSHOperator(ssh_conn_id='tableau_server',
                 task_id='refresh_mapping_tables',
