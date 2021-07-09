@@ -17,7 +17,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('refresh_tableau_metadata', default_args=default_args, catchup=False, schedule_interval='0 22 * * *')
+dag = DAG('refresh_tableau_metadata', default_args=default_args, catchup=False, schedule_interval='0 20 * * *')
 
 users_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_users.py'
 system_users_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_system_users.py'
