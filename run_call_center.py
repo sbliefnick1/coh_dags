@@ -67,6 +67,13 @@ ACCAT = PythonOperator(
         dag=dag
         )
 
+SURV = PythonOperator(
+        task_id='refresh_cisco_call_center_surveys',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '1e51f282-6346-473f-b4ca-2fa2bff18d6f'},
+        dag=dag
+        )
+
 # deps >> ACC
 # deps >> ACCA
 # deps >> AAGP
@@ -79,3 +86,4 @@ AAGP
 AAGPH
 AVV
 ACCAT
+SURV
