@@ -3,7 +3,14 @@ from datetime import datetime, timedelta
 import pendulum
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.sensors.sql import SqlSensor
 from auxiliary.outils import refresh_tableau_extract
+
+
+def check_date(d):
+    # check that max call date is greater than or equal to yesterday
+    return (datetime.today() + timedelta(days=-1)).strftime('%Y-%m-%d') <= d.strftime('%Y-%m-%d')
+
 
 default_args = {
     'owner': 'airflow',
@@ -24,6 +31,14 @@ dag = DAG('run_call_center', default_args=default_args, catchup=False, schedule_
 #        task_id='wait_for_daily_census',
 #        dag=dag
 #        )
+
+check_max_call_date = SqlSensor(
+        task_id='check_max_call_date',
+        conn_id='ebi_datamart',
+        sql='select max(call_date) from vw_call_center where avaya_system = "cisco"',
+        success=check_date,
+        dag=dag,
+        )
 
 ACC = PythonOperator(
         task_id='refresh_avaya_call_center',
@@ -80,7 +95,7 @@ SURV = PythonOperator(
 # deps >> AAGPH
 # deps >> AVV
 
-ACC
+check_max_call_date >> ACC
 ACCA
 AAGP
 AAGPH
