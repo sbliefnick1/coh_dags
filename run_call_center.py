@@ -35,7 +35,7 @@ dag = DAG('run_call_center', default_args=default_args, catchup=False, schedule_
 check_max_call_date = SqlSensor(
         task_id='check_max_call_date',
         conn_id='ebi_datamart',
-        sql='select max(call_date) from vw_call_center where avaya_system = "cisco"',
+        sql="select max(call_date) from vw_call_center where avaya_system = 'cisco'",
         success=check_date,
         dag=dag,
         )
