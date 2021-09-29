@@ -32,10 +32,21 @@ dag = DAG('run_call_center', default_args=default_args, catchup=False, schedule_
 #        dag=dag
 #        )
 
+call_date_sql = """
+select MAX(CAST(rqi.[DateTime] as date)) as max_cisco_calldate
+
+from ccehds_t_router_queue_interval rqi with (nolock)
+
+where CAST(rqi.[DateTime] as date) < CAST(GETDATE() as date)
+  and rqi.precisionqueueid != 5082
+
+having SUM(ISNULL(rqi.callsoffered, 0)) > 0
+"""
+
 check_max_call_date = SqlSensor(
         task_id='check_max_call_date',
         conn_id='ebi_datamart',
-        sql="select max(call_date) from vw_call_center where avaya_system = 'cisco'",
+        sql=call_date_sql,
         success=check_date,
         dag=dag,
         )
