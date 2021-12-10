@@ -79,12 +79,12 @@ AAGPH = PythonOperator(
         dag=dag
         )
 
-AVV = PythonOperator(
-        task_id='refresh_avaya_vdn_vector',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '7f9bdba7-b64e-4225-a777-490dc14ffb69'},
-        dag=dag
-        )
+# AVV = PythonOperator(
+#         task_id='refresh_avaya_vdn_vector',
+#         python_callable=refresh_tableau_extract,
+#         op_kwargs={'datasource_id': '7f9bdba7-b64e-4225-a777-490dc14ffb69'},
+#         dag=dag
+#         )
 
 ACCAT = PythonOperator(
         task_id='refresh_avaya_call_center_agents_trace',
@@ -110,6 +110,6 @@ check_max_call_date >> ACC
 ACCA
 AAGP
 AAGPH
-AVV
+# AVV
 ACCAT
 SURV
