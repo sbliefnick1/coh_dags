@@ -248,8 +248,24 @@ scws = PythonOperator(
         dag=dag
         )
 
+scmi = PythonOperator(
+        task_id='refresh_scm_inventory',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': 'c5c47779-a321-48ee-a12f-1f4c933f26c6'},
+        dag=dag
+        )
+
+scmiu = PythonOperator(
+        task_id='refresh_scm_inventory_usage',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '9737e41f-1e28-444a-8f70-0d9ee47569ec'},
+        dag=dag
+        )
+
 si >> sv
 si >> scws
+si >> scmi
+si >> scmiu
 
 sv >> vch
 sv >> vchw
