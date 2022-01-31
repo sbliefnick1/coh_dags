@@ -100,6 +100,20 @@ SURV = PythonOperator(
         dag=dag
         )
 
+CAB = PythonOperator(
+        task_id='refresh_calabrio_agents_productivity',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '8a77dd16-5b63-4f25-8b0a-dc59708bad4f'},
+        dag=dag
+        )
+
+CAES = PythonOperator(
+        task_id='refresh_calabrio_agents_evaluation_scores',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': 'b07d75e4-1abf-4085-8ace-f0f9f85b7376'},
+        dag=dag
+        )
+
 # deps >> ACC
 # deps >> ACCA
 # deps >> AAGP
@@ -113,3 +127,5 @@ AAGPH
 # AVV
 ACCAT
 SURV
+CAB
+CAES
