@@ -164,7 +164,7 @@ t = SSHOperator(ssh_conn_id='tableau_server',
 wtr = PythonOperator(
         task_id='refresh_workbook_tags',
         python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '3132ecbd-4acb-4890-8622-7e5b21ab6b0c'},
+        op_kwargs={'datasource_id': '36b9a01d-c545-4963-9fe8-2fdef413367e'},
         dag=dag
         )
 
