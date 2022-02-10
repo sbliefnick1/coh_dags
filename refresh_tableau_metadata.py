@@ -36,6 +36,9 @@ datasource_tables_bash = 'cd C:\\Anaconda\\ETL\\tableau && python TableauServerD
 workbook_datasources_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_workbook_datasources.py'
 customized_views_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_customized_views.py'
 subscriptions_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_subscriptions.py'
+projects_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_projects.py'
+taggings_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_taggings.py'
+tags_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_tags.py'
 
 tps = PythonOperator(
         task_id='refresh_tableau_permissions_stats',
@@ -143,6 +146,29 @@ sb = SSHOperator(ssh_conn_id='tableau_server',
                  command=subscriptions_bash,
                  dag=dag)
 
+pj = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='tableau_projects',
+                 command=projects_bash,
+                 dag=dag)
+
+tg = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='tableau_taggings',
+                 command=taggings_bash,
+                 dag=dag)
+
+t = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='tableau_tags',
+                 command=tags_bash,
+                 dag=dag)
+
+wtr = PythonOperator(
+        task_id='refresh_workbook_tags',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '3132ecbd-4acb-4890-8622-7e5b21ab6b0c'},
+        dag=dag
+        )
+
 tps >> tus
-u >> su >> v >> w >> s >> d >> g >> gu >> dm >> lr >> ta >> tas >> da >> cv >> sb >> dt >> wd
+u >> su >> v >> w >> s >> d >> g >> gu >> dm >> lr >> ta >> tas >> da >> cv >> sb >> dt >> wd >> pj >> tg >> t
 wd >> wdr
+t >> wtr
