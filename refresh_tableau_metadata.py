@@ -21,7 +21,7 @@ dag = DAG(
         'refresh_tableau_metadata',
         default_args=default_args,
         catchup=False,
-        max_active_tasks=4,
+        concurrency=4,
         schedule_interval='0 20 * * *'
 )
 
