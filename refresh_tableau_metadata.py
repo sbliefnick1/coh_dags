@@ -14,6 +14,7 @@ default_args = {
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 1,
+    'max_active_tasks': 4,
     'retry_delay': timedelta(minutes=2)
     }
 
@@ -162,13 +163,11 @@ t = SSHOperator(ssh_conn_id='tableau_server',
                  dag=dag)
 
 wtr = PythonOperator(
-        task_id='refresh_workbook_tags',
+        task_id='refresh_tableau_workbooks',
         python_callable=refresh_tableau_extract,
         op_kwargs={'datasource_id': '36b9a01d-c545-4963-9fe8-2fdef413367e'},
         dag=dag
         )
 
-tps >> tus
-u >> su >> v >> w >> s >> d >> g >> gu >> dm >> lr >> ta >> tas >> da >> cv >> sb >> dt >> wd >> pj >> tg >> t
 wd >> wdr
 t >> wtr
