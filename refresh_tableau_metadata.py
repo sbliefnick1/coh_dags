@@ -170,4 +170,18 @@ wtr = PythonOperator(
         )
 
 wd >> wdr
+d >> wdr
+w >> wdr
+dt >> wdr
+da >> wdr
+tas >> wdr
+ta >> wdr
+
 t >> wtr
+tg >> wtr
+v >> wtr
+w >> wtr
+u >> wtr
+su >> wtr
+s >> wtr
+pj >> wtr
