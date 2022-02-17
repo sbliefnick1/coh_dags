@@ -136,6 +136,22 @@ MBRR = PythonOperator(
         dag=dag
         )
 
+FTE = MsSqlOperator(
+        sql='EXEC EBI_COH_Labor_FTE_Logic;',
+        task_id='labor_fte',
+        autocommit=True,
+        mssql_conn_id=conn_id,
+        pool=pool_id,
+        dag=dag
+        )
+
+FTER = PythonOperator(
+        task_id='refresh_labor_fte',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': 'DE1BE98A-B246-4317-9223-97C2F533EB43'},
+        dag=dag
+        )
+
 # deps >> RTE
 # deps >> MA
 # deps >> ML
@@ -151,3 +167,4 @@ MSS >> MBRR
 MTS >> MTSR
 CPS >> CP
 CP >> CPR
+FTE >> FTER
