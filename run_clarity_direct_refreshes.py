@@ -26,4 +26,12 @@ hbs = PythonOperator(
         dag=dag
         )
 
+dcc = PythonOperator(
+        task_id='refresh_daily_census_clarity',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '0ED0A5E0-30FC-4A9C-8A6A-C906CEAA1F3E'},
+        dag=dag
+        )
+
 hbs
+dcc
