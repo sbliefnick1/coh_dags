@@ -145,6 +145,15 @@ FTE = MsSqlOperator(
         dag=dag
         )
 
+FTES = MsSqlOperator(
+        sql='UPDATE STATISTICS EBI_COH_Labor_FTE;',
+        task_id='update_labor_fte_stats',
+        autocommit=True,
+        mssql_conn_id=conn_id,
+        pool=pool_id,
+        dag=dag
+        )
+
 FTER = PythonOperator(
         task_id='refresh_labor_fte',
         python_callable=refresh_tableau_extract,
@@ -167,4 +176,4 @@ MSS >> MBRR
 MTS >> MTSR
 CPS >> CP
 CP >> CPR
-FTE >> FTER
+FTE >> FTES >> FTER
