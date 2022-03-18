@@ -26,6 +26,7 @@ server = TSC.Server('https://ebi.coh.org', use_server_version=True)
 
 git_pull_latest = 'cd C:\\Anaconda\\ETL\\metrics && git pull'
 refresh_oc_daily_financials_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python oc_daily_financial_statistics.py'
+refresh_cfin_daily_flash_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python clinical_finance_daily_flash.py'
 refresh_metrics_metadata_table = 'cd C:\\Anaconda\\ETL\\metrics\\dictionary && conda activate metrics && python load_dictionary_data.py'
 
 def refresh_ds(tableau_server, tableau_authentication, ds_luid):
@@ -42,6 +43,11 @@ rocdt = SSHOperator(ssh_conn_id='tableau_server',
                 command=refresh_oc_daily_financials_table,
                 dag=dag)
 
+rcfdft = SSHOperator(ssh_conn_id='tableau_server',
+                task_id='refresh_cfin_daily_flash_table',
+                command=refresh_cfin_daily_flash_table,
+                dag=dag)
+
 rmmt = SSHOperator(ssh_conn_id='tableau_server',
                 task_id='refresh_metrics_metadata_table',
                 command=refresh_metrics_metadata_table,
@@ -54,6 +60,13 @@ rocde = PythonOperator(
         dag=dag
         )
 
+rcfdfe = PythonOperator(
+        task_id='refresh_cfin_daily_flash_extract',
+        python_callable=refresh_ds,
+        op_kwargs={'tableau_server': server, 'tableau_authentication': auth, 'ds_luid': 'fcfcba9e-023b-446f-929c-afc037c74b90'},
+        dag=dag
+        )
+
 rmme = PythonOperator(
         task_id='refresh_metrics_metadata_extract',
         python_callable=refresh_ds,
@@ -63,3 +76,4 @@ rmme = PythonOperator(
 
 gp >> rocdt >> rocde
 gp >> rmmt >> rmme
+gp >> rcfdft >> rcfdfe
