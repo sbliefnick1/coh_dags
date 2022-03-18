@@ -26,8 +26,9 @@ server = TSC.Server('https://ebi.coh.org', use_server_version=True)
 
 git_pull_latest = 'cd C:\\Anaconda\\ETL\\metrics && git pull'
 refresh_oc_daily_financials_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python oc_daily_financial_statistics.py'
+refresh_metrics_metadata_table = 'cd C:\\Anaconda\\ETL\\metrics\\dictionary && conda activate metrics && python load_dictionary_data.py'
 
-def refresh_ds_oc(tableau_server, tableau_authentication, ds_luid):
+def refresh_ds(tableau_server, tableau_authentication, ds_luid):
     with server.auth.sign_in(tableau_authentication):
         server.datasources.refresh(ds_luid)
 
@@ -41,11 +42,24 @@ rocdt = SSHOperator(ssh_conn_id='tableau_server',
                 command=refresh_oc_daily_financials_table,
                 dag=dag)
 
+rmmt = SSHOperator(ssh_conn_id='tableau_server',
+                task_id='refresh_metrics_metadata_table',
+                command=refresh_metrics_metadata_table,
+                dag=dag)
+
 rocde = PythonOperator(
         task_id='refresh_oc_daily_financials_extract',
-        python_callable=refresh_ds_oc,
+        python_callable=refresh_ds,
         op_kwargs={'tableau_server': server, 'tableau_authentication': auth, 'ds_luid': 'bfacbd49-df60-4dfa-aa4f-24006fb8952a'},
         dag=dag
         )
 
+rmme = PythonOperator(
+        task_id='refresh_metrics_metadata_extract',
+        python_callable=refresh_ds,
+        op_kwargs={'tableau_server': server, 'tableau_authentication': auth, 'ds_luid': 'e64852e7-d0cf-43ec-b3d1-55f6bdda421e'},
+        dag=dag
+        )
+
 gp >> rocdt >> rocde
+gp >> rmmt >> rmme
