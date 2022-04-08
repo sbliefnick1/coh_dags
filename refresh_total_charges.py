@@ -17,7 +17,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('refresh_total_charges', default_args=default_args, catchup=False, schedule_interval='0 16 * * *')
+dag = DAG('refresh_total_charges', default_args=default_args, catchup=False, schedule_interval='0 17 * * *')
 
 conn_id = 'ebi_datamart'
 pool_id = 'ebi_etl_pool'

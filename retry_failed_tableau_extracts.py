@@ -15,7 +15,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('retry_failed_tableau_extracts', default_args=default_args, catchup=False, schedule_interval='0 13 * * *')
+dag = DAG('retry_failed_tableau_extracts', default_args=default_args, catchup=False, schedule_interval='0 15 * * *')
 
 refresh_bash = 'cd C:\\Anaconda\\ETL\\tableau && python run_failed_extracts.py'
 
