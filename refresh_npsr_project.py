@@ -18,7 +18,7 @@ default_args = {
 dag = DAG('refresh_npsr_project', default_args=default_args, catchup=False, schedule_interval='0 7 * * *')
 
 git_pull_bash = 'cd C:\\Anaconda\\ETL\\npsr\\clinical_revenue_model && git pull'
-#vrefresh_bash = 'cd C:\\Anaconda\\ETL\\npsr\\clinical_revenue_model\\code\\data_model && python refresh_data_model.py'
+# refresh_bash = 'cd C:\\Anaconda\\ETL\\npsr\\clinical_revenue_model\\code\\data_model && python refresh_data_model.py'
 refresh_aa_bash = 'cd C:\\Anaconda\\ETL\\npsr\\clinical_revenue_model\\code\\applied_ai_data && python refresh_applied_ai_data.py'
 
 gp = SSHOperator(ssh_conn_id='tableau_server',
