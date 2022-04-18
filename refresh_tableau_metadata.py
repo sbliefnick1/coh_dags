@@ -45,6 +45,7 @@ subscriptions_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_subscripti
 projects_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_projects.py'
 taggings_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_taggings.py'
 tags_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_tags.py'
+user_site_role_hx_bash = 'cd C:\\Anaconda\\ETL\\tableau && python create_users_snapshot.py'
 
 tps = PythonOperator(
         task_id='refresh_tableau_permissions_stats',
@@ -173,6 +174,13 @@ wtr = PythonOperator(
         op_kwargs={'datasource_id': '36b9a01d-c545-4963-9fe8-2fdef413367e'},
         dag=dag
         )
+
+uhx = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='user_site_role_hx',
+        command=user_site_role_hx_bash,
+        dag=dag
+)
 
 wd >> wdr
 d >> wdr
