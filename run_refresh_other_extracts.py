@@ -48,8 +48,6 @@ datasources = [
      'datasource_id': '23d5115f-eadc-4366-95b7-2a82aa710056'},
     {'task_id': 'refresh_revenue_cycle_pb_workqueue_telehealth',
      'datasource_id': '3fd8f8f1-439c-499c-9649-e15a3251bd35'},
-    {'task_id': 'refresh_cash_forecast',
-     'datasource_id': '8162e40a-b2d6-4930-b147-018b44d63897'},
     {'task_id': 'refresh_corporate_accounting_expense_reimbursement',
      'datasource_id': 'bb771489-e5a1-45c0-943b-7c8a02ad7aac'},
     {'task_id': 'refresh_pb_tdl_transactions',
