@@ -17,7 +17,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('run_refresh_priority_extracts', default_args=default_args, catchup=False, schedule_interval='40 5 * * *')
+dag = DAG('run_refresh_priority_extracts', default_args=default_args, catchup=False, schedule_interval='39 5 * * *')
 
 
 datasources = [
