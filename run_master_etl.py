@@ -19,7 +19,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('run_master_etl', default_args=default_args, catchup=False, schedule_interval='40 5 * * *')
+dag = DAG('run_master_etl', default_args=default_args, catchup=False, schedule_interval='45 5 * * *')
 
 
 def read_json_files(names):
