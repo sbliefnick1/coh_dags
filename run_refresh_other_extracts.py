@@ -52,8 +52,10 @@ datasources = [
      'datasource_id': 'bb771489-e5a1-45c0-943b-7c8a02ad7aac'},
     {'task_id': 'refresh_pb_tdl_transactions',
      'datasource_id': '8a83879d-6937-4a31-a784-21107733854f'},
-     {'task_id': 'refresh_epsi_department_utilization',
-     'datasource_id': 'ba019a61-06d5-41ca-b2a0-904ca811b922'}
+    {'task_id': 'refresh_epsi_department_utilization',
+     'datasource_id': 'ba019a61-06d5-41ca-b2a0-904ca811b922'},
+    {'task_id': 'refresh_corporate_accounting_ap_aging',
+     'datasource_id': '04b12b4d-fb90-483e-b0ad-653f4e85867a'}
     ]
 
 for d in datasources:
