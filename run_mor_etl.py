@@ -56,12 +56,12 @@ MSS = MsSqlOperator(
         dag=dag
         )
 
-MSSR = PythonOperator(
-        task_id='refresh_mor_summary_w_security',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '75834DFA-3C69-4C65-A6DF-BACE3E850B10'},
-        dag=dag
-        )
+# MSSR = PythonOperator(
+#         task_id='refresh_mor_summary_w_security',
+#         python_callable=refresh_tableau_extract,
+#         op_kwargs={'datasource_id': '75834DFA-3C69-4C65-A6DF-BACE3E850B10'},
+#         dag=dag
+#         )
 
 MA = MsSqlOperator(
         sql='EXEC EBI_MOR_Account_Logic;',
@@ -171,7 +171,7 @@ RTE >> BFB
 MA >> BFB
 MA >> MTS
 BFB >> MSS
-MSS >> MSSR
+# MSS >> MSSR
 MSS >> MBRR
 MTS >> MTSR
 CPS >> CP
