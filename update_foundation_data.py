@@ -17,11 +17,11 @@ default_args = {
     'retry_delay': timedelta(minutes=2),
     }
 
-dag = DAG('update_foundation_data', default_args=default_args, catchup=False, schedule_interval='00 21 * * *')
+dag = DAG('update_foundation_data', default_args=default_args, catchup=False, schedule_interval='00 20 * * *')
 
-t1_bash = 'cd C:\\Anaconda\\ETL\\foundation && python DSS_D_Data.py'
-t2_bash = 'cd C:\\Anaconda\\ETL\\foundation && python LU_Physicians.py'
-t4_bash = 'cd C:\\Anaconda\\ETL\\misc_etl && python CovidWaiverData.py'
+t1_bash = 'cd C:\\Anaconda\\ETL\\foundation && conda activate foundation && python DSS_D_Data.py'
+t2_bash = 'cd C:\\Anaconda\\ETL\\foundation && conda activate foundation && python LU_Physicians.py'
+# t4_bash = 'cd C:\\Anaconda\\ETL\\misc_etl && python CovidWaiverData.py'
 
 t1 = SSHOperator(ssh_conn_id='tableau_server',
                  task_id='refresh_dss_d_data',
@@ -35,10 +35,10 @@ t3 = PythonOperator(
         dag=dag
         )
 
-t4 = SSHOperator(ssh_conn_id='tableau_server',
-                 task_id='refresh_covid_waiver',
-                 command=t4_bash,
-                 dag=dag)
+# t4 = SSHOperator(ssh_conn_id='tableau_server',
+#                  task_id='refresh_covid_waiver',
+#                  command=t4_bash,
+#                  dag=dag)
 
 t1 >> t3
-t4
+# t4
