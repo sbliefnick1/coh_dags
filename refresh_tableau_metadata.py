@@ -169,6 +169,11 @@ t = SSHOperator(ssh_conn_id='tableau_server',
                  command=tags_bash,
                  dag=dag)
 
+vs = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='tableau_views_stats',
+                 command=views_stats_bash,
+                 dag=dag)
+
 wtr = PythonOperator(
         task_id='refresh_tableau_workbooks',
         python_callable=refresh_tableau_extract,
