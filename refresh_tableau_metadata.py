@@ -46,6 +46,7 @@ projects_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_projects.py'
 taggings_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_taggings.py'
 tags_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_tags.py'
 views_stats_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_views_stats.py'
+workbooks_metadata_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_workbooks_metadata.py'
 user_site_role_hx_bash = 'cd C:\\Anaconda\\ETL\\tableau && python create_users_snapshot.py'
 
 tps = PythonOperator(
@@ -173,6 +174,11 @@ vs = SSHOperator(ssh_conn_id='tableau_server',
                  task_id='tableau_views_stats',
                  command=views_stats_bash,
                  dag=dag)
+        
+wm = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='tableau_workbooks_metadata',
+                 command=workbooks_metadata_bash,
+                 dag=dag)
 
 wtr = PythonOperator(
         task_id='refresh_tableau_workbooks',
@@ -187,6 +193,13 @@ uhx = SSHOperator(
         command=user_site_role_hx_bash,
         dag=dag
 )
+
+wmr = PythonOperator(
+        task_id='refresh_tableau_workbooks_metadata',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '4ab93018-6e62-43cc-9323-00f624f7ad8d'},
+        dag=dag
+        )
 
 wd >> wdr
 d >> wdr
@@ -204,3 +217,10 @@ u >> wtr
 su >> wtr
 s >> wtr
 pj >> wtr
+
+wm >> wmr
+vs >> wmr
+v >> wmr
+w >> wmr
+u >> wmr
+su >> wmr
