@@ -45,6 +45,7 @@ subscriptions_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_subscripti
 projects_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_projects.py'
 taggings_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_taggings.py'
 tags_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_tags.py'
+views_stats_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_views_stats.py'
 user_site_role_hx_bash = 'cd C:\\Anaconda\\ETL\\tableau && python create_users_snapshot.py'
 
 tps = PythonOperator(
