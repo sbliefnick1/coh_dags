@@ -19,7 +19,7 @@ dag = DAG('run_backup_stored_procedures', default_args=default_args, catchup=Fal
 
 t1_bash = 'python C:\\Anaconda\\ETL\\fi_dm_ebi\\backup_stored_procedures.py'
 t2_bash = 'python C:\\Anaconda\\ETL\\misc_etl\\EBIDictionary.py'
-t3_bash = "cd C:\\Anaconda\\ETL\\fi_dm_ebi && conda activate foundation && python version_stored_procedures.py && cd ebi-stored-procedures && git diff --quiet && git diff --staged --quiet || git commit -am 'add changes' && git push"
+t3_bash = 'cd C:\\Anaconda\\ETL\\fi_dm_ebi && conda activate foundation && python version_stored_procedures.py && cd ebi-stored-procedures && git diff --quiet && git diff --staged --quiet || git commit -m "add changes" && git push'
 
 t1 = SSHOperator(ssh_conn_id='tableau_server',
                  task_id='run_backup',
