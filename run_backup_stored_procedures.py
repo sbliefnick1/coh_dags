@@ -19,6 +19,7 @@ dag = DAG('run_backup_stored_procedures', default_args=default_args, catchup=Fal
 
 t1_bash = 'python C:\\Anaconda\\ETL\\fi_dm_ebi\\backup_stored_procedures.py'
 t2_bash = 'python C:\\Anaconda\\ETL\\misc_etl\\EBIDictionary.py'
+t3_bash = "conda activate foundation && python C:\\Anaconda\\ETL\\fi_dm_ebi\\version_stored_procedures.py && git diff --quiet && git diff --staged --quiet || git commit -am 'add changes' && git push"
 
 t1 = SSHOperator(ssh_conn_id='tableau_server',
                  task_id='run_backup',
@@ -28,6 +29,11 @@ t1 = SSHOperator(ssh_conn_id='tableau_server',
 t2 = SSHOperator(ssh_conn_id='tableau_server',
                  task_id='refresh_dictionary',
                  command=t2_bash,
+                 dag=dag)
+
+t3 = SSHOperator(ssh_conn_id='tableau_server',
+                 task_id='run_versioning',
+                 command=t3_bash,
                  dag=dag)
 
 # backup_stored_procedures.py
