@@ -17,7 +17,7 @@ default_args = {
 
 dag = DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, schedule_interval='0 21 * * *')
 
-hr_bash = 'cd C:\\Anaconda\\ETL\\tableau && python hr_security.py'
+hr_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python hr_security.py'
 # epic_bash = 'cd C:\\Anaconda\\ETL\\tableau && python TableauEpicSecuritySync.py'
 unlicense_bash = 'cd C:\\Anaconda\\ETL\\tableau && python Unlicense_Users.py'
 mf_sched = 'cd C:\\Anaconda\\ETL\\tableau && python MF_Schedulers_Security.py'
