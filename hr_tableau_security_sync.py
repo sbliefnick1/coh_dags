@@ -19,7 +19,7 @@ dag = DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, 
 
 hr_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python hr_security.py'
 # epic_bash = 'cd C:\\Anaconda\\ETL\\tableau && python TableauEpicSecuritySync.py'
-unlicense_bash = 'cd C:\\Anaconda\\ETL\\tableau && python Unlicense_Users.py'
+unlicense_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python Unlicense_Users.py'
 mf_sched = 'cd C:\\Anaconda\\ETL\\tableau && python MF_Schedulers_Security.py'
 
 t1 = SSHOperator(ssh_conn_id='tableau_server',
