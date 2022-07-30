@@ -17,7 +17,7 @@ default_args = {
 
 dag = DAG('retry_failed_tableau_extracts', default_args=default_args, catchup=False, schedule_interval='0 15 * * *')
 
-refresh_bash = 'cd C:\\Anaconda\\ETL\\tableau && python run_failed_extracts.py'
+refresh_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python run_failed_extracts.py'
 
 r = SSHOperator(ssh_conn_id='tableau_server',
                 task_id='find_and_rerun_failed_extracts',
