@@ -19,7 +19,7 @@ dag = DAG('run_backup_stored_procedures', default_args=default_args, catchup=Fal
 
 dictionary_bash = 'cd C:\\Anaconda\\ETL\\misc_etl && conda activate foundation && python ebi_dictionary.py'
 changes_version_bash = 'cd C:\\Anaconda\\ETL\\fi_dm_ebi && conda activate foundation && python version_stored_procedures.py'
-commit_version_bash = 'cd C:\\Anaconda\\ETL\\fi_dm_ebi\\ebi-stored-procedures && git add -A && git diff --quiet && git diff --staged --quiet || && git commit -am "add changes"'
+commit_version_bash = 'cd C:\\Anaconda\\ETL\\fi_dm_ebi\\ebi-stored-procedures && git add -A && git diff --quiet && git diff --staged --quiet || git commit -am "add changes"'
 push_version_bash = 'cd C:\\Anaconda\\ETL\\fi_dm_ebi\\ebi-stored-procedures && git push'
 
 d = SSHOperator(
