@@ -31,13 +31,6 @@ d = SSHOperator(
 
 cv = SSHOperator(
     ssh_conn_id='tableau_server',
-    task_id='run_versioning',
-    command=changes_version_bash,
-    dag=dag
-)
-
-cv = SSHOperator(
-    ssh_conn_id='tableau_server',
     task_id='add_changes_to_versioning_folder',
     command=changes_version_bash,
     dag=dag
@@ -56,3 +49,5 @@ pv = SSHOperator(
     command=push_version_bash,
     dag=dag
 )
+
+cv >> cmv >> pv
