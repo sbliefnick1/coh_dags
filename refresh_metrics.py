@@ -28,6 +28,7 @@ git_pull_latest = 'cd C:\\Anaconda\\ETL\\metrics && git pull'
 refresh_oc_daily_financials_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python oc_daily_financial_statistics.py'
 refresh_cfin_daily_flash_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python clinical_finance_daily_flash.py'
 refresh_metrics_metadata_table = 'cd C:\\Anaconda\\ETL\\metrics\\dictionary && conda activate metrics && python load_dictionary_data.py'
+refresh_quality_monthly_scorecard_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python quality_monthly_scorecard.py'
 
 def refresh_ds(tableau_server, tableau_authentication, ds_luid):
     with server.auth.sign_in(tableau_authentication):
@@ -51,6 +52,11 @@ rcfdft = SSHOperator(ssh_conn_id='tableau_server',
 rmmt = SSHOperator(ssh_conn_id='tableau_server',
                 task_id='refresh_metrics_metadata_table',
                 command=refresh_metrics_metadata_table,
+                dag=dag)
+
+rqmst = SSHOperator(ssh_conn_id='tableau_server',
+                task_id='refresh_quality_monthly_scorecard_table',
+                command=refresh_quality_monthly_scorecard_table,
                 dag=dag)
 
 rocde = PythonOperator(
@@ -77,3 +83,4 @@ rmme = PythonOperator(
 gp >> rocdt >> rocde
 gp >> rmmt >> rmme
 gp >> rcfdft >> rcfdfe
+gp >> rqmst
