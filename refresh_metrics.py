@@ -29,6 +29,7 @@ refresh_oc_daily_financials_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections 
 refresh_cfin_daily_flash_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python clinical_finance_daily_flash.py'
 refresh_metrics_metadata_table = 'cd C:\\Anaconda\\ETL\\metrics\\dictionary && conda activate metrics && python load_dictionary_data.py'
 refresh_quality_monthly_scorecard_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python quality_monthly_scorecard.py'
+refresh_access_operations_scorecard_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python access_operations_scorecard.py'
 
 def refresh_ds(tableau_server, tableau_authentication, ds_luid):
     with server.auth.sign_in(tableau_authentication):
@@ -59,6 +60,11 @@ rqmst = SSHOperator(ssh_conn_id='tableau_server',
                 command=refresh_quality_monthly_scorecard_table,
                 dag=dag)
 
+raost = SSHOperator(ssh_conn_id='tableau_server',
+                task_id='refresh_access_operations_scorecard_table',
+                command=refresh_access_operations_scorecard_table,
+                dag=dag)
+
 rocde = PythonOperator(
         task_id='refresh_oc_daily_financials_extract',
         python_callable=refresh_ds,
@@ -80,7 +86,15 @@ rmme = PythonOperator(
         dag=dag
         )
 
+raose = PythonOperator(
+        task_id='refresh_access_operations_scorecard_extract',
+        python_callable=refresh_ds,
+        op_kwargs={'tableau_server': server, 'tableau_authentication': auth, 'ds_luid': '97d0cf7d-eafb-4cca-a031-7b5c1d8ad799'},
+        dag=dag
+        )
+
 gp >> rocdt >> rocde
 gp >> rmmt >> rmme
 gp >> rcfdft >> rcfdfe
+gp >> raost >> raose
 gp >> rqmst
