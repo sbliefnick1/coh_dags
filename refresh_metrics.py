@@ -30,6 +30,7 @@ refresh_cfin_daily_flash_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && 
 refresh_metrics_metadata_table = 'cd C:\\Anaconda\\ETL\\metrics\\dictionary && conda activate metrics && python load_dictionary_data.py'
 refresh_quality_monthly_scorecard_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python quality_monthly_scorecard.py'
 refresh_access_operations_scorecard_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python access_operations_scorecard.py'
+propagate_base_sql_views = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python base_sql_propagation.py'
 
 def refresh_ds(tableau_server, tableau_authentication, ds_luid):
     with server.auth.sign_in(tableau_authentication):
@@ -63,6 +64,11 @@ rqmst = SSHOperator(ssh_conn_id='tableau_server',
 raost = SSHOperator(ssh_conn_id='tableau_server',
                 task_id='refresh_access_operations_scorecard_table',
                 command=refresh_access_operations_scorecard_table,
+                dag=dag)
+
+pbsv = SSHOperator(ssh_conn_id='tableau_server',
+                task_id='propagate_base_sql_views',
+                command=propagate_base_sql_views,
                 dag=dag)
 
 rocde = PythonOperator(
