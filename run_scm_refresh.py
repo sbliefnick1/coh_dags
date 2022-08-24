@@ -262,10 +262,18 @@ scmiu = PythonOperator(
         dag=dag
         )
 
+scmibu = PythonOperator(
+        task_id='refresh_scm_inventory_business_units',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '1da002a9-25fd-4139-b4d1-e3244ef919fb'},
+        dag=dag
+        )
+
 si >> sv
 si >> scws
 si >> scmi
 si >> scmiu
+si >> scmibu
 
 sv >> vch
 sv >> vchw
