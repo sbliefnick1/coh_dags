@@ -75,28 +75,32 @@ rocde = PythonOperator(
         task_id='refresh_oc_daily_financials_extract',
         python_callable=refresh_ds,
         op_kwargs={'tableau_server': server, 'tableau_authentication': auth, 'ds_luid': 'bfacbd49-df60-4dfa-aa4f-24006fb8952a'},
-        dag=dag
+        dag=dag,
+        priority_weight=20,
         )
 
 rcfdfe = PythonOperator(
         task_id='refresh_cfin_daily_flash_extract',
         python_callable=refresh_ds,
         op_kwargs={'tableau_server': server, 'tableau_authentication': auth, 'ds_luid': 'fcfcba9e-023b-446f-929c-afc037c74b90'},
-        dag=dag
+        dag=dag,
+        priority_weight=20,
         )
 
 rmme = PythonOperator(
         task_id='refresh_metrics_metadata_extract',
         python_callable=refresh_ds,
         op_kwargs={'tableau_server': server, 'tableau_authentication': auth, 'ds_luid': 'e64852e7-d0cf-43ec-b3d1-55f6bdda421e'},
-        dag=dag
+        dag=dag,
+        priority_weight=20,
         )
 
 raose = PythonOperator(
         task_id='refresh_access_operations_scorecard_extract',
         python_callable=refresh_ds,
         op_kwargs={'tableau_server': server, 'tableau_authentication': auth, 'ds_luid': '97d0cf7d-eafb-4cca-a031-7b5c1d8ad799'},
-        dag=dag
+        dag=dag,
+        priority_weight=20
         )
 
 gp >> rocdt >> rocde
