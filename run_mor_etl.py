@@ -161,6 +161,13 @@ FTER = PythonOperator(
         dag=dag
         )
 
+MTP = PythonOperator(
+        task_id='refresh_mor_transactions_po',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '4a5c42cb-b83e-4a07-824d-19c9bfc35349'},
+        dag=dag
+        )
+
 # deps >> RTE
 # deps >> MA
 # deps >> ML
@@ -177,3 +184,4 @@ MTS >> MTSR
 CPS >> CP
 CP >> CPR
 FTE >> FTES >> FTER
+MTP
