@@ -46,6 +46,9 @@ projects_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && p
 taggings_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python tableau_taggings.py'
 tags_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python tableau_tags.py'
 views_stats_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python tableau_views_stats.py'
+
+airflow_tasks_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python airflow_tasks.py'
+
 workbooks_metadata_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_workbooks_metadata.py'
 user_site_role_hx_bash = 'cd C:\\Anaconda\\ETL\\tableau && python create_users_snapshot.py'
 
@@ -200,6 +203,13 @@ wmr = PythonOperator(
         op_kwargs={'datasource_id': '4ab93018-6e62-43cc-9323-00f624f7ad8d'},
         dag=dag
         )
+
+at = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='airflow_tasks',
+        command=airflow_tasks_bash,
+        dag=dag
+)
 
 wd >> wdr
 d >> wdr
