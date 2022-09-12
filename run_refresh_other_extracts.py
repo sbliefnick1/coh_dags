@@ -55,7 +55,9 @@ datasources = [
     {'task_id': 'refresh_epsi_department_utilization',
      'datasource_id': 'ba019a61-06d5-41ca-b2a0-904ca811b922'},
     {'task_id': 'refresh_corporate_accounting_ap_aging',
-     'datasource_id': '04b12b4d-fb90-483e-b0ad-653f4e85867a'}
+     'datasource_id': '04b12b4d-fb90-483e-b0ad-653f4e85867a'},
+    {'task_id': 'refresh_daily_tray_delivery',
+     'datasource_id': '009749f0-02e0-443a-ad3d-b6b551192231'}
     ]
 
 for d in datasources:
