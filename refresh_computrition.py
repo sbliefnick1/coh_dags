@@ -21,6 +21,6 @@ dag = DAG('refresh_computrition', default_args=default_args, catchup=False, sche
 rc = PythonOperator(
         task_id='refresh_custom_sql_computrition_extract',
         python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '7f9f88de-200a-4c22-bf2f-c249fa704096'},
+        op_kwargs={'datasource_id': 'd30a733f-ffed-4e47-8ffe-e20cdcecc8ca'},
         dag=dag
         )
