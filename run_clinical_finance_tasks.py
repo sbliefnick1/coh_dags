@@ -509,7 +509,7 @@ ebi = MsSqlOperator(
 )
 
 cfin = MsSqlOperator(
-    sql=ebi_sql,
+    sql=cfin_sql,
     task_id='refresh_labor_table_in_clinical_finance',
     autocommit=True,
     mssql_conn_id=conn_id,
