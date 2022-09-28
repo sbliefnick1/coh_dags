@@ -33,5 +33,21 @@ dcc = PythonOperator(
         dag=dag
         )
 
+dcnp = PythonOperator(
+        task_id='refresh_daily_census_nonip_patients',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': 'e4f386ac-abef-4ade-8a87-36560273e276'},
+        dag=dag
+        )
+
+dcpdap = PythonOperator(
+        task_id='refresh_daily_census_pending_direct_admit_patients',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '16b2821f-0a51-4f3a-a032-50d034250531'},
+        dag=dag
+        )
+
 hbs
 dcc
+dcnp
+dcpdap
