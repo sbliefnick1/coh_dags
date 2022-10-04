@@ -21,7 +21,7 @@ dag = DAG('refresh_cancer_center', default_args=default_args, catchup=False, sch
 
 datasources = [
     {'task_id': 'refresh_cancer_center_publications',
-     'datasource_id': '60a2cf6f-def3-4764-bca7-9d8db428a7a6'},
+     'datasource_id': 'd441b956-7fc8-4e2b-a2a1-1a6b483a81c6'},
     ]
 
 for d in datasources:
