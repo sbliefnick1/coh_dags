@@ -57,7 +57,9 @@ datasources = [
     {'task_id': 'refresh_corporate_accounting_ap_aging',
      'datasource_id': '04b12b4d-fb90-483e-b0ad-653f4e85867a'},
     {'task_id': 'refresh_daily_tray_delivery',
-     'datasource_id': '009749f0-02e0-443a-ad3d-b6b551192231'}
+     'datasource_id': '009749f0-02e0-443a-ad3d-b6b551192231'},
+    {'task_id': 'refresh_cancer_center_publications',
+     'datasource_id': 'd441b956-7fc8-4e2b-a2a1-1a6b483a81c6'},
     ]
 
 for d in datasources:
@@ -68,7 +70,7 @@ for d in datasources:
             dag=dag
             )
 
-    task
+task
 
 sync = SSHOperator(ssh_conn_id='tableau_server',
                    task_id='Sync_Telehealth_Providers',
