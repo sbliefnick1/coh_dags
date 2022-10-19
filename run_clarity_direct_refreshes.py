@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import pendulum
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.sensors.sql import SqlSensor
 from auxiliary.outils import refresh_tableau_extract
 
 default_args = {
@@ -17,7 +18,21 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('run_clarity_direct_refreshes', default_args=default_args, catchup=False, schedule_interval='00 5 * * *')
+dag = DAG('run_clarity_direct_refreshes', default_args=default_args, catchup=False, schedule_interval='30 0 * * *')
+
+sql_query = '''
+select case when max(exec_end_time) > cast(getdate() as date) then 1 else 0 end
+from cr_stat_execution
+where exec_name = 'ETL'
+  and status in ('Warning', 'Success')
+'''
+
+query = SqlSensor(
+        task_id='query_etl_status',
+        conn_id='EPCCLAPRDAGL',
+        sql=sql_query,
+        dag=dag
+        )
 
 hbs = PythonOperator(
         task_id='refresh_hospital_billing_summary',
@@ -47,7 +62,7 @@ dcpdap = PythonOperator(
         dag=dag
         )
 
-hbs
-dcc
-dcnp
-dcpdap
+query >> hbs
+query >> dcc
+query >> dcnp
+query >> dcpdap
