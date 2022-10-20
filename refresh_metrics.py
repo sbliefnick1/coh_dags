@@ -31,6 +31,7 @@ refresh_metrics_metadata_table = 'cd C:\\Anaconda\\ETL\\metrics\\dictionary && c
 refresh_quality_monthly_scorecard_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python quality_monthly_scorecard.py'
 refresh_access_operations_scorecard_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python access_operations_scorecard.py'
 propagate_base_sql_views = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python base_sql_propagation.py'
+refresh_parquet_files = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python refresh_parquet_files.py'
 
 def refresh_ds(tableau_server, tableau_authentication, ds_luid):
     with server.auth.sign_in(tableau_authentication):
@@ -71,6 +72,11 @@ pbsv = SSHOperator(ssh_conn_id='tableau_server',
                 command=propagate_base_sql_views,
                 dag=dag)
 
+rpf = SSHOperator(ssh_conn_id='tableau_server',
+                task_id='refresh_parquet_files',
+                command=refresh_parquet_files,
+                dag=dag)
+
 rocde = PythonOperator(
         task_id='refresh_oc_daily_financials_extract',
         python_callable=refresh_ds,
@@ -103,9 +109,10 @@ raose = PythonOperator(
         priority_weight=20
         )
 
-gp >> rocdt >> rocde
-gp >> rmmt >> rmme
-gp >> rcfdft >> rcfdfe
-gp >> raost >> raose
-gp >> rqmst
-gp >> pbsv
+gp >> rpf
+rpf >> rocdt >> rocde
+rpf >> rmmt >> rmme
+rpf >> rcfdft >> rcfdfe
+rpf >> raost >> raose
+rpf >> rqmst
+rpf >> pbsv
