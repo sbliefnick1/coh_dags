@@ -29,7 +29,7 @@ files = [
     ]
 
 for file in files:
-    sftp = SFTPOperator(task_id=file,
+    sftp = SFTPOperator(task_id=file.replace(' ', ''),
                         ssh_conn_id='claro_sftp',
                         local_filepath=f'/var/nfsshare/files/claro/{file}',
                         remote_filepath=f'/{file}',
