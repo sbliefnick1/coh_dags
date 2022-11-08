@@ -276,6 +276,13 @@ scmic = PythonOperator(
         dag=dag
         )
 
+scmp = PythonOperator(
+        task_id='refresh_scm_procurement',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '4d10e729-5a83-4261-9367-8af4bc3a083c'},
+        dag=dag
+        )
+
 si >> sv
 si >> scws
 si >> scmi
@@ -293,6 +300,7 @@ sv >> sp
 sv >> spc
 sv >> srt
 sv >> srq
+sv >> scmp
 
 jl >> jlr >> jlv >> jlcm >> jlc
 
