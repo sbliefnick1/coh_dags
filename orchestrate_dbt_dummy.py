@@ -22,14 +22,15 @@ dag = DAG('orchestrate_dbt_dummy', default_args=default_args, catchup=False, sch
 url = 'http://build.coh.org:37000/manifest.json'
 manifest = requests.get(url).json()
 
+ops = {}
 for node in manifest['nodes'].keys():
     task = DummyOperator(
         task_id = node,
         dag=dag,
     )
+    ops[node] = task
 
-parents = manifest['child_map'].keys()
-for node in parents:
-    if node.split('.')[0] == 'model':
-        for child in manifest['child_map'][node]:
-            node >> child
+for parent in manifest['child_map'].keys():
+    if parent.split('.')[0] == 'model':
+        for child in manifest['child_map'][parent]:
+            ops[parent] >> ops[child]
