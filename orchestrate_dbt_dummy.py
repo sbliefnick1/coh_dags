@@ -32,4 +32,4 @@ parents = manifest['child_map'].keys()
 for node in parents:
     if node.split('.')[0] == 'model':
         for child in manifest['child_map'][node]:
-            f'{node} >> {child}'
+            node >> child
