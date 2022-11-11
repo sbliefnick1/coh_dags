@@ -30,9 +30,9 @@ for node in manifest['nodes'].keys():
     )
     ops[node] = task
 
+sources = set([s.split('.')[2] for s in manifest['sources'].keys()])
 srcs = {}
-for src_table in manifest['sources'].keys():
-    src = src_table.split('.')[2]
+for src in sources:
     task = DummyOperator(
         task_id = src,
         dag=dag,
