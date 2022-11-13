@@ -35,7 +35,8 @@ with DAG('orchestrate_dbt_dummy', default_args=default_args, catchup=False, sche
                 task = DummyOperator(task_id = f'run-{node_name}')
                 for test in child_map[node]:
                     if test.split('.')[0] == 'test':
-                        test_task = DummyOperator(task_id = f'test-{test}')
+                        test_name = test.split('.')[2]
+                        test_task = DummyOperator(task_id = f'test-{test_name}')
                         task >> test_task
                 ops[node] = tg
 
