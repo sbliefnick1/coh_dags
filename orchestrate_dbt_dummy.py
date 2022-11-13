@@ -30,11 +30,12 @@ parent_map = manifest['parent_map']
 ops = {}
 for node in manifest_nodes.keys():
     if node.split('.')[0] == 'model':
-        task = DummyOperator(
-            task_id = f'run-{node}',
-            dag=dag,
-        )
-        ops[node] = task
+        with TaskGroup(node, tooltip=f"Tasks for {node}") as tg:
+            task = DummyOperator(
+                task_id = f'run-{node}',
+                dag=dag,
+            )
+            ops[node] = tg
 
 sources = set([s.split('.')[2] for s in manifest_sources.keys()])
 srcs = {}
