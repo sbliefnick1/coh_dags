@@ -16,7 +16,7 @@ default_args = {
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 0,
-    }
+}
 
 with DAG('orchestrate_dbt_dummy', default_args=default_args, catchup=False, schedule_interval='0 1 * * *') as dag:
 
