@@ -40,7 +40,7 @@ sources = set([s.split('.')[2] for s in manifest_sources.keys()])
 srcs = {}
 for src in sources:
     task = DummyOperator(
-        task_id = f'dbt run --select {src}',
+        task_id = f'dbt run __select {src}',
         dag=dag,
     )
     srcs[src] = task
