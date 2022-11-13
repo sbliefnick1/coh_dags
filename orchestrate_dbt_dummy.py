@@ -3,6 +3,7 @@ from datetime import datetime
 import pendulum
 from airflow import DAG
 from airflow.operators.dummy import DummyOperator
+from airflow.utils.task_group import TaskGroup
 import requests
 
 
@@ -21,9 +22,13 @@ dag = DAG('orchestrate_dbt_dummy', default_args=default_args, catchup=False, sch
 
 url = 'http://build.coh.org:37000/manifest.json'
 manifest = requests.get(url).json()
+manifest_nodes = manifest['nodes']
+manifest_sources = manifest['sources']
+child_map = manifest['child_map']
+parent_map = manifest['parent_map']
 
 ops = {}
-for node in manifest['nodes'].keys():
+for node in manifest_nodes.keys():
     if node.split('.')[0] == 'model':
         task = DummyOperator(
             task_id = node,
@@ -31,7 +36,7 @@ for node in manifest['nodes'].keys():
         )
         ops[node] = task
 
-sources = set([s.split('.')[2] for s in manifest['sources'].keys()])
+sources = set([s.split('.')[2] for s in manifest_sources.keys()])
 srcs = {}
 for src in sources:
     task = DummyOperator(
@@ -40,15 +45,15 @@ for src in sources:
     )
     srcs[src] = task
 
-for parent in manifest['child_map'].keys():
+for parent in child_map.keys():
     if parent.split('.')[0] == 'model':
-        for child in manifest['child_map'][parent]:
+        for child in child_map[parent]:
             if child.split('.')[0] == 'model':
                 ops[parent] >> ops[child]
 
-for node in manifest['parent_map'].keys():
+for node in parent_map.keys():
     if node.split('.')[0] == 'model':
-        for parent in manifest['parent_map'][node]:
+        for parent in parent_map[node]:
             parent_split = parent.split('.')
             if parent_split[0] == 'source':
                 src_sys = parent_split[2]
