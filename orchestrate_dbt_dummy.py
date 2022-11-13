@@ -18,44 +18,38 @@ default_args = {
     'retries': 0,
     }
 
-dag = DAG('orchestrate_dbt_dummy', default_args=default_args, catchup=False, schedule_interval='0 1 * * *')
+with DAG('orchestrate_dbt_dummy', default_args=default_args, catchup=False, schedule_interval='0 1 * * *') as dag:
 
-url = 'http://build.coh.org:37000/manifest.json'
-manifest = requests.get(url).json()
-manifest_nodes = manifest['nodes']
-manifest_sources = manifest['sources']
-child_map = manifest['child_map']
-parent_map = manifest['parent_map']
+    url = 'http://build.coh.org:37000/manifest.json'
+    manifest = requests.get(url).json()
+    manifest_nodes = manifest['nodes']
+    manifest_sources = manifest['sources']
+    child_map = manifest['child_map']
+    parent_map = manifest['parent_map']
 
-ops = {}
-for node in manifest_nodes.keys():
-    if node.split('.')[0] == 'model':
-        with TaskGroup(node, tooltip=f"Tasks for {node}") as tg:
-            task = DummyOperator(
-                task_id = f'run-{node}',
-                dag=dag,
-            )
-            ops[node] = tg
+    ops = {}
+    for node in manifest_nodes.keys():
+        if node.split('.')[0] == 'model':
+            with TaskGroup(node, tooltip=f"Tasks for {node}") as tg:
+                task = DummyOperator(task_id = f'run-{node}')
+                ops[node] = tg
 
-sources = set([s.split('.')[2] for s in manifest_sources.keys()])
-srcs = {}
-for src in sources:
-    task = DummyOperator(
-        task_id = f'freshness-{src}',
-        dag=dag,
-    )
-    srcs[src] = task
+    sources = set([s.split('.')[2] for s in manifest_sources.keys()])
+    srcs = {}
+    for src in sources:
+        task = DummyOperator(task_id = f'freshness-{src}')
+        srcs[src] = task
 
-for parent in child_map.keys():
-    if parent.split('.')[0] == 'model':
-        for child in child_map[parent]:
-            if child.split('.')[0] == 'model':
-                ops[parent] >> ops[child]
+    for parent in child_map.keys():
+        if parent.split('.')[0] == 'model':
+            for child in child_map[parent]:
+                if child.split('.')[0] == 'model':
+                    ops[parent] >> ops[child]
 
-for node in parent_map.keys():
-    if node.split('.')[0] == 'model':
-        for parent in parent_map[node]:
-            parent_split = parent.split('.')
-            if parent_split[0] == 'source':
-                src_sys = parent_split[2]
-                srcs[src_sys] >> ops[node]
+    for node in parent_map.keys():
+        if node.split('.')[0] == 'model':
+            for parent in parent_map[node]:
+                parent_split = parent.split('.')
+                if parent_split[0] == 'source':
+                    src_sys = parent_split[2]
+                    srcs[src_sys] >> ops[node]
