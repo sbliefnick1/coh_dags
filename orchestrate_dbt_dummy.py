@@ -32,12 +32,15 @@ with DAG('orchestrate_dbt_dummy', default_args=default_args, catchup=False, sche
         if node.split('.')[0] == 'model':
             with TaskGroup(node, tooltip=f"Tasks for {node}") as tg:
                 task = DummyOperator(task_id = f'run-{node}')
+                for test in ['test1', 'test2']:
+                    test_task = DummyOperator(task_id = f'test-{test}')
+                    node >> test_task
                 ops[node] = tg
 
     sources = set([s.split('.')[2] for s in manifest_sources.keys()])
     srcs = {}
     for src in sources:
-        task = DummyOperator(task_id = f'freshness-{src}')
+        task = DummyOperator(task_id = f'sensor-{src}')
         srcs[src] = task
 
     for parent in child_map.keys():
