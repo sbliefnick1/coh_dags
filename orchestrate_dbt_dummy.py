@@ -24,11 +24,12 @@ manifest = requests.get(url).json()
 
 ops = {}
 for node in manifest['nodes'].keys():
-    task = DummyOperator(
-        task_id = node,
-        dag=dag,
-    )
-    ops[node] = task
+    if node.split('.')[0] == 'model':
+        task = DummyOperator(
+            task_id = node,
+            dag=dag,
+        )
+        ops[node] = task
 
 sources = set([s.split('.')[2] for s in manifest['sources'].keys()])
 srcs = {}
@@ -42,12 +43,13 @@ for src in sources:
 for parent in manifest['child_map'].keys():
     if parent.split('.')[0] == 'model':
         for child in manifest['child_map'][parent]:
-            ops[parent] >> ops[child]
+            if child.split('.')[0] == 'model':
+                ops[parent] >> ops[child]
 
-for node in manifest['parent_map'].keys():
-    if node.split('.')[0] == 'model':
-        for parent in manifest['parent_map'][node]:
-            parent_split = parent.split('.')
-            if parent_split[0] == 'source':
-                src_sys = parent_split[2]
-                srcs[src_sys] >> ops[node]
+# for node in manifest['parent_map'].keys():
+#     if node.split('.')[0] == 'model':
+#         for parent in manifest['parent_map'][node]:
+#             parent_split = parent.split('.')
+#             if parent_split[0] == 'source':
+#                 src_sys = parent_split[2]
+#                 srcs[src_sys] >> ops[node]
