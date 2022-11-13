@@ -31,7 +31,7 @@ ops = {}
 for node in manifest_nodes.keys():
     if node.split('.')[0] == 'model':
         task = DummyOperator(
-            task_id = node,
+            task_id = f'dbt run {node}',
             dag=dag,
         )
         ops[node] = task
@@ -40,7 +40,7 @@ sources = set([s.split('.')[2] for s in manifest_sources.keys()])
 srcs = {}
 for src in sources:
     task = DummyOperator(
-        task_id = f'dbt run __select {src}',
+        task_id = src,
         dag=dag,
     )
     srcs[src] = task
