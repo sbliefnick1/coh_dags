@@ -31,8 +31,9 @@ with DAG('orchestrate_dbt_dummy', default_args=default_args, catchup=False, sche
     for node in manifest_nodes.keys():
         if node.split('.')[0] == 'model':
             with TaskGroup(node, tooltip=f"Tasks for {node}") as tg:
-                task = DummyOperator(task_id = f'run-{node}')
-                for test in child_map[task]:
+                node_name = node.split('.')[2]
+                task = DummyOperator(task_id = f'run-{node_name}')
+                for test in child_map[node]:
                     if test.split('.')[0] == 'test':
                         test_task = DummyOperator(task_id = f'test-{test}')
                         task >> test_task
