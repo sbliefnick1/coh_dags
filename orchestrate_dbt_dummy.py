@@ -31,7 +31,7 @@ ops = {}
 for node in manifest_nodes.keys():
     if node.split('.')[0] == 'model':
         task = DummyOperator(
-            task_id = f'dbt run {node}',
+            task_id = f'dbt_run_{node}',
             dag=dag,
         )
         ops[node] = task
