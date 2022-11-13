@@ -46,10 +46,10 @@ for parent in manifest['child_map'].keys():
             if child.split('.')[0] == 'model':
                 ops[parent] >> ops[child]
 
-# for node in manifest['parent_map'].keys():
-#     if node.split('.')[0] == 'model':
-#         for parent in manifest['parent_map'][node]:
-#             parent_split = parent.split('.')
-#             if parent_split[0] == 'source':
-#                 src_sys = parent_split[2]
-#                 srcs[src_sys] >> ops[node]
+for node in manifest['parent_map'].keys():
+    if node.split('.')[0] == 'model':
+        for parent in manifest['parent_map'][node]:
+            parent_split = parent.split('.')
+            if parent_split[0] == 'source':
+                src_sys = parent_split[2]
+                srcs[src_sys] >> ops[node]
