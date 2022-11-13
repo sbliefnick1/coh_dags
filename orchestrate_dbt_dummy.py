@@ -34,7 +34,7 @@ with DAG('orchestrate_dbt_dummy', default_args=default_args, catchup=False, sche
                 task = DummyOperator(task_id = f'run-{node}')
                 for test in ['test1', 'test2']:
                     test_task = DummyOperator(task_id = f'test-{test}')
-                    node >> test_task
+                    task >> test_task
                 ops[node] = tg
 
     sources = set([s.split('.')[2] for s in manifest_sources.keys()])
