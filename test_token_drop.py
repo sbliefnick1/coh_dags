@@ -8,7 +8,7 @@ from airflow.operators.dummy import DummyOperator
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2022, 11, 30, tzinfo=pendulum.timezone('America/Los_Angeles')),
+    'start_date': datetime(2022, 11, 28, tzinfo=pendulum.timezone('America/Los_Angeles')),
     'concurrency': 8,
     'email': ['jharris@coh.org'],
     'email_on_failure': False,
