@@ -44,6 +44,9 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
         task_id='clarity_fresness',
         conn_id='qa_ebi_datamart',
         sql=clarity_token_query,
+        pool='default_pool',
+        poke_interval=300,
+        mode='reschedule',
         dag=dag,
     )
 
@@ -51,6 +54,9 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
         task_id='epsi_fresness',
         conn_id='qa_ebi_datamart',
         sql=epsi_token_query,
+        pool='default_pool',
+        poke_interval=300,
+        mode='reschedule',
         dag=dag,
     )
 
@@ -58,6 +64,9 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
         task_id='morrisey_fresness',
         conn_id='qa_ebi_datamart',
         sql=morrisey_token_query,
+        pool='default_pool',
+        poke_interval=300,
+        mode='reschedule',
         dag=dag,
     )
 
@@ -65,16 +74,19 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
     # define dummy transform tasks
     clarity_trans= DummyOperator(
         task_id='clarity_only_transform',
+        pool='default_pool',
         dag=dag,
     )
 
     clarity_epsi_trans = DummyOperator(
         task_id='clarity_plus_epsi_transform',
+        pool='default_pool',
         dag=dag,
     )
 
     clarity_morr_trans = DummyOperator(
         task_id='clarity_plus_morrisey_transform',
+        pool='default_pool',
         dag=dag,
     )
 
