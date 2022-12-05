@@ -13,7 +13,7 @@ default_args = {
     'email': ['jharris@coh.org'],
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 1,
+    'retries': 45,
 }
 
 clarity_token_query = '''
@@ -37,15 +37,17 @@ morrisey_token_query = '''
     where SRC_NM = 'MOR2DM'
 '''
 
+poke_int = 600
+
 with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_interval='5 0 * * *') as dag:
-    
+
     # define sensor tasks
     clarity_fresh = SqlSensor(
         task_id='clarity_fresness',
         conn_id='qa_ebi_datamart',
         sql=clarity_token_query,
         pool='default_pool',
-        poke_interval=300,
+        poke_interval=poke_int,
         mode='reschedule',
         dag=dag,
     )
@@ -55,7 +57,7 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
         conn_id='qa_ebi_datamart',
         sql=epsi_token_query,
         pool='default_pool',
-        poke_interval=300,
+        poke_interval=poke_int,
         mode='reschedule',
         dag=dag,
     )
@@ -65,7 +67,7 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
         conn_id='qa_ebi_datamart',
         sql=morrisey_token_query,
         pool='default_pool',
-        poke_interval=300,
+        poke_interval=poke_int,
         mode='reschedule',
         dag=dag,
     )
