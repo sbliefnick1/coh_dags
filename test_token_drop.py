@@ -18,21 +18,36 @@ default_args = {
 
 clarity_token_query = '''
     select
-        case when max(DRP_TS) < getdate() then 1 else 0 end
+        case
+            when cast(max(DRP_TS) as date) = cast(getdate() as date)
+                    and max(DRP_TS) < getdate() 
+                then 1
+            else 0
+        end
     from FI_EDW_TOKEN.dbo.EDW_TOKEN_DROPS with(nolock)
     where SRC_NM = 'CLARITY'
 '''
 
 epsi_token_query = '''
     select
-        case when max(DRP_TS) < getdate() then 1 else 0 end
+        case
+            when cast(max(DRP_TS) as date) = cast(getdate() as date)
+                    and max(DRP_TS) < getdate() 
+                then 1
+            else 0
+        end
     from FI_EDW_TOKEN.dbo.EDW_TOKEN_DROPS with(nolock)
     where SRC_NM = 'EPSI2DM'
 '''
 
 morrisey_token_query = '''
     select
-        case when max(DRP_TS) < getdate() then 1 else 0 end
+        case
+            when cast(max(DRP_TS) as date) = cast(getdate() as date)
+                    and max(DRP_TS) < getdate() 
+                then 1
+            else 0
+        end
     from FI_EDW_TOKEN.dbo.EDW_TOKEN_DROPS with(nolock)
     where SRC_NM = 'MOR2DM'
 '''
