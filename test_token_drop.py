@@ -17,7 +17,7 @@ default_args = {
 }
 
 def token_query(src):
-    sql = f'''
+    token_query_sql = f'''
         select
             case
                 when cast(max(DRP_TS) as date) = cast(getdate() as date)
@@ -29,9 +29,12 @@ def token_query(src):
         where SRC_NM = '{src}'
     '''
 
+    return token_query_sql
+
+
 poke_int = 600
 
-with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_interval='5 0 * * *') as dag:
+with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_interval='5 2 * * *') as dag:
 
     # define sensor tasks
     clarity_fresh = SqlSensor(
