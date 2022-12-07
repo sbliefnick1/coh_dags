@@ -16,41 +16,18 @@ default_args = {
     'retries': 45,
 }
 
-clarity_token_query = '''
-    select
-        case
-            when cast(max(DRP_TS) as date) = cast(getdate() as date)
-                    and max(DRP_TS) < getdate() 
-                then 1
-            else 0
-        end
-    from FI_EDW_TOKEN.dbo.EDW_TOKEN_DROPS with(nolock)
-    where SRC_NM = 'CLARITY'
-'''
-
-epsi_token_query = '''
-    select
-        case
-            when cast(max(DRP_TS) as date) = cast(getdate() as date)
-                    and max(DRP_TS) < getdate() 
-                then 1
-            else 0
-        end
-    from FI_EDW_TOKEN.dbo.EDW_TOKEN_DROPS with(nolock)
-    where SRC_NM = 'EPSI2DM'
-'''
-
-morrisey_token_query = '''
-    select
-        case
-            when cast(max(DRP_TS) as date) = cast(getdate() as date)
-                    and max(DRP_TS) < getdate() 
-                then 1
-            else 0
-        end
-    from FI_EDW_TOKEN.dbo.EDW_TOKEN_DROPS with(nolock)
-    where SRC_NM = 'MOR2DM'
-'''
+def token_query(src):
+    sql = f'''
+        select
+            case
+                when cast(max(DRP_TS) as date) = cast(getdate() as date)
+                        and max(DRP_TS) < getdate() 
+                    then 1
+                else 0
+            end
+        from FI_EDW_TOKEN.dbo.EDW_TOKEN_DROPS with(nolock)
+        where SRC_NM = '{src}'
+    '''
 
 poke_int = 600
 
@@ -60,7 +37,7 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
     clarity_fresh = SqlSensor(
         task_id='clarity_fresness',
         conn_id='qa_ebi_datamart',
-        sql=clarity_token_query,
+        sql=token_query('CLARITY'),
         pool='default_pool',
         poke_interval=poke_int,
         mode='reschedule',
@@ -70,7 +47,7 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
     epsi_fresh = SqlSensor(
         task_id='epsi_fresness',
         conn_id='qa_ebi_datamart',
-        sql=epsi_token_query,
+        sql=token_query('EPSI2DM'),
         pool='default_pool',
         poke_interval=poke_int,
         mode='reschedule',
@@ -80,7 +57,7 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
     morrisey_fresh = SqlSensor(
         task_id='morrisey_fresness',
         conn_id='qa_ebi_datamart',
-        sql=morrisey_token_query,
+        sql=token_query('MOR2DM'),
         pool='default_pool',
         poke_interval=poke_int,
         mode='reschedule',
