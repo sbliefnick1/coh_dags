@@ -53,13 +53,13 @@ datasources = [
     {'task_id': 'refresh_pb_tdl_transactions',
      'datasource_id': '8a83879d-6937-4a31-a784-21107733854f'},
     {'task_id': 'refresh_epsi_department_utilization',
-     'datasource_id': 'ba019a61-06d5-41ca-b2a0-904ca811b922'},
+     'datasource_id': 'a87ba706-7940-4aa9-b02e-462a6a1a672c'},
     {'task_id': 'refresh_corporate_accounting_ap_aging',
      'datasource_id': '04b12b4d-fb90-483e-b0ad-653f4e85867a'},
     {'task_id': 'refresh_daily_tray_delivery',
      'datasource_id': '009749f0-02e0-443a-ad3d-b6b551192231'},
     {'task_id': 'refresh_cancer_center_publications',
-     'datasource_id': 'd441b956-7fc8-4e2b-a2a1-1a6b483a81c6'},
+     'datasource_id': '726198cb-9826-4b38-b0f2-aeecaf391bd8'},
     ]
 
 for d in datasources:
