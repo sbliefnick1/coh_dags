@@ -18,14 +18,7 @@ default_args = {
 dag = DAG('claro_one_time', default_args=default_args, catchup=False, schedule_interval=None)
 
 files = [
-    'Claro Healthcare Data Month -tbl-202001-202004.xlsx',
-    'Claro Healthcare Data Month -tbl-202005-202008.xlsx',
-    'Claro Healthcare Data Month -tbl-202009-202012.xlsx',
-    'Claro Healthcare Data Month -tbl-202101-202104.xlsx',
-    'Claro Healthcare Data Month -tbl-202105-202108.xlsx',
-    'Claro Healthcare Data Month -tbl-202109-202112.xlsx',
-    'Claro Healthcare Data Month -tbl-202201-202204.xlsx',
-    'Claro Healthcare Data Month -tbl-202205-202208.xlsx',
+    'Clarity_PRD_Report_c_Patient_Account_File.csv',
     ]
 
 for file in files:
