@@ -18,7 +18,7 @@ default_args = {
 dag = DAG('claro_one_time', default_args=default_args, catchup=False, schedule_interval=None)
 
 files = [
-    'Clarity_PRD_Report_c_Patient_Account_File.csv',
+    'Claro_Healthcare_Data_Flat_Month-202209-202212.xlsx',
     ]
 
 for file in files:
