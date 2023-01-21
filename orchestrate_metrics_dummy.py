@@ -23,8 +23,8 @@ with DAG('orchestrate_metrics_dummy', default_args=default_args, catchup=False, 
     manifest = requests.get(url).json()
     deps = requests.get(url).json()['base_to_collection_dependencies']
     both = [d.split(" >> ") for d in deps]
-    bases = list(set([d[0].replace(".sql", "") for d in both]))
-    colls = list(set([d[1] for d in both]))
+    bases = list(set([d[0].replace(".sql", "").replace(" ", "_") for d in both]))
+    colls = list(set([d[1].replace(" ", "_") for d in both]))
 
     bs = {}
     for base in bases:
