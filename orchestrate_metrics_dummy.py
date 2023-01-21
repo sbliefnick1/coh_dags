@@ -23,21 +23,25 @@ with DAG('orchestrate_metrics_dummy', default_args=default_args, catchup=False, 
     manifest = requests.get(url).json()
     deps = requests.get(url).json()['base_to_collection_dependencies']
     both = [d.split(" >> ") for d in deps]
-    bases = list(set([d[0].replace(".sql", "").replace(" ", "_") for d in both]))
-    colls = list(set([d[1].replace(" ", "_") for d in both]))
+
+    def clean_name(n):
+        return n.replace(".sql", "").replace(" ", "_")
+
+    bases = list(set([f'base-{clean_name(d[0])}' for d in both]))
+    colls = list(set([f'collection-{clean_name(d[1])}' for d in both]))
 
     bs = {}
     for base in bases:
-        task = DummyOperator(task_id = base)
+        task = DummyOperator(task_id=base)
         bs[base] = task
 
     cs = {}
     for coll in colls:
-        task = DummyOperator(task_id = coll)
+        task = DummyOperator(task_id=coll)
         cs[coll] = task
 
     print(bs)
     for d in both:
-        f = d[0].replace(".sql", "").replace(" ", "_")
-        l = d[1].replace(" ", "_")
+        f = f'base-{clean_name(d[0])}'
+        l = f'collection-{clean_name(d[1])}'
         bs.get(f) >> cs.get(l)
