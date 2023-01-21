@@ -36,5 +36,5 @@ with DAG('orchestrate_metrics_dummy', default_args=default_args, catchup=False, 
         task = DummyOperator(task_id = f'refresh_{coll}_collection')
         cs[coll] = task
 
-    for bd in both:
-        [bse for bse in bs if bse.name == bd[0]][0] >> [cll for cll in cs if cll.name == bd[1]][0]
+    for b in both:
+        bs[b[0]] >> cs[b[1]]
