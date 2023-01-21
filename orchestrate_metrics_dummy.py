@@ -28,16 +28,16 @@ with DAG('orchestrate_metrics_dummy', default_args=default_args, catchup=False, 
 
     bs = {}
     for base in bases:
-        task = DummyOperator(task_id = f'refresh_{base}_parquet')
+        task = DummyOperator(task_id = base)
         bs[base] = task
 
     cs = {}
     for coll in colls:
-        task = DummyOperator(task_id = f'refresh_{coll}_collection')
+        task = DummyOperator(task_id = coll)
         cs[coll] = task
 
     print(bs)
     for d in both:
-        f = f'refresh_{d[0].replace(".sql", "").replace(" ", "_")}_parquet'
-        l = f'refresh_{d[1].replace(" ", "_")}_collection'
+        f = d[0].replace(".sql", "").replace(" ", "_")
+        l = d[1].replace(" ", "_")
         bs.get(f) >> cs.get(l)
