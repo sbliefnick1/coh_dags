@@ -37,7 +37,7 @@ with DAG('orchestrate_metrics_dummy', default_args=default_args, catchup=False, 
         cs[coll] = task
 
     print(bs)
-    for b in both:
-        f = f'refresh_{b[0].replace(".sql", "").replace(" ", "_")}_parquet'
-        l = f'refresh_{b[1].replace(" ", "_")}_collection'
-        bs[f] >> cs[l]
+    for d in both:
+        f = f'refresh_{d[0].replace(".sql", "").replace(" ", "_")}_parquet'
+        l = f'refresh_{d[1].replace(" ", "_")}_collection'
+        bs.get(f) >> cs.get(l)
