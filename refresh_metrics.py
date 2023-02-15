@@ -32,6 +32,8 @@ refresh_quality_monthly_scorecard_table = 'cd C:\\Anaconda\\ETL\\metrics\\collec
 refresh_access_operations_scorecard_table = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python access_operations_scorecard.py'
 propagate_base_sql_views = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python base_sql_propagation.py'
 refresh_parquet_files = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python refresh_parquet_files.py'
+refresh_cfin_metrics_daily = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python clinical_finance_metrics_daily.py'
+refresh_cfin_metrics_monthly = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python clinical_finance_metrics_monthly.py'
 
 
 def refresh_ds(tableau_server, tableau_authentication, ds_luid):
@@ -87,6 +89,18 @@ rpf = SSHOperator(ssh_conn_id='tableau_server',
                   dag=dag,
                   priority_weight=100)
 
+rcfmd = SSHOperator(ssh_conn_id='tableau_server',
+                  task_id='refresh_cfin_metrics_daily',
+                  command=refresh_cfin_metrics_daily,
+                  dag=dag,
+                  priority_weight=100)
+
+rcfmm = SSHOperator(ssh_conn_id='tableau_server',
+                  task_id='refresh_cfin_metrics_monthly',
+                  command=refresh_cfin_metrics_monthly,
+                  dag=dag,
+                  priority_weight=100)
+
 rocde = PythonOperator(
         task_id='refresh_oc_daily_financials_extract',
         python_callable=refresh_ds,
@@ -130,3 +144,5 @@ rpf >> rcfdft >> rcfdfe
 rpf >> raost >> raose
 rpf >> rqmst
 rpf >> pbsv
+rpf >> rcfmd
+rpf >> rcfmm
