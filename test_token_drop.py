@@ -39,7 +39,7 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
     # define sensor tasks
     clarity_fresh = SqlSensor(
         task_id='clarity_fresness',
-        conn_id='qa_ebi_datamart',
+        conn_id='ebi_datamart',
         sql=token_query('CLARITY'),
         pool='default_pool',
         poke_interval=poke_int,
@@ -49,7 +49,7 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
 
     epsi_fresh = SqlSensor(
         task_id='epsi_fresness',
-        conn_id='qa_ebi_datamart',
+        conn_id='ebi_datamart',
         sql=token_query('EPSI2DM'),
         pool='default_pool',
         poke_interval=poke_int,
@@ -59,7 +59,7 @@ with DAG('test_token_drop', default_args=default_args, catchup=False, schedule_i
 
     morrisey_fresh = SqlSensor(
         task_id='morrisey_fresness',
-        conn_id='qa_ebi_datamart',
+        conn_id='ebi_datamart',
         sql=token_query('MOR2DM'),
         pool='default_pool',
         poke_interval=poke_int,
