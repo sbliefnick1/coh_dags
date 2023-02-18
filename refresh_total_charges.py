@@ -4,6 +4,7 @@ import pendulum
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
+from airflow.providers.ssh.operators.ssh import SSHOperator
 from auxiliary.outils import refresh_tableau_extract
 
 default_args = {
@@ -19,8 +20,24 @@ default_args = {
 
 dag = DAG('refresh_total_charges', default_args=default_args, catchup=False, schedule_interval='0 17 * * *')
 
+bash = 'cd C:\\Anaconda\\ETL\\foundation && conda activate foundation && python DSS_D_Data.py'
+
 conn_id = 'ebi_datamart'
 pool_id = 'ebi_etl_pool'
+
+dss_d = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='refresh_dss_d_data',
+        command=bash,
+        dag=dag
+        )
+
+rvus = PythonOperator(
+        task_id='refresh_rvu_extract',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': 'c08148a1-cf27-48df-8c8f-fc29f2c77c12'},
+        dag=dag
+        )
 
 tc = MsSqlOperator(
         sql='EXEC EBI_Total_Charges_Clarity_Logic;',
@@ -66,4 +83,10 @@ cim = PythonOperator(
         dag=dag
         )
 
-tc >> new >> trj >> tcc >> cim >> kpi
+dss_d >> tc
+dss_d >> rvus
+tc >> new
+tc >> trj
+tc >> tcc
+tc >> cim
+tc >> kpi
