@@ -128,13 +128,12 @@ cim = PythonOperator(
         dag=dag
         )
 
-dss_d >> tcmd
+dss_d >> tcmd >> tcr
 dss_d >> rvus
 
-tcmd >> tcr >> tcf
-tcmd >> tclc >> tcf
-tcmd >> tcpc >> tcf
-tcmd >> tchc >> tcf
+tcr >> tclc >> tcf
+tcr >> tcpc >> tcf
+tcr >> tchc >> tcf
 
 tcf >> new
 tcf >> trj
