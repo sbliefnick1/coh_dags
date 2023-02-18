@@ -39,9 +39,54 @@ rvus = PythonOperator(
         dag=dag
         )
 
-tc = MsSqlOperator(
-        sql='EXEC EBI_Total_Charges_Clarity_Logic;',
-        task_id='load_total_charges_clarity',
+tcmd = MsSqlOperator(
+        sql='EXEC EBI_TC_MIN_DOS_Logic;',
+        task_id='load_ebi_tc_min_dos',
+        autocommit=True,
+        mssql_conn_id=conn_id,
+        pool=pool_id,
+        dag=dag
+        )
+
+tcr = MsSqlOperator(
+        sql='EXEC EBI_Total_Charges_Raw_Logic;',
+        task_id='load_ebi_total_charges_raw',
+        autocommit=True,
+        mssql_conn_id=conn_id,
+        pool=pool_id,
+        dag=dag
+        )
+
+tclc = MsSqlOperator(
+        sql='EXEC EBI_Total_Charges_Legacy_Charges;',
+        task_id='load_ebi_total_charges_legacy_charges',
+        autocommit=True,
+        mssql_conn_id=conn_id,
+        pool=pool_id,
+        dag=dag
+        )
+
+tcpc = MsSqlOperator(
+        sql='EXEC EBI_Total_Charges_PB_Charges;',
+        task_id='load_ebi_total_charges_pb_charges',
+        autocommit=True,
+        mssql_conn_id=conn_id,
+        pool=pool_id,
+        dag=dag
+        )
+
+tchc = MsSqlOperator(
+        sql='EXEC EBI_Total_Charges_HB_Charges;',
+        task_id='load_ebi_total_charges_hb_charges',
+        autocommit=True,
+        mssql_conn_id=conn_id,
+        pool=pool_id,
+        dag=dag
+        )
+
+tcf = MsSqlOperator(
+        sql='EXEC EBI_Total_Charges_Final_Logic;',
+        task_id='load_ebi_total_charges_final',
         autocommit=True,
         mssql_conn_id=conn_id,
         pool=pool_id,
@@ -83,10 +128,16 @@ cim = PythonOperator(
         dag=dag
         )
 
-dss_d >> tc
+dss_d >> tcmd
 dss_d >> rvus
-tc >> new
-tc >> trj
-tc >> tcc
-tc >> cim
-tc >> kpi
+
+tcmd >> tcr
+tcmd >> tclc
+tcmd >> tcpc
+tcmd >> tchc
+
+tcf >> new
+tcf >> trj
+tcf >> tcc
+tcf >> cim
+tcf >> kpi
