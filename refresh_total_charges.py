@@ -131,10 +131,10 @@ cim = PythonOperator(
 dss_d >> tcmd
 dss_d >> rvus
 
-tcmd >> tcr
-tcmd >> tclc
-tcmd >> tcpc
-tcmd >> tchc
+tcmd >> tcr >> tcf
+tcmd >> tclc >> tcf
+tcmd >> tcpc >> tcf
+tcmd >> tchc >> tcf
 
 tcf >> new
 tcf >> trj
