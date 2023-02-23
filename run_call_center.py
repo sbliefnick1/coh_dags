@@ -114,6 +114,13 @@ CAES = PythonOperator(
         dag=dag
         )
 
+CLU = PythonOperator(
+        task_id='refresh_calabrio_license_usage',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': 'fc30c9ee-e7be-40fa-a596-6a3f75884be1'},
+        dag=dag
+        )
+
 # deps >> ACC
 # deps >> ACCA
 # deps >> AAGP
