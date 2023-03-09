@@ -57,7 +57,7 @@ datasources = [
     {'task_id': 'refresh_daily_tray_delivery',
      'datasource_id': '009749f0-02e0-443a-ad3d-b6b551192231'},
     {'task_id': 'refresh_cancer_center_publications',
-     'datasource_id': '726198cb-9826-4b38-b0f2-aeecaf391bd8'},
+     'datasource_id': 'a81be1ce-498c-4a79-8730-5fdcc20a1cec'},
     ]
 
 for d in datasources:
