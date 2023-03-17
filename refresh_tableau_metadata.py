@@ -47,6 +47,7 @@ taggings_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && p
 tags_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python tableau_tags.py'
 views_stats_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python tableau_views_stats.py'
 ds_owner_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python tableau_datasource_ownership.py'
+ebi_cols_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python ebi_column_usage.py'
 
 airflow_tasks_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python airflow_tasks.py'
 
@@ -216,6 +217,13 @@ at = SSHOperator(
         ssh_conn_id='tableau_server',
         task_id='airflow_tasks',
         command=airflow_tasks_bash,
+        dag=dag
+)
+
+ecu = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='ebi_column_usage',
+        command=ebi_cols_bash,
         dag=dag
 )
 
