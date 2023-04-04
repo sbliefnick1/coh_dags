@@ -277,9 +277,23 @@ scmic = PythonOperator(
         )
 
 scmp = PythonOperator(
-        task_id='refresh_scm_procurement',
+        task_id='refresh_scm_procurement_spend',
         python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '4d10e729-5a83-4261-9367-8af4bc3a083c'},
+        op_kwargs={'datasource_id': 'e97743f2-eac5-4553-ab38-99989498bd16'},
+        dag=dag
+        )
+
+scmid = PythonOperator(
+        task_id='refresh_scm_inventory_demand',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '834a01c3-ea84-4cac-8a9d-f63acbf9f84a'},
+        dag=dag
+        )
+
+scmta = PythonOperator(
+        task_id='refresh_scm_transport_activity',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': 'fee39e73-5d2d-480d-9e40-be594d08ed7a'},
         dag=dag
         )
 
@@ -289,6 +303,8 @@ si >> scmi
 si >> scmiu
 si >> scmibu
 si >> scmic
+si >> scmid
+si >> scmta
 
 sv >> vch
 sv >> vchw

@@ -58,6 +58,8 @@ datasources = [
      'datasource_id': '009749f0-02e0-443a-ad3d-b6b551192231'},
     {'task_id': 'refresh_cancer_center_publications',
      'datasource_id': 'a81be1ce-498c-4a79-8730-5fdcc20a1cec'},
+    {'task_id': 'refresh_340B_dsh_patient_days',
+     'datasource_id': '407119d8-7720-4304-9d97-776fcb65c987'}
     ]
 
 for d in datasources:
