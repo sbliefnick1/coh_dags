@@ -59,7 +59,11 @@ datasources = [
     {'task_id': 'refresh_cancer_center_publications',
      'datasource_id': 'a81be1ce-498c-4a79-8730-5fdcc20a1cec'},
     {'task_id': 'refresh_340B_dsh_patient_days',
-     'datasource_id': '407119d8-7720-4304-9d97-776fcb65c987'}
+     'datasource_id': '407119d8-7720-4304-9d97-776fcb65c987'},
+    {'task_id': 'refresh_dbt_run_results',
+     'datasource_id': '041df7f7-d700-45db-a6ca-f0a29d9a4260'},
+    {'task_id': 'refresh_dbt_test_results',
+     'datasource_id': '9d73ac49-14d2-4695-ac5e-b1b0640bfe81'}
     ]
 
 for d in datasources:
