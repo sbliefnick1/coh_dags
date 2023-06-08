@@ -34,6 +34,7 @@ propagate_base_sql_views = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda 
 refresh_parquet_files = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python refresh_parquet_files.py'
 refresh_cfin_metrics_daily = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python clinical_finance_metrics_daily.py'
 refresh_cfin_metrics_monthly = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python clinical_finance_metrics_monthly.py'
+refresh_daily_disease_metrics = 'cd C:\\Anaconda\\ETL\\metrics\\collections && conda activate metrics && python daily_disease_metrics.py'
 
 
 def refresh_ds(tableau_server, tableau_authentication, ds_luid):
@@ -98,6 +99,12 @@ rcfmd = SSHOperator(ssh_conn_id='tableau_server',
 rcfmm = SSHOperator(ssh_conn_id='tableau_server',
                   task_id='refresh_cfin_metrics_monthly',
                   command=refresh_cfin_metrics_monthly,
+                  dag=dag,
+                  priority_weight=100)
+
+rddm = SSHOperator(ssh_conn_id='tableau_server',
+                  task_id='refresh_daily_disease_metrics',
+                  command=refresh_daily_disease_metrics,
                   dag=dag,
                   priority_weight=100)
 
