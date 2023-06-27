@@ -25,16 +25,14 @@ with DAG('orchestrate_metrics_dummy', default_args=default_args, catchup=False, 
     def prep_name(node_name):
         return node_name.lower().replace(' ', '_').replace('(', '').replace(')', '').replace('/', '')
 
-    nodes = list(set([f"{prep_name(n['type'])}_{prep_name(n['name'])}" for n in data]))
-
     n = {}
-    for node in nodes:
+    for node in data:
+        node = f"{prep_name(node['type'])}_{prep_name(node['name'])}"
         task = DummyOperator(task_id=node)
         n[node] = task
 
-    for node in nodes:
-        if len(node['parents']) > 0:
-            for parent in node['parents']:
-                c = f"{node['type']}_{node['name']}"
-                p = f"{parent['type']}_{parent['name']}"
-                n.get(p) >> n.get(c)
+    for node in data:
+        for parent in node['parents']:
+            c = f"{prep_name(node['type'])}_{prep_name(node['name'])}"
+            p = f"{prep_name(parent['type'])}_{prep_name(parent['name'])}"
+            n.get(p) >> n.get(c)
