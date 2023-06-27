@@ -12,10 +12,10 @@ default_args = {
     'depends_on_past': False,
     'start_date': datetime(2018, 9, 12, tzinfo=pendulum.timezone('America/Los_Angeles')),
     'concurrency': 4,
-    'email': ['jharris@coh.org'],
+    'email': ['jharris@coh.org', 'nbyers@coh.org'],
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 0,
+    'retries': 1,
 }
 
 with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
@@ -43,7 +43,7 @@ with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, sch
         task = PythonOperator(
             task_id=node,
             python_callable=refresh_node,
-            op_kwargs={'url': refresh_url, 'api_token': Variable.get('metrics_api_token')},
+            op_kwargs={'node_url': refresh_url, 'api_token': Variable.get('metrics_api_token')},
         )
         n[node] = task
 
