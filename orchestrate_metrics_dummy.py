@@ -20,7 +20,7 @@ default_args = {
 with DAG('orchestrate_metrics_dummy', default_args=default_args, catchup=False, schedule_interval='0 1 * * *') as dag:
 
     url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6/nodes/'
-    data = requests.get(url).json()
+    data = requests.get(url, verify=False).json()
 
     nodes = list(set([f"{n['type']}_{n['name']}" for n in data]))
 
