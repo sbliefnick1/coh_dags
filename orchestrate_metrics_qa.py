@@ -23,25 +23,27 @@ with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, sch
     base_url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6'
     url = f'{base_url}/nodes/'
     data = requests.get(url, verify=False).json()
+    token = Variable.get('metrics_api_token')
 
     def prep_name(node_name):
         return node_name.lower().replace(' ', '_').replace('(', '').replace(')', '').replace('/', '')
+    
+    def refresh_node(node_url, api_token):
+        requests.put(
+            node_url,
+            headers={'x-access-token': api_token},
+            verify=False,
+        )
 
     n = {}
     for node in data:
-
         node_type = prep_name(node['type'])
         refresh_url = f"{base_url}/refresh/{node_type}/qa/{node['id']}"
         node = f"{node_type}_{prep_name(node['name'])}"
-        token = Variable.get('metrics_api_token')
-
         task = PythonOperator(
             task_id=node,
-            python_callable=requests.put(
-                refresh_url,
-                headers={'x-access-token': token},
-                verify=False,
-            ),
+            python_callable=refresh_node,
+            op_kwargs={'url': refresh_url, 'api_token': Variable.get('metrics_api_token')},
         )
         n[node] = task
 
