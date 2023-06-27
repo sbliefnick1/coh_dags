@@ -11,7 +11,7 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'start_date': datetime(2018, 9, 12, tzinfo=pendulum.timezone('America/Los_Angeles')),
-    'concurrency': 4,
+    'pool': 'metrics_pool',
     'email': ['jharris@coh.org', 'nbyers@coh.org'],
     'email_on_failure': False,
     'email_on_retry': False,
