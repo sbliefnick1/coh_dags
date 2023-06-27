@@ -34,7 +34,9 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
             verify=False,
         )
         if resp.status_code != 200:
-            raise ValueError(f'PUT operation failed with response: {resp.content}')
+            print(f'Sending PUT request to {node_url}')
+            print(resp.content)
+            raise ValueError(f'PUT operation failed with response')
 
     n = {}
     for node in data:
