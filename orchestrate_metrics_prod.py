@@ -17,7 +17,7 @@ default_args = {
     'retries': 1,
 }
 
-with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
+with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, schedule_interval='35 5 * * *') as dag:
 
     base_url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6'
     url = f'{base_url}/nodes/'
