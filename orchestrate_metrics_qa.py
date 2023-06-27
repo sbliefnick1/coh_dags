@@ -2,7 +2,8 @@ from datetime import datetime
 
 import pendulum
 from airflow import DAG
-from airflow.operators.dummy import DummyOperator
+from airflow.models import Variable
+from airflow.operators.python import PythonOperator
 import requests
 
 
@@ -19,7 +20,8 @@ default_args = {
 
 with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
 
-    url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6/nodes/'
+    base_url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6'
+    url = f'{base_url}/nodes/'
     data = requests.get(url, verify=False).json()
 
     def prep_name(node_name):
@@ -27,8 +29,20 @@ with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, sch
 
     n = {}
     for node in data:
-        node = f"{prep_name(node['type'])}_{prep_name(node['name'])}"
-        task = DummyOperator(task_id=node)
+
+        node_type = prep_name(node['type'])
+        refresh_url = f"{base_url}/refresh/{node_type}/qa/{node['id']}"
+        node = f"{node_type}_{prep_name(node['name'])}"
+        token = Variable.get('metrics_api_token')
+
+        task = PythonOperator(
+            task_id=node,
+            python_callable=requests.put(
+                refresh_url,
+                headers={'x-access-token': token},
+                verify=False,
+            ),
+        )
         n[node] = task
 
     for node in data:
