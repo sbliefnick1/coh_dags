@@ -14,7 +14,7 @@ default_args = {
     'email': ['jharris@coh.org', 'nbyers@coh.org'],
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 1,
+    'retries': 2,
 }
 
 with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
