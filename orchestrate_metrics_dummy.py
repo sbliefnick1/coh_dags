@@ -22,7 +22,10 @@ with DAG('orchestrate_metrics_dummy', default_args=default_args, catchup=False, 
     url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6/nodes/'
     data = requests.get(url, verify=False).json()
 
-    nodes = list(set([f"{n['type']}_{n['name']}" for n in data]))
+    def prep_name(node_name):
+        return node_name.lower().replace(' ', '_')
+
+    nodes = list(set([f"{prep_name(n['type'])}_{prep_name(n['name'])}" for n in data]))
 
     n = {}
     for node in nodes:
