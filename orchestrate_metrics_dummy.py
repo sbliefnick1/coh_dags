@@ -35,6 +35,6 @@ with DAG('orchestrate_metrics_dummy', default_args=default_args, catchup=False, 
     for node in nodes:
         if len(node['parents']) > 0:
             for parent in node['parents']:
-                f = f"{node['type']}_{node['name']}"
-                l = f"{parent['type']}_{parent['name']}"
-                n.get(f) >> n.get(l)
+                c = f"{node['type']}_{node['name']}"
+                p = f"{parent['type']}_{parent['name']}"
+                n.get(p) >> n.get(c)
