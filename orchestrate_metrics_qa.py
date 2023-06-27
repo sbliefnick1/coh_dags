@@ -28,11 +28,13 @@ with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, sch
         return node_name.lower().replace(' ', '_').replace('(', '').replace(')', '').replace('/', '')
     
     def refresh_node(node_url, api_token):
-        requests.put(
+        resp = requests.put(
             node_url,
             headers={'x-access-token': api_token},
             verify=False,
         )
+        if resp.status_code != 200:
+            raise ValueError(f'PUT operation failed with response: {resp.text}')
 
     n = {}
     for node in data:
