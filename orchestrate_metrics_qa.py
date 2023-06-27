@@ -17,7 +17,7 @@ default_args = {
     'retries': 0,
 }
 
-with DAG('orchestrate_metrics_dummy', default_args=default_args, catchup=False, schedule_interval='0 1 * * *') as dag:
+with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
 
     url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6/nodes/'
     data = requests.get(url, verify=False).json()
