@@ -11,7 +11,6 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'start_date': datetime(2018, 9, 12, tzinfo=pendulum.timezone('America/Los_Angeles')),
-    'pool': 'metrics_pool',
     'email': ['jharris@coh.org', 'nbyers@coh.org'],
     'email_on_failure': False,
     'email_on_retry': False,
@@ -44,6 +43,7 @@ with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, sch
             task_id=node,
             python_callable=refresh_node,
             op_kwargs={'node_url': refresh_url, 'api_token': Variable.get('metrics_api_token')},
+            pool='metrics_pool'
         )
         n[node] = task
 
