@@ -23,7 +23,7 @@ with DAG('orchestrate_metrics_dummy', default_args=default_args, catchup=False, 
     data = requests.get(url, verify=False).json()
 
     def prep_name(node_name):
-        return node_name.lower().replace(' ', '_').replace('(', '').replace(')', '')
+        return node_name.lower().replace(' ', '_').replace('(', '').replace(')', '').replace('/', '')
 
     nodes = list(set([f"{prep_name(n['type'])}_{prep_name(n['name'])}" for n in data]))
 
