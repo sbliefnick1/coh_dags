@@ -5,6 +5,7 @@ from airflow import DAG
 from airflow.models import Variable
 from airflow.operators.python import PythonOperator
 import requests
+import json
 
 
 default_args = {
@@ -20,8 +21,9 @@ default_args = {
 with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
 
     base_url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6'
-    url = f'{base_url}/nodes/'
-    data = requests.get(url, verify=False).json()
+    json_path = '/var/nfsshare/etl_deps/metrics_deps.json'
+    with open(json_path, 'r') as infile:
+        data = json.load(infile)
     token = Variable.get('metrics_api_token')
 
     def prep_name(node_name):
