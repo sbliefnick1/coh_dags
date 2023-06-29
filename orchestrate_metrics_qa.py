@@ -43,11 +43,20 @@ with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, sch
         node_type = prep_name(node['type'])
         refresh_url = f"{base_url}/refresh/{node_type}/qa/{node['id']}"
         node = f"{node_type}_{prep_name(node['name'])}"
+
+        if node_type == 'base':
+            weight = 3
+        elif node_type == 'instance':
+            weight = 2
+        else:
+            weight = 1
+        
         task = PythonOperator(
             task_id=node,
             python_callable=refresh_node,
             op_kwargs={'node_url': refresh_url, 'api_token': Variable.get('metrics_api_token')},
-            pool='metrics_pool'
+            pool='metrics_pool',
+            priority_weight=weight,
         )
         n[node] = task
 
