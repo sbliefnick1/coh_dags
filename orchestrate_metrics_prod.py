@@ -6,6 +6,7 @@ from airflow.models import Variable
 from airflow.operators.python import PythonOperator
 import requests
 import json
+import time
 
 
 default_args = {
@@ -39,6 +40,7 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
             print(f'Sending PUT request to {node_url}')
             print(resp.content)
             raise ValueError(f'PUT operation failed with response')
+        time.sleep(10)
 
     n = {}
     for node in data:
