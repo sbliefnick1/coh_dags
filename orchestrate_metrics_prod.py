@@ -41,7 +41,7 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
         python_callable=refresh_node,
         op_kwargs={
             'node_url': f'{base_url}/refresh/base/prod/all',
-            'api_token': Variable.get('metrics_api_token')
+            'api_token': token
         },
         pool='metrics_pool',
     )
@@ -51,7 +51,7 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
         python_callable=refresh_node,
         op_kwargs={
             'node_url': f'{base_url}/refresh/instance/prod/all',
-            'api_token': Variable.get('metrics_api_token')
+            'api_token': token
         },
         pool='metrics_pool',
     )
@@ -61,7 +61,7 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
         python_callable=refresh_node,
         op_kwargs={
             'node_url': f'{base_url}/refresh/collection/prod/all',
-            'api_token': Variable.get('metrics_api_token')
+            'api_token': token
         },
         pool='metrics_pool',
     )
