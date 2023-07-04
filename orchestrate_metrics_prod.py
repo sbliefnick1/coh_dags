@@ -22,13 +22,7 @@ default_args = {
 with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
 
     base_url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6'
-    json_path = '/var/nfsshare/etl_deps/metrics_deps.json'
-    with open(json_path, 'r') as infile:
-        data = json.load(infile)
     token = Variable.get('metrics_api_token')
-
-    def prep_name(node_name):
-        return node_name.lower().replace(' ', '_').replace('(', '').replace(')', '').replace('/', '')
     
     def refresh_node(node_url, api_token):
         resp = requests.put(
@@ -42,30 +36,35 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
             raise ValueError(f'PUT operation failed with response')
         time.sleep(10)
 
-    n = {}
-    for node in data:
-        node_type = prep_name(node['type'])
-        refresh_url = f"{base_url}/refresh/{node_type}/prod/{node['id']}"
-        node = f"{node_type}_{prep_name(node['name'])}"
 
-        if node_type == 'base':
-            weight = 3
-        elif node_type == 'instance':
-            weight = 2
-        else:
-            weight = 1
-
-        task = PythonOperator(
-            task_id=node,
+        base_run = PythonOperator(
+            task_id='run_base_metrics',
             python_callable=refresh_node,
-            op_kwargs={'node_url': refresh_url, 'api_token': Variable.get('metrics_api_token')},
+            op_kwargs={
+                'node_url': f'{base_url}/refresh/base/prod/all',
+                'api_token': Variable.get('metrics_api_token')
+            },
             pool='metrics_pool',
-            priority_weight=weight,
         )
-        n[node] = task
 
-    for node in data:
-        for parent in node['parents']:
-            c = f"{prep_name(node['type'])}_{prep_name(node['name'])}"
-            p = f"{prep_name(parent['type'])}_{prep_name(parent['name'])}"
-            n.get(p) >> n.get(c)
+        instance_run = PythonOperator(
+            task_id='run_instance_metrics',
+            python_callable=refresh_node,
+            op_kwargs={
+                'node_url': f'{base_url}/refresh/instance/prod/all',
+                'api_token': Variable.get('metrics_api_token')
+            },
+            pool='metrics_pool',
+        )
+
+        collection_run = PythonOperator(
+            task_id='run_instance_metrics',
+            python_callable=refresh_node,
+            op_kwargs={
+                'node_url': f'{base_url}/refresh/collection/prod/all',
+                'api_token': Variable.get('metrics_api_token')
+            },
+            pool='metrics_pool',
+        )
+    
+        base_run >> instance_run >> collection_run
