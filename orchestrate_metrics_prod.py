@@ -36,34 +36,34 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
         time.sleep(10)
 
 
-        base_run = PythonOperator(
-            task_id='run_base_metrics',
-            python_callable=refresh_node,
-            op_kwargs={
-                'node_url': f'{base_url}/refresh/base/prod/all',
-                'api_token': Variable.get('metrics_api_token')
-            },
-            pool='metrics_pool',
-        )
+    base_run = PythonOperator(
+        task_id='run_base_metrics',
+        python_callable=refresh_node,
+        op_kwargs={
+            'node_url': f'{base_url}/refresh/base/prod/all',
+            'api_token': Variable.get('metrics_api_token')
+        },
+        pool='metrics_pool',
+    )
 
-        instance_run = PythonOperator(
-            task_id='run_instance_metrics',
-            python_callable=refresh_node,
-            op_kwargs={
-                'node_url': f'{base_url}/refresh/instance/prod/all',
-                'api_token': Variable.get('metrics_api_token')
-            },
-            pool='metrics_pool',
-        )
+    instance_run = PythonOperator(
+        task_id='run_instance_metrics',
+        python_callable=refresh_node,
+        op_kwargs={
+            'node_url': f'{base_url}/refresh/instance/prod/all',
+            'api_token': Variable.get('metrics_api_token')
+        },
+        pool='metrics_pool',
+    )
 
-        collection_run = PythonOperator(
-            task_id='run_instance_metrics',
-            python_callable=refresh_node,
-            op_kwargs={
-                'node_url': f'{base_url}/refresh/collection/prod/all',
-                'api_token': Variable.get('metrics_api_token')
-            },
-            pool='metrics_pool',
-        )
-    
-        base_run >> instance_run >> collection_run
+    collection_run = PythonOperator(
+        task_id='run_instance_metrics',
+        python_callable=refresh_node,
+        op_kwargs={
+            'node_url': f'{base_url}/refresh/collection/prod/all',
+            'api_token': Variable.get('metrics_api_token')
+        },
+        pool='metrics_pool',
+    )
+
+    base_run >> instance_run >> collection_run
