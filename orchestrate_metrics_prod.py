@@ -57,7 +57,7 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
     )
 
     collection_run = PythonOperator(
-        task_id='run_instance_metrics',
+        task_id='run_collection_metrics',
         python_callable=refresh_node,
         op_kwargs={
             'node_url': f'{base_url}/refresh/collection/prod/all',
