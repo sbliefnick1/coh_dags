@@ -54,7 +54,7 @@ with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, sch
         task = PythonOperator(
             task_id=node,
             python_callable=refresh_node,
-            op_kwargs={'node_url': refresh_url, 'api_token': Variable.get('metrics_api_token')},
+            op_kwargs={'node_url': refresh_url, 'api_token': token,
             pool='metrics_pool',
             priority_weight=weight,
         )
