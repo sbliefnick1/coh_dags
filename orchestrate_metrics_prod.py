@@ -29,9 +29,9 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
             headers={'x-access-token': api_token},
             verify=False,
         )
+        print(f'Sending PUT request to {node_url}')
+        print(resp.content)
         if resp.status_code != 200:
-            print(f'Sending PUT request to {node_url}')
-            print(resp.content)
             raise ValueError(f'PUT operation failed with response')
         time.sleep(10)
 
