@@ -25,7 +25,7 @@ dag = DAG(
         schedule_interval='0 20 * * *'
 )
 
-repo = 'C:\\Users\\ebitabuser\\Documets\\ebi-data-engineering'
+repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
 enviro = 'ebi_data_engineering'
 
 users_bash = f'cd {repo} && conda activate {enviro} && python tableau\\users.py'
