@@ -27,6 +27,7 @@ dag = DAG(
 
 repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
 tab_repo = f'{repo}\\tableau'
+aflw_repo = f'{repo}\\airflow'
 enviro = 'ebi_data_engineering'
 
 users_bash = f'cd {tab_repo} && conda activate {enviro} && python users.py'
@@ -53,7 +54,7 @@ views_stats_bash = f'cd {tab_repo} && conda activate {enviro} && python views_st
 ds_owner_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python tableau_datasource_ownership.py'
 ebi_cols_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python ebi_column_usage.py'
 
-airflow_tasks_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python airflow_tasks.py'
+airflow_tasks_bash = f'cd {aflw_repo} && conda activate {enviro} && python task_instance.py'
 
 workbooks_metadata_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_workbooks_metadata.py'
 user_site_role_hx_bash = 'cd C:\\Anaconda\\ETL\\tableau && python create_users_snapshot.py'
