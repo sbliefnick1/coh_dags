@@ -26,9 +26,10 @@ dag = DAG(
 )
 
 repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
+tab_repo = f'{repo}\\tableau'
 enviro = 'ebi_data_engineering'
 
-users_bash = f'cd {repo} && conda activate {enviro} && python tableau\\users.py'
+users_bash = f'cd {tab_repo} && conda activate {enviro} && python users.py'
 system_users_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python tableau_system_users.py'
 views_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python tableau_views.py'
 workbooks_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python tableau_workbooks.py'
