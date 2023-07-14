@@ -18,7 +18,7 @@ default_args = {
     'retries': 2,
 }
 
-with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, schedule_interval='50 5 * * *') as dag:
+with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, schedule_interval='0 11 * * *') as dag:
 
     base_url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6'
     token = Variable.get('metrics_api_token')

@@ -18,38 +18,38 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('run_clinical_finance_tasks', default_args=default_args, catchup=False, schedule_interval='35 5 * * *')
+with DAG('run_clinical_finance_tasks', default_args=default_args, catchup=False, schedule_interval='0 13 * * *') as dag:
 
-conn_id = 'ebi_datamart'
-pool_id = 'ebi_etl_pool'
+    conn_id = 'ebi_datamart'
+    pool_id = 'ebi_etl_pool'
 
-ebi_sql = """
-    exec EBI_Enterprise_Labor_Logic;
-"""
+    ebi_sql = """
+        exec EBI_Enterprise_Labor_Logic;
+    """
 
-refresh_maps_bash = 'cd C:\\Anaconda\\ETL\\clinical_finance && python cfin_maps_to_ebi.py'
+    refresh_maps_bash = 'cd C:\\Anaconda\\ETL\\clinical_finance && python cfin_maps_to_ebi.py'
 
-m = SSHOperator(
-    ssh_conn_id='tableau_server',
-    task_id='refresh_mapping_tables',
-    command=refresh_maps_bash,
-    dag=dag
-)
+    m = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='refresh_mapping_tables',
+        command=refresh_maps_bash,
+        dag=dag
+    )
 
-ebi = MsSqlOperator(
-    sql=ebi_sql,
-    task_id='refresh_labor_table_in_ebi',
-    autocommit=True,
-    mssql_conn_id=conn_id,
-    pool=pool_id,
-    dag=dag
-)
+    ebi = MsSqlOperator(
+        sql=ebi_sql,
+        task_id='refresh_labor_table_in_ebi',
+        autocommit=True,
+        mssql_conn_id=conn_id,
+        pool=pool_id,
+        dag=dag
+    )
 
-tab = PythonOperator(
-    task_id='refresh_labor_table_in_tableau',
-    python_callable=refresh_tableau_extract,
-    op_kwargs={'datasource_id': '149fbbfa-b146-454e-be88-f7c365ccafbe'},
-    dag=dag
-)
+    tab = PythonOperator(
+        task_id='refresh_labor_table_in_tableau',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '149fbbfa-b146-454e-be88-f7c365ccafbe'},
+        dag=dag
+    )
 
-ebi >> tab
+    ebi >> tab
