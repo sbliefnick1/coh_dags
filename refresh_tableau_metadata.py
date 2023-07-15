@@ -53,11 +53,10 @@ tags_bash = f'cd {tab_repo} && conda activate {enviro} && python tags.py'
 views_stats_bash = f'cd {tab_repo} && conda activate {enviro} && python views_stats.py'
 ds_owner_bash = f'cd {tab_repo} && conda activate {enviro} && python metadata_datasource_ownership.py'
 user_site_role_hx_bash = f'cd {tab_repo} && conda activate {enviro} && python site_users_snapshot.py'
+workbooks_metadata_bash = f'cd {tab_repo} && conda activate {enviro} && python workbooks_metadata.py'
 ebi_cols_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python ebi_column_usage.py'
 
 airflow_tasks_bash = f'cd {aflw_repo} && conda activate {enviro} && python task_instance.py'
-
-workbooks_metadata_bash = 'cd C:\\Anaconda\\ETL\\tableau && python tableau_workbooks_metadata.py'
 
 tps = PythonOperator(
         task_id='refresh_tableau_permissions_stats',
