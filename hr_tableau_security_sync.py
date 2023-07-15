@@ -15,29 +15,23 @@ default_args = {
     'retry_delay': timedelta(minutes=2),
     }
 
-dag = DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, schedule_interval='0 21 * * *')
+with DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, schedule_interval='0 21 * * *') as dag:
 
-hr_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python hr_security.py'
-# epic_bash = 'cd C:\\Anaconda\\ETL\\tableau && python TableauEpicSecuritySync.py'
-unlicense_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python Unlicense_Users.py'
-mf_sched = 'cd C:\\Anaconda\\ETL\\tableau && python MF_Schedulers_Security.py'
+    hr_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python hr_security.py'
+    unlicense_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python Unlicense_Users.py'
+    mf_sched = 'cd C:\\Anaconda\\ETL\\tableau && python MF_Schedulers_Security.py'
 
-t1 = SSHOperator(ssh_conn_id='tableau_server',
-                 task_id='Sync_HR_Users_And_Groups',
-                 command=hr_bash,
-                 dag=dag)
+    t1 = SSHOperator(ssh_conn_id='tableau_server',
+                    task_id='Sync_HR_Users_And_Groups',
+                    command=hr_bash,
+                    dag=dag)
 
-# t2 = SSHOperator(ssh_conn_id='tableau_server',
-#                  task_id='Sync_Epic_Users_And_Groups',
-#                  command=epic_bash,
-#                  dag=dag)
+    t3 = SSHOperator(ssh_conn_id='tableau_server',
+                    task_id='Unlicense_Tableau_Users',
+                    command=unlicense_bash,
+                    dag=dag)
 
-t3 = SSHOperator(ssh_conn_id='tableau_server',
-                 task_id='Unlicense_Tableau_Users',
-                 command=unlicense_bash,
-                 dag=dag)
-
-t4 = SSHOperator(ssh_conn_id='tableau_server',
-                 task_id='MF_Schedulers_Security',
-                 command=mf_sched,
-                 dag=dag)
+    t4 = SSHOperator(ssh_conn_id='tableau_server',
+                    task_id='MF_Schedulers_Security',
+                    command=mf_sched,
+                    dag=dag)
