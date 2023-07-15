@@ -29,12 +29,12 @@ with DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, s
                     command=hr_bash,
                     dag=dag)
 
-    t3 = SSHOperator(ssh_conn_id='tableau_server',
+    t2 = SSHOperator(ssh_conn_id='tableau_server',
                     task_id='Unlicense_Tableau_Users',
                     command=unlicense_bash,
                     dag=dag)
 
-    t4 = SSHOperator(ssh_conn_id='tableau_server',
+    t3 = SSHOperator(ssh_conn_id='tableau_server',
                     task_id='MF_Schedulers_Security',
                     command=mf_sched,
                     dag=dag)
