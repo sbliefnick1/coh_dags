@@ -15,11 +15,27 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-dag = DAG('retry_failed_tableau_extracts', default_args=default_args, catchup=False, schedule_interval='0 15 * * *')
+with DAG('retry_failed_tableau_extracts', default_args=default_args, catchup=False, schedule_interval='0 15 * * *') as dag:
 
-refresh_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python run_failed_extracts.py'
+    refresh_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python run_failed_extracts.py'
 
-r = SSHOperator(ssh_conn_id='tableau_server',
-                task_id='find_and_rerun_failed_extracts',
-                command=refresh_bash,
-                dag=dag)
+    repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
+    auto_repo = f'{repo}\\automations'
+    enviro = 'ebi_data_engineering'
+
+    git_pull_bash = f'cd {repo} && git pull'
+    users_bash = f'cd {auto_repo} && conda activate {enviro} && python rerun_failed_extracts.py'
+
+    git = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='git_pull_latest',
+        command=git_pull_bash,
+    )
+
+    r = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='find_and_rerun_failed_extracts',
+        command=refresh_bash,
+    )
+
+    git >> r
