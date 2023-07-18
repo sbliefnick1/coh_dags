@@ -28,7 +28,7 @@ with DAG('run_clinical_finance_tasks', default_args=default_args, catchup=False,
     """
 
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
-    cfin_repo = f'{repo}\\clinical finance'
+    cfin_repo = f'{repo}\\clinical_finance'
     enviro = 'ebi_data_engineering'
 
     git_pull_bash = f'cd {repo} && git pull'
