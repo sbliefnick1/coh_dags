@@ -253,6 +253,15 @@ git >> s
 git >> pj
 git >> wm
 git >> vs
+git >> ecu
+git >> at
+git >> tdso
+git >> wmr
+git >> uhx
+git >> vs
+git >> wtr
+git >> tps
+git >> tus
 
 wd >> wdr
 d >> wdr
