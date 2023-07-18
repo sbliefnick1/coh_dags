@@ -30,6 +30,8 @@ tab_repo = f'{repo}\\tableau'
 aflw_repo = f'{repo}\\airflow'
 enviro = 'ebi_data_engineering'
 
+git_pull_bash = f'cd {tab_repo} && git pull'
+
 users_bash = f'cd {tab_repo} && conda activate {enviro} && python users.py'
 system_users_bash = f'cd {tab_repo} && conda activate {enviro} && python system_users.py'
 views_bash = f'cd {tab_repo} && conda activate {enviro} && python views.py'
@@ -71,6 +73,11 @@ tus = PythonOperator(
         op_kwargs={'datasource_id': '733c626f-2729-479a-8cb6-d953fbeaed40'},
         dag=dag
         )
+
+git = SSHOperator(ssh_conn_id='tableau_server',
+                task_id='git_pull_latest',
+                command=git_pull_bash,
+                dag=dag)
 
 u = SSHOperator(ssh_conn_id='tableau_server',
                 task_id='tableau_users',
@@ -230,6 +237,22 @@ ecu = SSHOperator(
         command=ebi_cols_bash,
         dag=dag
 )
+git >> wd
+git >> d
+git >> w
+git >> dt
+git >> da
+git >> tas
+git >> ta
+git >> t
+git >> tg
+git >> v
+git >> u
+git >> su
+git >> s
+git >> pj
+git >> wm
+git >> vs
 
 wd >> wdr
 d >> wdr
