@@ -262,6 +262,12 @@ git >> vs
 git >> wtr
 git >> tps
 git >> tus
+git >> cv
+git >> dm
+git >> gu
+git >> g
+git >> sb
+git >> lr
 
 wd >> wdr
 d >> wdr
