@@ -30,7 +30,7 @@ tab_repo = f'{repo}\\tableau'
 aflw_repo = f'{repo}\\airflow'
 enviro = 'ebi_data_engineering'
 
-git_pull_bash = f'cd {tab_repo} && git pull'
+git_pull_bash = f'cd {repo} && git pull'
 
 users_bash = f'cd {tab_repo} && conda activate {enviro} && python users.py'
 system_users_bash = f'cd {tab_repo} && conda activate {enviro} && python system_users.py'
