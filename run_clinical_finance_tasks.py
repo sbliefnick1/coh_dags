@@ -31,13 +31,21 @@ with DAG('run_clinical_finance_tasks', default_args=default_args, catchup=False,
     cfin_repo = f'{repo}\\clinical finance'
     enviro = 'ebi_data_engineering'
 
+    git_pull_bash = f'cd {repo} && git pull'
     refresh_maps_bash = f'cd {cfin_repo} && conda activate {enviro} && python mappings_to_ebi.py'
 
-    m = SSHOperator(
+    git = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='git_pull_latest',
+        command=git_pull_bash,
+        dag=dag,
+    )
+
+    maps = SSHOperator(
         ssh_conn_id='tableau_server',
         task_id='refresh_mapping_tables',
         command=refresh_maps_bash,
-        dag=dag
+        dag=dag,
     )
 
     ebi = MsSqlOperator(
@@ -46,14 +54,17 @@ with DAG('run_clinical_finance_tasks', default_args=default_args, catchup=False,
         autocommit=True,
         mssql_conn_id=conn_id,
         pool=pool_id,
-        dag=dag
+        dag=dag,
     )
 
     tab = PythonOperator(
         task_id='refresh_labor_table_in_tableau',
         python_callable=refresh_tableau_extract,
         op_kwargs={'datasource_id': '149fbbfa-b146-454e-be88-f7c365ccafbe'},
-        dag=dag
+        dag=dag,
     )
+
+    git >> maps
+    git >> ebi
 
     ebi >> tab
