@@ -27,7 +27,11 @@ with DAG('run_clinical_finance_tasks', default_args=default_args, catchup=False,
         exec EBI_Enterprise_Labor_Logic;
     """
 
-    refresh_maps_bash = 'cd C:\\Anaconda\\ETL\\clinical_finance && python cfin_maps_to_ebi.py'
+    repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
+    cfin_repo = f'{repo}\\clinical finance'
+    enviro = 'ebi_data_engineering'
+
+    refresh_maps_bash = f'cd {cfin_repo} && conda activate {enviro} && python mappings_to_ebi.py'
 
     m = SSHOperator(
         ssh_conn_id='tableau_server',
