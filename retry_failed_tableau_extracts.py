@@ -17,14 +17,12 @@ default_args = {
 
 with DAG('retry_failed_tableau_extracts', default_args=default_args, catchup=False, schedule_interval='0 15 * * *') as dag:
 
-    refresh_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python run_failed_extracts.py'
-
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
     auto_repo = f'{repo}\\automations'
     enviro = 'ebi_data_engineering'
 
     git_pull_bash = f'cd {repo} && git pull'
-    users_bash = f'cd {auto_repo} && conda activate {enviro} && python rerun_failed_extracts.py'
+    refresh_bash = f'cd {auto_repo} && conda activate {enviro} && python rerun_failed_extracts.py'
 
     git = SSHOperator(
         ssh_conn_id='tableau_server',
