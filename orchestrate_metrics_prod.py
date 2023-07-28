@@ -104,6 +104,14 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
         pool=pool_id,
     )
 
+    qrrm_monthly = MsSqlOperator(
+        sql='drop table FI_DM_QRRM.dbo.Enterprise_Metrics_Quality_Monthly_Scorecard; select * into FI_DM_QRRM.dbo.Enterprise_Metrics_Quality_Monthly_Scorecard from FI_DM_METRICS.collections.quality_monthly_scorecard;',
+        task_id='qrrm_monthly_metrics_to_fi_dm_qrrm',
+        autocommit=True,
+        mssql_conn_id=conn_id,
+        pool=pool_id,
+    )
+
     oc_daily_extract = PythonOperator(
         task_id='refresh_oc_daily_financials_extract',
         python_callable=refresh_ds,
@@ -146,3 +154,4 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
     collection_run >> oc_daily_extract
     collection_run >> acces_ops_extract
     collection_run >> cfin_daily_flash_extract
+    collection_run >> qrrm_monthly
