@@ -21,7 +21,7 @@ default_args = {
     'retries': 2,
 }
 
-with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, schedule_interval='45 4 * * *') as dag:
+with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, schedule_interval='0 4 * * *') as dag:
 
     ebi = get_json_secret('ebi_db_conn')['db_connections']['fi_dm_ebi']
     auth = TSC.TableauAuth(ebi['user'].split(sep='\\')[1], ebi['password'])
