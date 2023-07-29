@@ -18,12 +18,12 @@ default_args = {
 
 with DAG('metrics_early_access_test', default_args=default_args, catchup=False, schedule_interval='0 3 * * *') as dag:
 
-    ebi = get_json_secret('ebi_db_conn')['db_connections']['fi_dm_metrics']
+    ebi = get_json_secret('ebi_db_conn')['db_connections']['fi_ebi']
     conn_id = 'ebi_datamart'
     pool_id = 'ebi_etl_pool'
 
     cfin_daily_flash = MsSqlOperator(
-        sql='select 1 as n;',
+        sql='use fi_dm_metrics; select 1 as n;',
         task_id='test__fi_dm_metrics__access',
         autocommit=True,
         mssql_conn_id=conn_id,
