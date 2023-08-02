@@ -80,30 +80,6 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
         pool='metrics_pool',
     )
 
-    cfin_daily_flash = MsSqlOperator(
-        sql='drop table FI_DM_CLINICAL_FINANCE.dbo.EBI_Metrics_Clinical_Finance_Daily_Flash; select * into FI_DM_CLINICAL_FINANCE.dbo.EBI_Metrics_Clinical_Finance_Daily_Flash from FI_DM_METRICS.collections.clinical_finance_daily_flash;',
-        task_id='cfin_daily_flash_to_fi_dm_clinical_finance',
-        autocommit=True,
-        mssql_conn_id=conn_id,
-        pool=pool_id,
-    )
-
-    cfin_daily_metrics = MsSqlOperator(
-        sql='drop table FI_DM_CLINICAL_FINANCE.dbo.EBI_Metrics_Clinical_Finance_Daily; select * into FI_DM_CLINICAL_FINANCE.dbo.EBI_Metrics_Clinical_Finance_Daily from FI_DM_METRICS.collections.clinical_finance_metrics_daily;',
-        task_id='cfin_daily_metrics_to_fi_dm_clinical_finance',
-        autocommit=True,
-        mssql_conn_id=conn_id,
-        pool=pool_id,
-    )
-
-    cfin_monthly_metrics = MsSqlOperator(
-        sql='drop table FI_DM_CLINICAL_FINANCE.dbo.EBI_Metrics_Clinical_Finance_Monthly; select * into FI_DM_CLINICAL_FINANCE.dbo.EBI_Metrics_Clinical_Finance_Monthly from FI_DM_METRICS.collections.clinical_finance_metrics_monthly;',
-        task_id='cfin_monthly_metrics_to_fi_dm_clinical_finance',
-        autocommit=True,
-        mssql_conn_id=conn_id,
-        pool=pool_id,
-    )
-
     qrrm_monthly = MsSqlOperator(
         sql='drop table FI_DM_QRRM.dbo.Enterprise_Metrics_Quality_Monthly_Scorecard; select * into FI_DM_QRRM.dbo.Enterprise_Metrics_Quality_Monthly_Scorecard from FI_DM_METRICS.collections.quality_monthly_scorecard;',
         task_id='qrrm_monthly_metrics_to_fi_dm_qrrm',
@@ -146,10 +122,6 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
     )
 
     base_run >> instance_run >> collection_run
-
-    collection_run >> cfin_daily_flash
-    collection_run >> cfin_daily_metrics
-    collection_run >> cfin_monthly_metrics
 
     collection_run >> oc_daily_extract
     collection_run >> acces_ops_extract
