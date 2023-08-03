@@ -30,7 +30,7 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
     conn_id = 'ebi_datamart'
     pool_id = 'ebi_etl_pool'
     
-    base_url = 'https://vpxrstudio.coh.org/content/f14d3e1b-b477-4660-ad17-c95b88a1bd09'
+    base_url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6'
     token = Variable.get('metrics_api_token')
 
     def refresh_ds(tableau_server, tableau_authentication, ds_luid):
