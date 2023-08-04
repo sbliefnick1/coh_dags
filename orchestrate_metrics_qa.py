@@ -18,8 +18,8 @@ default_args = {
 
 with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
 
-    conn_id = 'ebi_datamart'
-    pool_id = 'ebi_etl_pool'
+    conn_id = 'metrics_dm_qa'
+    pool_id = 'metrics_pool_qa'
     
     json_path = '/var/nfsshare/etl_deps/metrics_deps.json'
     with open(json_path, 'r') as infile:
