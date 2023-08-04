@@ -33,6 +33,8 @@ with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, sch
 
         node_type = prep_name(node['type'])
         task_name = prep_name(node['name'])
+        node_task_id = f"{node_type}_{task_name}"
+        node_sql = node['sql']
 
         if node_type == 'base':
             weight = 3
@@ -42,13 +44,13 @@ with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, sch
             weight = 1
         
         task = MsSqlOperator(
-            sql=node['sql'],
-            task_id=f"{node_type}_{task_name}",
+            sql=node_sql,
+            task_id=node_task_id,
             autocommit=True,
             mssql_conn_id=conn_id,
             pool=pool_id,
         )
-        n[node] = task
+        n[node_task_id] = task
 
     for node in data:
         for parent in node['parents']:
