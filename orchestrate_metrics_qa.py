@@ -2,9 +2,7 @@ from datetime import datetime
 
 import pendulum
 from airflow import DAG
-from airflow.models import Variable
-from airflow.operators.python import PythonOperator
-import requests
+from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
 import json
 
 
@@ -20,29 +18,21 @@ default_args = {
 
 with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
 
-    base_url = 'https://vpxrstudio.coh.org/content/5fceaff8-8811-41ac-be8b-88aae904b2b6'
+    conn_id = 'ebi_datamart'
+    pool_id = 'ebi_etl_pool'
+    
     json_path = '/var/nfsshare/etl_deps/metrics_deps.json'
     with open(json_path, 'r') as infile:
         data = json.load(infile)
-    token = Variable.get('metrics_api_token')
 
     def prep_name(node_name):
         return node_name.lower().replace(' ', '_').replace('(', '').replace(')', '').replace('/', '')
-    
-    def refresh_node(node_url, api_token):
-        resp = requests.put(
-            node_url,
-            headers={'x-access-token': api_token},
-            verify=False,
-        )
-        if resp.status_code != 200:
-            raise ValueError(f'PUT operation failed with response: {resp.text}')
 
     n = {}
     for node in data:
+
         node_type = prep_name(node['type'])
-        refresh_url = f"{base_url}/refresh/{node_type}/qa/{node['id']}"
-        node = f"{node_type}_{prep_name(node['name'])}"
+        task_name = prep_name(node['name'])
 
         if node_type == 'base':
             weight = 3
@@ -51,12 +41,12 @@ with DAG('orchestrate_metrics_qa', default_args=default_args, catchup=False, sch
         else:
             weight = 1
         
-        task = PythonOperator(
-            task_id=node,
-            python_callable=refresh_node,
-            op_kwargs={'node_url': refresh_url, 'api_token': token},
-            pool='metrics_pool',
-            priority_weight=weight,
+        task = MsSqlOperator(
+            sql=node['sql'],
+            task_id=f"{node_type}_{task_name}",
+            autocommit=True,
+            mssql_conn_id=conn_id,
+            pool=pool_id,
         )
         n[node] = task
 
