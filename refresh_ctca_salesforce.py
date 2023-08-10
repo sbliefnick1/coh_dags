@@ -15,7 +15,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-with DAG('refresh_ctca_salesforce', default_args=default_args, catchup=False, schedule_interval='0 2 * * *') as dag:
+with DAG('refresh_ctca_salesforce', default_args=default_args, catchup=False, schedule_interval='50 3 * * *') as dag:
 
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
     snwflk_repo = f'{repo}\\snowflake'
