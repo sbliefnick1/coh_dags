@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import pendulum
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
 from auxiliary.outils import refresh_tableau_extract
 
 default_args = {
@@ -18,6 +19,17 @@ default_args = {
 
 with DAG('refresh_total_charges', default_args=default_args, catchup=False, schedule_interval='0 17 * * *') as dag:
 
+    conn_id = 'ebi_datamart'
+    pool_id = 'ebi_etl_pool'
+    
+    mindos = MsSqlOperator(
+        sql='EXEC EBI_TC_MIN_DOS_Logic;',
+        task_id='load_ebi_tc_min_dos',
+        autocommit=True,
+        mssql_conn_id=conn_id,
+        pool=pool_id,
+    )
+    
     rvu = PythonOperator(
         task_id='refresh_rvu_extract',
         python_callable=refresh_tableau_extract,
@@ -49,5 +61,6 @@ with DAG('refresh_total_charges', default_args=default_args, catchup=False, sche
     )
 
     rvu
+    mindos >> tc
     tc >> new >> trj
     tc >> cim
