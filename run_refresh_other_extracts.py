@@ -63,7 +63,9 @@ datasources = [
     {'task_id': 'refresh_dbt_run_results',
      'datasource_id': '041df7f7-d700-45db-a6ca-f0a29d9a4260'},
     {'task_id': 'refresh_dbt_test_results',
-     'datasource_id': '9d73ac49-14d2-4695-ac5e-b1b0640bfe81'}
+     'datasource_id': '9d73ac49-14d2-4695-ac5e-b1b0640bfe81'},
+    {'task_id': 'refresh_spec_pharmacy_credit_card',
+     'datasource_id': '62f4c05c-355c-472a-a98f-df48dfc3fdbf'}
     ]
 
 for d in datasources:
