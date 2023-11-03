@@ -62,7 +62,15 @@ dcpdap = PythonOperator(
         dag=dag
         )
 
+pbs = PythonOperator(
+        task_id='refresh_professional_billing_summary',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': 'df657eee-298a-4c1a-8fa9-cf7c5324699b'},
+        dag=dag
+        )
+
 query >> hbs
 query >> dcc
 query >> dcnp
 query >> dcpdap
+query >> pbs
