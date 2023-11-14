@@ -20,14 +20,9 @@ with DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, s
     auto_repo = f'{repo}\\automations'
     enviro = 'ebi_data_engineering'
 
-    hr_bash = 'cd C:\\Anaconda\\ETL\\tableau && conda activate foundation && python hr_security.py'
     unlicense_bash = f'cd {auto_repo} && conda activate {enviro} && python tableau_unlicense_users.py'
-    mf_sched = 'cd C:\\Anaconda\\ETL\\tableau && python MF_Schedulers_Security.py'
+    mf_sched = f'cd {auto_repo} && conda activate {enviro} && python tableau_mf_scheduler_security.py'
 
-    t1 = SSHOperator(ssh_conn_id='tableau_server',
-                    task_id='Sync_HR_Users_And_Groups',
-                    command=hr_bash,
-                    dag=dag)
 
     t2 = SSHOperator(ssh_conn_id='tableau_server',
                     task_id='Unlicense_Tableau_Users',
