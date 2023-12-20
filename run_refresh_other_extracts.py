@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import pendulum
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
 from airflow.providers.ssh.operators.ssh import SSHOperator
 from auxiliary.outils import refresh_tableau_extract
 
@@ -84,3 +85,14 @@ sync = SSHOperator(ssh_conn_id='tableau_server',
                    dag=dag)
 
 sync
+
+claro = MsSqlOperator(
+        sql='exec EBI_Claro_Patient_Account_File_Extract_Logic',
+        task_id='exec_EBI_Claro_Patient_Account_File_Extract_Logic',
+        autocommit=True,
+        mssql_conn_id='ebi_datamart',
+        pool='ebi_etl_pool',
+        dag=dag
+        )
+
+claro
