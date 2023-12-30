@@ -18,7 +18,7 @@ default_args = {
 with DAG('refresh_ebi_snowflake_data', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
 
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
-    supp_repo = f'{repo}\\supplimental'
+    supp_repo = f'{repo}\\supplemental'
     enviro = 'ebi_data_engineering'
 
     git_pull_bash = f'cd {repo} && git pull'
