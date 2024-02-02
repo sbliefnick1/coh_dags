@@ -22,26 +22,11 @@ with DAG('refresh_ebi_snowflake_data', default_args=default_args, catchup=False,
     enviro = 'ebi_data_engineering'
 
     git_pull_bash = f'cd {repo} && git pull'
-    famgenix_bash = f'cd {supp_repo} && conda activate {enviro} && python famgenix.py'
-    oncore_bash = f'cd {supp_repo} && conda activate {enviro} && python oncore_consent.py'
 
     git = SSHOperator(
         ssh_conn_id='tableau_server',
         task_id='git_pull_latest',
         command=git_pull_bash,
     )
-
-    fam = SSHOperator(
-        ssh_conn_id='tableau_server',
-        task_id='famgenix_temp_etl',
-        command=famgenix_bash,
-    )
-
-    onc = SSHOperator(
-        ssh_conn_id='tableau_server',
-        task_id='oncore_consent_temp_etl',
-        command=oncore_bash,
-    )
     
-    git >> fam
-    git >> onc
+    git
