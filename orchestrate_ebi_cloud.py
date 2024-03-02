@@ -18,7 +18,7 @@ default_args = {
 with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, schedule_interval='0 6 * * *') as dag:
 
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-cloud-orchestration'
-    enviro = 'ebi_cloud_orchestration''
+    enviro = 'ebi_cloud_orchestration'
 
     wait_for_ae_dbt_bash = f'cd {repo} && conda activate {enviro} && python wait_for_ae_dbt.py'
     ebi_dbt_build_bash = f'cd {repo} && conda activate {enviro} && python ebi_dbt_build.py'
