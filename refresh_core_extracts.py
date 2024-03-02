@@ -15,12 +15,12 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
 }
 
-with DAG('refresh_priority_extracts', default_args=default_args, catchup=False, schedule_interval='0 19 * * *') as dag:
+with DAG('refresh_core_extracts', default_args=default_args, catchup=False, schedule_interval='0 19 * * *') as dag:
 
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-automations'
     enviro = 'ebi_automations'
 
-    run_extracts_bash = f'cd {repo} && refresh_priority_extracts.py'
+    run_extracts_bash = f'cd {repo} && conda activate {enviro} && refresh_priority_extracts.py'
     
     run = SSHOperator(
         ssh_conn_id='tableau_server',
