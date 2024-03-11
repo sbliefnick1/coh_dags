@@ -15,7 +15,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2),
 }
 
-with DAG('refresh_qrrm_data', default_args=default_args, catchup=False, concurrency=2, schedule_interval='0 3 * * 5') as dag:
+with DAG('refresh_qrrm_data', default_args=default_args, catchup=False, concurrency=2, schedule_interval='0 3 * * *') as dag:
 
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
     quality_repo = f'{repo}\\quality'
