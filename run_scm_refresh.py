@@ -297,6 +297,14 @@ scmta = PythonOperator(
         dag=dag
         )
 
+scmmmpa = PythonOperator(
+        task_id='refresh_scm_materials_management_price_analysis',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '1ba18b72-6aea-4734-a49c-3e64b9849643'},
+        dag=dag
+        )
+
+
 si >> sv
 si >> scws
 si >> scmi
@@ -305,6 +313,7 @@ si >> scmibu
 si >> scmic
 si >> scmid
 si >> scmta
+si >> scmmmpa
 
 sv >> vch
 sv >> vchw
