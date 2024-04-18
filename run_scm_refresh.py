@@ -304,6 +304,13 @@ scmmmpa = PythonOperator(
         dag=dag
         )
 
+scmpar = PythonOperator(
+        task_id='refresh_scm_par_analysis',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': '638bac72-6b6e-4400-998e-53c3657cb7fe'},
+        dag=dag
+        )
+
 
 si >> sv
 si >> scws
@@ -314,6 +321,7 @@ si >> scmic
 si >> scmid
 si >> scmta
 si >> scmmmpa
+si >> scmpar
 
 sv >> vch
 sv >> vchw
