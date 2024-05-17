@@ -55,6 +55,5 @@ with DAG('refresh_total_charges', default_args=default_args, catchup=False, sche
     )
 
     rvu
-    mindos >> tc
-    tc >> new >> trj
-    tc >> cim
+    mindos >> new >> trj
+    mindos >> cim
