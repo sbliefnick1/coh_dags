@@ -36,12 +36,6 @@ with DAG('refresh_total_charges', default_args=default_args, catchup=False, sche
         op_kwargs={'datasource_id': 'c08148a1-cf27-48df-8c8f-fc29f2c77c12'},
     )
 
-    tc = PythonOperator(
-        task_id='refresh_total_charges',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': 'ad80c2d3-3926-4516-af11-55bac64735ac'},
-    )
-
     new = PythonOperator(
         task_id='refresh_new_em_provider',
         python_callable=refresh_tableau_extract,
