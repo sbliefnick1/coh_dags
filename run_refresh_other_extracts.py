@@ -35,8 +35,6 @@ datasources = [
      'datasource_id': 'ddd7ff23-0e45-4549-ac4e-f9cad97c3b31'},
     {'task_id': 'refresh_psft_hr_ps_coh_web_intrfac',
      'datasource_id': 'c8744e87-cb5c-4adc-b96d-19ed443879bc'},
-    {'task_id': 'refresh_availability',
-     'datasource_id': '85460963-7e81-4e5d-aaff-1a044cdc6c80'},
     {'task_id': 'refresh_pb_denials',
      'datasource_id': '66174e43-9ae5-43a8-b785-1080cf651b10'},
     {'task_id': 'refresh_arhb_payor_metrics',
