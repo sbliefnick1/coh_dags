@@ -28,6 +28,7 @@ dag = DAG(
 repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
 tab_repo = f'{repo}\\tableau'
 aflw_repo = f'{repo}\\airflow'
+auto_repo = f'{repo}\\automations'
 enviro = 'ebi_data_engineering'
 
 git_pull_bash = f'cd {repo} && git pull'
@@ -59,6 +60,8 @@ workbooks_metadata_bash = f'cd {tab_repo} && conda activate {enviro} && python w
 ebi_cols_bash = f'cd {tab_repo} && conda activate {enviro} && python column_usage.py'
 
 airflow_tasks_bash = f'cd {aflw_repo} && conda activate {enviro} && python task_instance.py'
+
+ebi_migr_bash = f'cd {auto_repo} && conda activate {enviro} && python ebi_cloud_migration_profiling.py'
 
 tps = PythonOperator(
         task_id='refresh_tableau_permissions_stats',
@@ -237,6 +240,14 @@ ecu = SSHOperator(
         command=ebi_cols_bash,
         dag=dag
 )
+
+emb = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='ebi_data_source_migration',
+        command=ebi_migr_bash,
+        dag=dag
+)
+
 git >> wd
 git >> d
 git >> w
@@ -268,6 +279,7 @@ git >> gu
 git >> g
 git >> sb
 git >> lr
+git >> emb
 
 wd >> wdr
 d >> wdr
