@@ -22,11 +22,18 @@ with DAG('refresh_ebi_snowflake_data', default_args=default_args, catchup=False,
     enviro = 'ebi_data_engineering'
 
     git_pull_bash = f'cd {repo} && git pull'
+    rvu_bash = f'cd {supp_repo} && conda activate {enviro} && python rvus.py'
 
     git = SSHOperator(
         ssh_conn_id='tableau_server',
         task_id='git_pull_latest',
         command=git_pull_bash,
     )
+
+    rvu = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='rvus_to_snowflake',
+        command=rvu_bash,
+    )
     
-    git
+    git >> rvu
