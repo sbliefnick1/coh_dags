@@ -64,7 +64,15 @@ with DAG('run_clinical_finance_tasks', default_args=default_args, catchup=False,
         dag=dag,
     )
 
+    fter = PythonOperator(
+        task_id='refresh_labor_fte',
+        python_callable=refresh_tableau_extract,
+        op_kwargs={'datasource_id': 'DE1BE98A-B246-4317-9223-97C2F533EB43'},
+        dag=dag,
+    )
+
     git >> maps
     git >> ebi
 
     ebi >> tab
+    ebi >> fter
