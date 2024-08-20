@@ -22,12 +22,6 @@ dag = DAG('run_mor_etl', default_args=default_args, catchup=False, schedule_inte
 conn_id = 'ebi_datamart'
 pool_id = 'ebi_etl_pool'
 
-# deps = ExternalTaskSensor(
-#        external_dag_id='run_daily_census',
-#        external_task_id='refresh_daily_census',
-#        task_id='wait_for_daily_census',
-#        dag=dag
-#        )
 
 RTE = MsSqlOperator(
         sql='EXEC EBI_MOR_RevtoExp_CostCenters_Logic;',
@@ -55,13 +49,6 @@ MSS = MsSqlOperator(
         pool=pool_id,
         dag=dag
         )
-
-# MSSR = PythonOperator(
-#         task_id='refresh_mor_summary_w_security',
-#         python_callable=refresh_tableau_extract,
-#         op_kwargs={'datasource_id': '75834DFA-3C69-4C65-A6DF-BACE3E850B10'},
-#         dag=dag
-#         )
 
 MA = MsSqlOperator(
         sql='EXEC EBI_MOR_Account_Logic;',
@@ -136,31 +123,6 @@ MBRR = PythonOperator(
         dag=dag
         )
 
-FTE = MsSqlOperator(
-        sql='EXEC EBI_COH_Labor_FTE_Logic;',
-        task_id='labor_fte',
-        autocommit=True,
-        mssql_conn_id=conn_id,
-        pool=pool_id,
-        dag=dag
-        )
-
-FTES = MsSqlOperator(
-        sql='UPDATE STATISTICS EBI_COH_Labor_FTE;',
-        task_id='update_labor_fte_stats',
-        autocommit=True,
-        mssql_conn_id=conn_id,
-        pool=pool_id,
-        dag=dag
-        )
-
-FTER = PythonOperator(
-        task_id='refresh_labor_fte',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': 'DE1BE98A-B246-4317-9223-97C2F533EB43'},
-        dag=dag
-        )
-
 MTP = PythonOperator(
         task_id='refresh_mor_transactions_po',
         python_callable=refresh_tableau_extract,
@@ -168,20 +130,13 @@ MTP = PythonOperator(
         dag=dag
         )
 
-# deps >> RTE
-# deps >> MA
-# deps >> ML
-# deps >> MF
-# deps >> CE
-# deps >> CPS
+
 RTE >> BFB
 MA >> BFB
 MA >> MTS
 BFB >> MSS
-# MSS >> MSSR
 MSS >> MBRR
 MTS >> MTSR
 CPS >> CP
 CP >> CPR
-FTE >> FTES >> FTER
 MTP
