@@ -25,5 +25,5 @@ with DAG('dbt_cloud_freshness', default_args=default_args, catchup=False, schedu
         ssh_conn_id='tableau_server',
         task_id='check_model_freshness',
         command=bash,
-        pool='default_pool',
+        pool='dbt_pool',
     )
