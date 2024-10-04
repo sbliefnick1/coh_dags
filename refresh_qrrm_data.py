@@ -22,7 +22,6 @@ with DAG('refresh_qrrm_data', default_args=default_args, catchup=False, concurre
     enviro = 'ebi_data_engineering'
 
     git_pull_bash = f'cd {repo} && git pull'
-    load_qa_cdc_data_bash = f'cd {quality_repo} && conda activate {enviro} && python cdc_files_ingest.py qa'
     load_prod_cdc_data_bash = f'cd {quality_repo} && conda activate {enviro} && python cdc_files_ingest.py prod'
 
 
@@ -32,17 +31,10 @@ with DAG('refresh_qrrm_data', default_args=default_args, catchup=False, concurre
         command=git_pull_bash,
     )
 
-    qa_data = SSHOperator(
-        ssh_conn_id='tableau_server',
-        task_id='load_latest_cdc_data_to_qa',
-        command=load_qa_cdc_data_bash,
-    )
-
     prod_data = SSHOperator(
         ssh_conn_id='tableau_server',
         task_id='load_latest_cdc_data_to_prod',
         command=load_prod_cdc_data_bash,
     )
 
-    git_pull >> qa_data
     git_pull >> prod_data
