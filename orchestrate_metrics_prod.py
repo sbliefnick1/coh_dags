@@ -5,6 +5,7 @@ from airflow import DAG
 from airflow.models import Variable
 from airflow.operators.python import PythonOperator
 from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
+from airflow.sensors.sql import SqlSensor
 from auxiliary.outils import get_json_secret
 import tableauserverclient as TSC
 import requests
@@ -49,7 +50,18 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
             raise ValueError(f'PUT operation failed with response')
         time.sleep(5)
 
+    def check_date(dbt_date):
+    # check that max dbt run was today
+        return datetime.today().strftime('%Y-%m-%d') == dbt_date.strftime('%Y-%m-%d')
 
+
+    check_dbt = SqlSensor(
+        task_id='check_dbt_done',
+        conn_id='ebi_datamart',
+        sql='select cast(max(_dbt_update) as date) from edw_bdm.data_quality.dbt_results_log with(nolock)',
+        success=check_date,
+    )
+    
     base_run = PythonOperator(
         task_id='run_base_metrics',
         python_callable=refresh_node,
@@ -121,6 +133,8 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
         priority_weight=100,
     )
 
+    
+    check_dbt >> base_run
     base_run >> instance_run >> collection_run
 
     collection_run >> oc_daily_extract
