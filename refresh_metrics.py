@@ -144,6 +144,15 @@ raose = PythonOperator(
         priority_weight=100
         )
 
+rdse = PythonOperator(
+        task_id='refresh_daily_stats_extract',
+        python_callable=refresh_ds,
+        op_kwargs={'tableau_server': server, 'tableau_authentication': auth,
+                   'ds_luid': '2ee01bc5-22d1-45a3-98c9-36f97eee617d'},
+        dag=dag,
+        priority_weight=100
+        )
+
 gp >> rpf
 rpf >> rocdt >> rocde
 rpf >> rmmt >> rmme
@@ -154,3 +163,4 @@ rpf >> pbsv
 rpf >> rcfmd
 rpf >> rcfmm
 rpf >> rddm
+rocde >> rdse
