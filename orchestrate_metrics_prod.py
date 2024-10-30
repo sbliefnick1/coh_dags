@@ -122,6 +122,17 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
         priority_weight=100,
     )
 
+    daily_stats_extract = PythonOperator(
+        task_id='refresh_daily_stats_extract',
+        python_callable=refresh_ds,
+        op_kwargs={
+            'tableau_server': server,
+            'tableau_authentication': auth,
+            'ds_luid': '2ee01bc5-22d1-45a3-98c9-36f97eee617d'
+        },
+        priority_weight=100,
+    )
+
     cfin_daily_flash_extract = PythonOperator(
         task_id='refresh_cfin_daily_flash_extract',
         python_callable=refresh_ds,
@@ -141,3 +152,4 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
     collection_run >> acces_ops_extract
     collection_run >> cfin_daily_flash_extract
     collection_run >> qrrm_monthly
+    oc_daily_extract >> daily_stats_extract
