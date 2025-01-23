@@ -22,6 +22,7 @@ with DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, s
 
     unlicense_bash = f'cd {auto_repo} && conda activate {enviro} && python tableau_unlicense_users.py'
     mf_sched = f'cd {auto_repo} && conda activate {enviro} && python tableau_mf_scheduler_security.py'
+    mf_security = f'cd {auto_repo} && conda activate {enviro} && python mf_tableau_security.py'
 
 
     t2 = SSHOperator(ssh_conn_id='tableau_server',
@@ -32,4 +33,9 @@ with DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, s
     t3 = SSHOperator(ssh_conn_id='tableau_server',
                     task_id='MF_Schedulers_Security',
                     command=mf_sched,
+                    dag=dag)
+
+    t4 = SSHOperator(ssh_conn_id='tableau_server',
+                    task_id='MF_Tableau_Security',
+                    command=mf_security,
                     dag=dag)
