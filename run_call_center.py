@@ -65,34 +65,6 @@ ACCA = PythonOperator(
         dag=dag
         )
 
-AAGP = PythonOperator(
-        task_id='refresh_avaya_agent_group_planner',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': 'B4F5407D-36E1-473D-87F1-D5B6AE0A9527'},
-        dag=dag
-        )
-
-AAGPH = PythonOperator(
-        task_id='refresh_avaya_agent_group_planner_hour',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '8B2C21BF-9EFC-491A-BC55-855F1B065393'},
-        dag=dag
-        )
-
-# AVV = PythonOperator(
-#         task_id='refresh_avaya_vdn_vector',
-#         python_callable=refresh_tableau_extract,
-#         op_kwargs={'datasource_id': '7f9bdba7-b64e-4225-a777-490dc14ffb69'},
-#         dag=dag
-#         )
-
-ACCAT = PythonOperator(
-        task_id='refresh_avaya_call_center_agents_trace',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': 'd79bb359-8404-4db1-867e-8ca5ac9069d2'},
-        dag=dag
-        )
-
 SURV = PythonOperator(
         task_id='refresh_cisco_call_center_surveys',
         python_callable=refresh_tableau_extract,
@@ -121,18 +93,8 @@ CLU = PythonOperator(
         dag=dag
         )
 
-# deps >> ACC
-# deps >> ACCA
-# deps >> AAGP
-# deps >> AAGPH
-# deps >> AVV
-
 check_max_call_date >> ACC
 ACCA
-AAGP
-AAGPH
-# AVV
-ACCAT
 SURV
 CAB
 CAES
