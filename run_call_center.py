@@ -7,11 +7,6 @@ from airflow.sensors.sql import SqlSensor
 from auxiliary.outils import refresh_tableau_extract
 
 
-def check_date(d):
-    # check that max call date is greater than or equal to yesterday
-    return (datetime.today() + timedelta(days=-1)).strftime('%Y-%m-%d') <= d.strftime('%Y-%m-%d')
-
-
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
@@ -25,38 +20,6 @@ default_args = {
 
 dag = DAG('run_call_center', default_args=default_args, catchup=False, schedule_interval='40 5 * * *')
 
-# deps = ExternalTaskSensor(
-#        external_dag_id='run_daily_census',
-#        external_task_id='refresh_daily_census',
-#        task_id='wait_for_daily_census',
-#        dag=dag
-#        )
-
-call_date_sql = """
-select MAX(CAST(rqi.[DateTime] as date)) as max_cisco_calldate
-
-from ccehds_t_router_queue_interval rqi with (nolock)
-
-where CAST(rqi.[DateTime] as date) < CAST(GETDATE() as date)
-  and rqi.precisionqueueid != 5082
-
-having SUM(ISNULL(rqi.callsoffered, 0)) > 0
-"""
-
-check_max_call_date = SqlSensor(
-        task_id='check_max_call_date',
-        conn_id='ebi_datamart',
-        sql=call_date_sql,
-        success=check_date,
-        dag=dag,
-        )
-
-ACC = PythonOperator(
-        task_id='refresh_avaya_call_center',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '6EE81264-DFE1-4318-8397-9EC853DF7085'},
-        dag=dag
-        )
 
 ACCA = PythonOperator(
         task_id='refresh_avaya_call_center_agents',
@@ -93,7 +56,6 @@ CLU = PythonOperator(
         dag=dag
         )
 
-check_max_call_date >> ACC
 ACCA
 SURV
 CAB
