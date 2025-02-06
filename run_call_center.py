@@ -21,13 +21,6 @@ default_args = {
 dag = DAG('run_call_center', default_args=default_args, catchup=False, schedule_interval='40 5 * * *')
 
 
-ACCA = PythonOperator(
-        task_id='refresh_avaya_call_center_agents',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '082E7473-5803-4681-A847-3ADAB4B1E8E7'},
-        dag=dag
-        )
-
 SURV = PythonOperator(
         task_id='refresh_cisco_call_center_surveys',
         python_callable=refresh_tableau_extract,
@@ -56,7 +49,6 @@ CLU = PythonOperator(
         dag=dag
         )
 
-ACCA
 SURV
 CAB
 CAES
