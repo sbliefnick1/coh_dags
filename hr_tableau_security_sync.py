@@ -39,3 +39,5 @@ with DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, s
                     task_id='MF_Tableau_Security',
                     command=mf_security,
                     dag=dag)
+
+    t2 >> t4 >> t3
