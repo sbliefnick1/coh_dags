@@ -26,7 +26,6 @@ with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, sche
     wait_for_ae_dbt_bash = f'cd {repo} && conda activate {enviro} && python wait_for_ae_dbt.py'
     ebi_dbt_build_bash = f'cd {repo} && conda activate {enviro} && python ebi_dbt_build.py'
     cfin_dbt_build_bash = f'cd {repo} && conda activate {enviro} && python cfin_dbt_build.py'
-    collections_refresh_bash = f'cd {dbt_repo} && conda activate {colls_enviro} && python python\\upload_collections\\upload_collections.py'
     refresh_tableau_extracts_bash = f'cd {repo} && conda activate {enviro} && python refresh_tableau_extracts.py'
     
     
@@ -48,12 +47,6 @@ with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, sche
         command=cfin_dbt_build_bash,
     )
 
-    dbt_coll_refresh = SSHOperator(
-        ssh_conn_id='tableau_server',
-        task_id='collections_refresh',
-        command=collections_refresh_bash,
-    )
-
     refresh_tableau_extracts = SSHOperator(
         ssh_conn_id='tableau_server',
         task_id='refresh_tableau_extracts',
@@ -63,4 +56,3 @@ with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, sche
     wait_for_ae_dbt >> ebi_dbt_build
     ebi_dbt_build >> refresh_tableau_extracts
     wait_for_ae_dbt >> cfin_dbt_build
-    wait_for_ae_dbt >> dbt_coll_refresh
