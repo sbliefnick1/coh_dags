@@ -69,16 +69,8 @@ pbs = PythonOperator(
         dag=dag
         )
 
-imt = PythonOperator(
-        task_id='refresh_ib_messages_trend',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '6f80eda8-803e-4cac-bf0a-162a4f2e86d1'},
-        dag=dag
-        )
-
 query >> hbs
 query >> dcc
 query >> dcnp
 query >> dcpdap
 query >> pbs
-query >> imt
