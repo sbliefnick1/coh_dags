@@ -29,12 +29,6 @@ with DAG('refresh_total_charges', default_args=default_args, catchup=False, sche
         mssql_conn_id=conn_id,
         pool=pool_id,
     )
-    
-    rvu = PythonOperator(
-        task_id='refresh_rvu_extract',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': 'c08148a1-cf27-48df-8c8f-fc29f2c77c12'},
-    )
 
     new = PythonOperator(
         task_id='refresh_new_em_provider',
@@ -54,6 +48,5 @@ with DAG('refresh_total_charges', default_args=default_args, catchup=False, sche
         op_kwargs={'datasource_id': '6e39fb3d-fdc1-41ee-8a2a-3f819a12fea5'},
     )
 
-    rvu
     mindos >> new >> trj
     mindos >> cim
