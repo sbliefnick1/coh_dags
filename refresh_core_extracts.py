@@ -22,6 +22,7 @@ with DAG('refresh_core_extracts', default_args=default_args, catchup=False, sche
 
     run_iip_extracts_bash = f'cd {repo} && conda activate {enviro} && python refresh_iip_time_to_seen_metrics.py'
     run_dbt_common_coverage_bash = f'cd {repo} && conda activate {enviro} && python get_coverage_stats.py'
+    run_dbt_housekeeping_bash = f'cd {repo} && conda activate {enviro} && python ebi_dbt_housekeeping.py'
     
     run_iip_extracts = SSHOperator(
         ssh_conn_id='tableau_server',
@@ -34,7 +35,14 @@ with DAG('refresh_core_extracts', default_args=default_args, catchup=False, sche
         task_id='run_dbt_common_coverage_refresh',
         command=run_dbt_common_coverage_bash,
     )
+
+    run_ebi_dbt_housekeeping = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='run_dbt_housekeeping_refresh',
+        command=run_dbt_housekeeping_bash,
+    )
     
     run_iip_extracts
     run_dbt_common_coverage_refresh
+    run_ebi_dbt_housekeeping
     
