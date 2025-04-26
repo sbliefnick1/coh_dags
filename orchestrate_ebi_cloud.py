@@ -15,7 +15,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
 }
 
-with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, schedule_interval='30 5 * * *') as dag:
+with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, schedule_interval='0 4 * * *') as dag:
 
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-cloud-orchestration'
     enviro = 'ebi_cloud_orchestration'
@@ -23,16 +23,23 @@ with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, sche
     dbt_repo = 'C:\\Users\\ebitabuser\\Documents\\ae-enterprise-dbt'
     colls_enviro = 'dbt_cloud'
 
-    wait_for_ae_dbt_bash = f'cd {repo} && conda activate {enviro} && python wait_for_ae_dbt.py'
+    wait_for_sources_bash = f'cd {repo} && conda activate {enviro} && python wait_for_sources.py'
+    ae_dbt_build_bash = f'cd {repo} && conda activate {enviro} && python ae_dbt_build.py'
     ebi_dbt_build_bash = f'cd {repo} && conda activate {enviro} && python ebi_dbt_build.py'
     cfin_dbt_build_bash = f'cd {repo} && conda activate {enviro} && python cfin_dbt_build.py'
     refresh_tableau_extracts_bash = f'cd {repo} && conda activate {enviro} && python refresh_tableau_extracts.py'
     
     
-    wait_for_ae_dbt = SSHOperator(
+    wait_for_sources = SSHOperator(
         ssh_conn_id='tableau_server',
-        task_id='wait_for_ae_dbt',
-        command=wait_for_ae_dbt_bash,
+        task_id='wait_for_sources',
+        command=wait_for_sources_bash,
+    )
+
+    ae_dbt_build = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='ae_dbt_build',
+        command=ae_dbt_build_bash,
     )
 
     ebi_dbt_build = SSHOperator(
@@ -52,7 +59,7 @@ with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, sche
         task_id='refresh_tableau_extracts',
         command=refresh_tableau_extracts_bash,
     )
-    
-    wait_for_ae_dbt >> ebi_dbt_build
-    ebi_dbt_build >> refresh_tableau_extracts
-    wait_for_ae_dbt >> cfin_dbt_build
+
+    wait_for_sources >> ae_dbt_build
+    ae_dbt_build >> ebi_dbt_build >> refresh_tableau_extracts
+    ae_dbt_build >> cfin_dbt_build
