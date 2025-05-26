@@ -62,6 +62,7 @@ ebi_cols_bash = f'cd {tab_repo} && conda activate {enviro} && python column_usag
 airflow_tasks_bash = f'cd {aflw_repo} && conda activate {enviro} && python task_instance.py'
 
 ebi_migr_bash = f'cd {auto_repo} && conda activate {enviro} && python ebi_cloud_migration_profiling.py'
+ebi_obj_bash = f'cd {auto_repo} && conda activate {enviro} && python ebi_etl_objects.py'
 
 tps = PythonOperator(
         task_id='refresh_tableau_permissions_stats',
@@ -247,6 +248,12 @@ emb = SSHOperator(
         command=ebi_migr_bash,
         dag=dag
 )
+eeo = SSHOperator(
+        ssh_conn_id='tableau_server',
+        task_id='ebi_etl_objects',
+        command=ebi_obj_bash,
+        dag=dag
+)
 
 git >> wd
 git >> d
@@ -280,6 +287,7 @@ git >> g
 git >> sb
 git >> lr
 git >> emb
+git >> eeo
 
 wd >> wdr
 d >> wdr
