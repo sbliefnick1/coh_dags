@@ -21,15 +21,6 @@ default_args = {
 
 dag = DAG('run_refresh_other_extracts', default_args=default_args, catchup=False, schedule_interval='0 10 * * *')
 
-# deps = ExternalTaskSensor(
-#        external_dag_id='run_daily_census',
-#        external_task_id='refresh_daily_census',
-#        task_id='wait_for_daily_census',
-#        dag=dag
-#        )
-
-telehlth_bash = 'cd C:\\Anaconda\\ETL\\tableau && python TableauOutofStateApptProvs.py'
-
 datasources = [
     {'task_id': 'refresh_clinical_trials_catchment',
      'datasource_id': 'ddd7ff23-0e45-4549-ac4e-f9cad97c3b31'},
@@ -78,13 +69,6 @@ for d in datasources:
             )
 
 task
-
-sync = SSHOperator(ssh_conn_id='tableau_server',
-                   task_id='Sync_Telehealth_Providers',
-                   command=telehlth_bash,
-                   dag=dag)
-
-sync
 
 claro = MsSqlOperator(
         sql='exec EBI_Claro_Patient_Account_File_Extract_Logic',
