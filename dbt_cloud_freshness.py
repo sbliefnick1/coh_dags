@@ -16,13 +16,13 @@ default_args = {
     }
 
 with DAG('dbt_cloud_freshness', default_args=default_args, catchup=False, schedule_interval='30 * * * *') as dag:
-    repo = 'C:\\Users\\ebitabuser\\Documents\\dbt-automations'
-    enviro = 'dbt_automations'
+    repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-automations'
+    enviro = 'ebi_automations'
 
     bash = f'cd {repo} && conda activate {enviro} && python dbt_models_sources.py'
 
     t = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='check_model_freshness',
         command=bash,
         pool='dbt_pool',
