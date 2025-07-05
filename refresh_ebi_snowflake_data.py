@@ -28,5 +28,5 @@ with DAG('refresh_ebi_snowflake_data', default_args=default_args, catchup=False,
         task_id='rvus_to_snowflake',
         command=rvu_bash,
     )
-    
-   rvu
+
+    rvu
