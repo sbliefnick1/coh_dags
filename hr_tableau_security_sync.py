@@ -24,12 +24,12 @@ with DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, s
     mf_security = f'cd {auto_repo} && conda activate {enviro} && python mf_tableau_security.py'
 
 
-    t2 = SSHOperator(ssh_conn_id='tableau_server',
+    t2 = SSHOperator(ssh_conn_id='ebi_etl_server',
                     task_id='Unlicense_Tableau_Users',
                     command=unlicense_bash,
                     dag=dag)
 
-    t4 = SSHOperator(ssh_conn_id='tableau_server',
+    t4 = SSHOperator(ssh_conn_id='ebi_etl_server',
                     task_id='MF_Tableau_Security',
                     command=mf_security,
                     dag=dag)
