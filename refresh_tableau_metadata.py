@@ -31,8 +31,6 @@ aflw_repo = f'{repo}\\airflow'
 auto_repo = f'{repo}\\automations'
 enviro = 'ebi_data_engineering'
 
-git_pull_bash = f'cd {repo} && git pull'
-
 users_bash = f'cd {tab_repo} && conda activate {enviro} && python users.py'
 system_users_bash = f'cd {tab_repo} && conda activate {enviro} && python system_users.py'
 views_bash = f'cd {tab_repo} && conda activate {enviro} && python views.py'
@@ -78,82 +76,77 @@ tus = PythonOperator(
         dag=dag
         )
 
-git = SSHOperator(ssh_conn_id='tableau_server',
-                task_id='git_pull_latest',
-                command=git_pull_bash,
-                dag=dag)
-
-u = SSHOperator(ssh_conn_id='tableau_server',
+u = SSHOperator(ssh_conn_id='ebi_etl_server',
                 task_id='tableau_users',
                 command=users_bash,
                 dag=dag)
 
-su = SSHOperator(ssh_conn_id='tableau_server',
+su = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_system_users',
                  command=system_users_bash,
                  dag=dag)
 
-v = SSHOperator(ssh_conn_id='tableau_server',
+v = SSHOperator(ssh_conn_id='ebi_etl_server',
                 task_id='tableau_views',
                 command=views_bash,
                 dag=dag)
 
-w = SSHOperator(ssh_conn_id='tableau_server',
+w = SSHOperator(ssh_conn_id='ebi_etl_server',
                 task_id='tableau_workbooks',
                 command=workbooks_bash,
                 dag=dag)
 
-s = SSHOperator(ssh_conn_id='tableau_server',
+s = SSHOperator(ssh_conn_id='ebi_etl_server',
                 task_id='tableau_sites',
                 command=sites_bash,
                 dag=dag)
 
-d = SSHOperator(ssh_conn_id='tableau_server',
+d = SSHOperator(ssh_conn_id='ebi_etl_server',
                 task_id='tableau_datasources',
                 command=datasources_bash,
                 dag=dag)
 
-g = SSHOperator(ssh_conn_id='tableau_server',
+g = SSHOperator(ssh_conn_id='ebi_etl_server',
                 task_id='tableau_groups',
                 command=groups_bash,
                 dag=dag)
 
-gu = SSHOperator(ssh_conn_id='tableau_server',
+gu = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_group_users',
                  command=group_users_bash,
                  dag=dag)
 
-dm = SSHOperator(ssh_conn_id='tableau_server',
+dm = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_domains',
                  command=domains_bash,
                  dag=dag)
 
-lr = SSHOperator(ssh_conn_id='tableau_server',
+lr = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_licensing_roles',
                  command=licensing_roles_bash,
                  dag=dag)
 
-ta = SSHOperator(ssh_conn_id='tableau_server',
+ta = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_table_assets',
                  command=table_assets_bash,
                  dag=dag)
 
-tas = SSHOperator(ssh_conn_id='tableau_server',
+tas = SSHOperator(ssh_conn_id='ebi_etl_server',
                   task_id='tableau_table_asset_sources',
                   command=table_asset_sources_bash,
                   dag=dag)
 
-da = SSHOperator(ssh_conn_id='tableau_server',
+da = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_database_assets',
                  command=database_assets_bash,
                  dag=dag)
 
-dt = SSHOperator(ssh_conn_id='tableau_server',
+dt = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_metadata_datasource_tables',
                  command=datasource_tables_bash,
                  dag=dag)
 
-wd = SSHOperator(ssh_conn_id='tableau_server',
+wd = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_workbook_datasources',
                  command=workbook_datasources_bash,
                  dag=dag)
@@ -165,37 +158,37 @@ wdr = PythonOperator(
         dag=dag
         )
 
-cv = SSHOperator(ssh_conn_id='tableau_server',
+cv = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_customized_views',
                  command=customized_views_bash,
                  dag=dag)
 
-sb = SSHOperator(ssh_conn_id='tableau_server',
+sb = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_subscriptions',
                  command=subscriptions_bash,
                  dag=dag)
 
-pj = SSHOperator(ssh_conn_id='tableau_server',
+pj = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_projects',
                  command=projects_bash,
                  dag=dag)
 
-tg = SSHOperator(ssh_conn_id='tableau_server',
+tg = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_taggings',
                  command=taggings_bash,
                  dag=dag)
 
-t = SSHOperator(ssh_conn_id='tableau_server',
+t = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_tags',
                  command=tags_bash,
                  dag=dag)
 
-vs = SSHOperator(ssh_conn_id='tableau_server',
+vs = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_views_stats',
                  command=views_stats_bash,
                  dag=dag)
         
-wm = SSHOperator(ssh_conn_id='tableau_server',
+wm = SSHOperator(ssh_conn_id='ebi_etl_server',
                  task_id='tableau_workbooks_metadata',
                  command=workbooks_metadata_bash,
                  dag=dag)
@@ -208,7 +201,7 @@ wtr = PythonOperator(
         )
 
 uhx = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='user_site_role_hx',
         command=user_site_role_hx_bash,
         dag=dag
@@ -222,72 +215,72 @@ wmr = PythonOperator(
         )
 
 tdso = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='datasource_ownership',
         command=ds_owner_bash,
         dag=dag
 )
 
 at = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='airflow_tasks',
         command=airflow_tasks_bash,
         dag=dag
 )
 
 ecu = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='ebi_column_usage',
         command=ebi_cols_bash,
         dag=dag
 )
 
 emb = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='ebi_data_source_migration',
         command=ebi_migr_bash,
         dag=dag
 )
 eeo = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='ebi_etl_objects',
         command=ebi_obj_bash,
         dag=dag
 )
 
-git >> wd
-git >> d
-git >> w
-git >> dt
-git >> da
-git >> tas
-git >> ta
-git >> t
-git >> tg
-git >> v
-git >> u
-git >> su
-git >> s
-git >> pj
-git >> wm
-git >> vs
-git >> ecu
-git >> at
-git >> tdso
-git >> wmr
-git >> uhx
-git >> vs
-git >> wtr
-git >> tps
-git >> tus
-git >> cv
-git >> dm
-git >> gu
-git >> g
-git >> sb
-git >> lr
-git >> emb
-git >> eeo
+wd
+d
+w
+dt
+da
+tas
+ta
+t
+tg
+v
+u
+su
+s
+pj
+wm
+vs
+ecu
+at
+tdso
+wmr
+uhx
+vs
+wtr
+tps
+tus
+cv
+dm
+gu
+g
+sb
+lr
+emb
+eeo
 
 wd >> wdr
 d >> wdr
