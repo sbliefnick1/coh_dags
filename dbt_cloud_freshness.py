@@ -17,7 +17,7 @@ default_args = {
 
 with DAG('dbt_cloud_freshness', default_args=default_args, catchup=False, schedule_interval='30 * * * *') as dag:
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-automations'
-    enviro = 'ebi_automations'
+    enviro = 'dbt_automations'
 
     bash = f'cd {repo} && conda activate {enviro} && python dbt_models_sources.py'
 
