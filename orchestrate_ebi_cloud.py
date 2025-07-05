@@ -18,10 +18,7 @@ default_args = {
 with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, schedule_interval='0 4 * * *') as dag:
 
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-cloud-orchestration'
-    enviro = 'ebi_cloud_orchestration'
-
-    dbt_repo = 'C:\\Users\\ebitabuser\\Documents\\ae-enterprise-dbt'
-    colls_enviro = 'dbt_cloud'
+    enviro = 'dbt_automations'
 
     wait_for_sources_bash = f'cd {repo} && conda activate {enviro} && python wait_for_sources.py'
     wait_for_ebi_sources_bash = f'cd {repo} && conda activate {enviro} && python wait_for_ebi_sources.py'
@@ -33,43 +30,43 @@ with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, sche
     
     
     wait_for_sources = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='wait_for_sources',
         command=wait_for_sources_bash,
     )
 
     wait_for_ebi_sources = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='wait_for_ebi_sources',
         command=wait_for_ebi_sources_bash,
     )
 
     ae_dbt_build = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='ae_dbt_build',
         command=ae_dbt_build_bash,
     )
 
     ae_dbt_test = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='ae_dbt_test',
         command=ae_dbt_test_bash,
     )
 
     ebi_dbt_build = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='ebi_dbt_build',
         command=ebi_dbt_build_bash,
     )
 
     cfin_dbt_build = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='cfin_dbt_build',
         command=cfin_dbt_build_bash,
     )
 
     refresh_tableau_extracts = SSHOperator(
-        ssh_conn_id='tableau_server',
+        ssh_conn_id='ebi_etl_server',
         task_id='refresh_tableau_extracts',
         command=refresh_tableau_extracts_bash,
     )
