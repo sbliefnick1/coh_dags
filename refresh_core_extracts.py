@@ -20,9 +20,9 @@ with DAG('refresh_core_extracts', default_args=default_args, catchup=False, sche
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-automations'
     enviro = 'dbt_automations'
 
-    run_iip_extracts_bash = f'cd {repo} && conda activate {enviro} && python refresh_iip_time_to_seen_metrics.py'
-    run_dbt_common_coverage_bash = f'cd {repo} && conda activate {enviro} && python get_coverage_stats.py'
-    run_dbt_housekeeping_bash = f'cd {repo} && conda activate {enviro} && python ebi_dbt_housekeeping.py'
+    run_iip_extracts_bash = f'cd {repo} && conda run -n {enviro} python refresh_iip_time_to_seen_metrics.py'
+    run_dbt_common_coverage_bash = f'cd {repo} && conda run -n {enviro} python get_coverage_stats.py'
+    run_dbt_housekeeping_bash = f'cd {repo} && conda run -n {enviro} python ebi_dbt_housekeeping.py'
     
     run_iip_extracts = SSHOperator(
         ssh_conn_id='ebi_etl_server',
