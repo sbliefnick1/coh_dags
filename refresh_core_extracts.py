@@ -23,6 +23,7 @@ with DAG('refresh_core_extracts', default_args=default_args, catchup=False, conc
     run_iip_extracts_bash = f'cd {repo} && conda run -n {enviro} python refresh_iip_time_to_seen_metrics.py'
     run_dbt_common_coverage_bash = f'cd {repo} && conda run -n {enviro} python get_coverage_stats.py'
     run_dbt_housekeeping_bash = f'cd {repo} && conda run -n {enviro} python ebi_dbt_housekeeping.py'
+    run_ebi_snowflake_progress_bash = f'cd {repo} && conda run -n {enviro} python ebi_snowflake_progress.py'
     
     run_iip_extracts = SSHOperator(
         ssh_conn_id='ebi_etl_server',
@@ -41,8 +42,14 @@ with DAG('refresh_core_extracts', default_args=default_args, catchup=False, conc
         task_id='run_dbt_housekeeping_refresh',
         command=run_dbt_housekeeping_bash,
     )
+
+    run_ebi_snowflake_progress = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
+        task_id='run_ebi_snowflake_progress_refresh',
+        command=run_ebi_snowflake_progress_bash,
+    )
     
     run_iip_extracts
     run_dbt_common_coverage_refresh
     run_ebi_dbt_housekeeping
-    
+    run_ebi_snowflake_progress
