@@ -11,11 +11,11 @@ default_args = {
     'email': ['jharris@coh.org'],
     'email_on_failure': True,
     'email_on_retry': False,
-    'retries': 1,
+    'retries': 2,
     'retry_delay': timedelta(minutes=2)
 }
 
-with DAG('refresh_core_extracts', default_args=default_args, catchup=False, schedule_interval='0 16 * * *') as dag:
+with DAG('refresh_core_extracts', default_args=default_args, catchup=False, concurrency=1, schedule_interval='0 16 * * *') as dag:
 
     repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-automations'
     enviro = 'dbt_automations'
