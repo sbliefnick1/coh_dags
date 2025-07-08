@@ -17,58 +17,51 @@ default_args = {
 
 with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, schedule_interval='0 4 * * *') as dag:
 
-    repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-cloud-orchestration'
+    repo = r'C:\Users\ebitabuser\Documents\ebi-cloud-orchestration'
     enviro = 'dbt_automations'
-
-    wait_for_sources_bash = f'cd {repo} && conda activate {enviro} && python wait_for_sources.py'
-    wait_for_ebi_sources_bash = f'cd {repo} && conda activate {enviro} && python wait_for_ebi_sources.py'
-    ae_dbt_build_bash = f'cd {repo} && conda activate {enviro} && python ae_dbt_build.py'
-    ae_dbt_test_bash = f'cd {repo} && conda activate {enviro} && python ae_dbt_test.py'
-    ebi_dbt_build_bash = f'cd {repo} && conda activate {enviro} && python ebi_dbt_build.py'
-    cfin_dbt_build_bash = f'cd {repo} && conda activate {enviro} && python cfin_dbt_build.py'
-    refresh_tableau_extracts_bash = f'cd {repo} && conda activate {enviro} && python refresh_tableau_extracts.py'
-    
+    python_exe = rf'C:\Users\ebitabuser\AppData\Local\Miniconda3\envs\{enviro}\python.exe'
+    prefix = f'cd {repo} && "{python_exe}"'
     
     wait_for_sources = SSHOperator(
         ssh_conn_id='ebi_etl_server',
         task_id='wait_for_sources',
-        command=wait_for_sources_bash,
+        command=f'{prefix} wait_for_sources.py',
     )
 
     wait_for_ebi_sources = SSHOperator(
         ssh_conn_id='ebi_etl_server',
         task_id='wait_for_ebi_sources',
-        command=wait_for_ebi_sources_bash,
+        command=f'{prefix} wait_for_ebi_sources.py',
     )
 
     ae_dbt_build = SSHOperator(
         ssh_conn_id='ebi_etl_server',
         task_id='ae_dbt_build',
-        command=ae_dbt_build_bash,
+        command=f'{prefix} ae_dbt_build.py',
     )
 
     ae_dbt_test = SSHOperator(
         ssh_conn_id='ebi_etl_server',
         task_id='ae_dbt_test',
-        command=ae_dbt_test_bash,
+        command=f'{prefix} ae_dbt_test.py',
     )
 
     ebi_dbt_build = SSHOperator(
         ssh_conn_id='ebi_etl_server',
         task_id='ebi_dbt_build',
-        command=ebi_dbt_build_bash,
+        command=f'{prefix} ebi_dbt_build.py',
     )
 
     cfin_dbt_build = SSHOperator(
         ssh_conn_id='ebi_etl_server',
         task_id='cfin_dbt_build',
-        command=cfin_dbt_build_bash,
+        command=f'{prefix} cfin_dbt_build.py',
     )
 
     refresh_tableau_extracts = SSHOperator(
         ssh_conn_id='ebi_etl_server',
         task_id='refresh_tableau_extracts',
-        command=refresh_tableau_extracts_bash,
+        command=f'{prefix} refresh_tableau_extracts.py',
     )
 
     wait_for_sources >> ae_dbt_build
