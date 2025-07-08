@@ -31,7 +31,7 @@ aflw_repo = f'{repo}\\airflow'
 auto_repo = f'{repo}\\automations'
 enviro = 'ebi_data_engineering'
 
-repo = r'C:\Users\ebitabuser\Documents\ebi-data-engineering\ebi-data-engineering'
+repo = r'C:\Users\ebitabuser\Documents\ebi-data-engineering'
 tab_repo = rf'{repo}\tableau'
 aflw_repo = rf'{repo}\airflow'
 auto_repo = rf'{repo}\automations'
