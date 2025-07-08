@@ -17,16 +17,15 @@ default_args = {
 
 with DAG('refresh_qrrm_data', default_args=default_args, catchup=False, concurrency=2, schedule_interval='0 3 * * *') as dag:
 
-    repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
-    quality_repo = f'{repo}\\quality'
+    repo = r'C:\Users\ebitabuser\Documents\ebi-data-engineering\quality'
     enviro = 'ebi_data_engineering'
-
-    load_prod_cdc_data_bash = f'cd {quality_repo} && conda activate {enviro} && python cdc_files_ingest.py prod'
+    python_exe = rf'C:\Users\ebitabuser\AppData\Local\Miniconda3\envs\{enviro}\python.exe'
+    prefix = f'cd {repo} && "{python_exe}"'
 
     prod_data = SSHOperator(
         ssh_conn_id='ebi_etl_server',
         task_id='load_latest_cdc_data_to_prod',
-        command=load_prod_cdc_data_bash,
+        command=f'{prefix} cdc_files_ingest.py prod',
     )
 
     prod_data
