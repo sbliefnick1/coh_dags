@@ -17,16 +17,17 @@ default_args = {
 
 with DAG('refresh_ebi_snowflake_data', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
 
-    repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
-    supp_repo = f'{repo}\\supplemental'
+    repo = r'C:\Users\ebitabuser\Documents\ebi-data-engineering\supplemental'
     enviro = 'ebi_data_engineering'
+    python_exe = rf'C:\Users\ebitabuser\AppData\Local\Miniconda3\envs\{enviro}\python.exe'
+    prefix = f'cd {repo} && "{python_exe}"'
 
     rvu_bash = f'cd {supp_repo} && conda activate {enviro} && python rvus.py'
 
     rvu = SSHOperator(
         ssh_conn_id='ebi_etl_server',
         task_id='rvus_to_snowflake',
-        command=rvu_bash,
+        command=f'{prefix} rvus.py',
     )
 
     rvu
