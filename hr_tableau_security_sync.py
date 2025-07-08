@@ -16,15 +16,16 @@ default_args = {
     }
 
 with DAG('hr_tableau_security_sync', default_args=default_args, catchup=False, schedule_interval='0 21 * * *') as dag:
-    repo = 'C:\\Users\\ebitabuser\\Documents\\ebi-data-engineering'
-    auto_repo = f'{repo}\\automations'
+
+    repo = r'C:\Users\ebitabuser\Documents\ebi-data-engineering\automations'
     enviro = 'ebi_data_engineering'
+    python_exe = rf'C:\Users\ebitabuser\AppData\Local\Miniconda3\envs\{enviro}\python.exe'
+    prefix = f'cd {repo} && "{python_exe}"'
 
-    mf_security = f'cd {auto_repo} && conda activate {enviro} && python mf_tableau_security.py'
-
-    mf_sec = SSHOperator(ssh_conn_id='ebi_etl_server',
-                    task_id='MF_Tableau_Security',
-                    command=mf_security,
-                    dag=dag)
+    mf_sec = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
+        task_id='MF_Tableau_Security',
+        command=f'{prefix} mf_tableau_security.py',
+    )
 
     mf_sec
