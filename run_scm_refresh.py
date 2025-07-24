@@ -211,22 +211,6 @@ alb = MsSqlOperator(
         dag=dag
         )
 
-alss = MsSqlOperator(
-        sql='EXEC EBI_SCM_AcctgLn_Supply_Spend_Logic;',
-        task_id='load_scm_acctgln_supply_spend',
-        autocommit=True,
-        mssql_conn_id=conn_id,
-        pool=pool_id,
-        dag=dag
-        )
-
-sse = PythonOperator(
-        task_id='refresh_scm_acctgline_supply_spend',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': 'd10c10a6-22c0-45c9-8a00-867cc32254e1'},
-        dag=dag
-        )
-
 spe = PythonOperator(
         task_id='refresh_scm_pcards',
         python_callable=refresh_tableau_extract,
@@ -349,8 +333,7 @@ spc >> alv
 srt >> alv
 srq >> alv
 
-alv >> alr >> alcm >> alb >> alss
+alv >> alr >> alcm >> alb
 
-alb >> alss >> sse
 alb >> spe
 alb >> pce
