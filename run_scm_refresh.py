@@ -31,24 +31,10 @@ si = MsSqlOperator(
         dag=dag
         )
 
-scws = PythonOperator(
-        task_id='refresh_scm_cspt_warehouse_stock',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '51db78e8-b319-4b8d-9c59-b4758cefdd9b'},
-        dag=dag
-        )
-
 scmi = PythonOperator(
         task_id='refresh_scm_inventory',
         python_callable=refresh_tableau_extract,
         op_kwargs={'datasource_id': 'c5c47779-a321-48ee-a12f-1f4c933f26c6'},
-        dag=dag
-        )
-
-scmiu = PythonOperator(
-        task_id='refresh_scm_inventory_usage',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '9737e41f-1e28-444a-8f70-0d9ee47569ec'},
         dag=dag
         )
 
@@ -59,13 +45,6 @@ scmibu = PythonOperator(
         dag=dag
         )
 
-scmic = PythonOperator(
-        task_id='refresh_scm_inventory_count',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': 'f046bc66-4b42-47f7-b074-243b48c49d06'},
-        dag=dag
-        )
-
 scmta = PythonOperator(
         task_id='refresh_scm_transport_activity',
         python_callable=refresh_tableau_extract,
@@ -73,26 +52,7 @@ scmta = PythonOperator(
         dag=dag
         )
 
-scmmmpa = PythonOperator(
-        task_id='refresh_scm_materials_management_price_analysis',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '1ba18b72-6aea-4734-a49c-3e64b9849643'},
-        dag=dag
-        )
 
-scmpar = PythonOperator(
-        task_id='refresh_scm_par_analysis',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '638bac72-6b6e-4400-998e-53c3657cb7fe'},
-        dag=dag
-        )
-
-
-si >> scws
 si >> scmi
-si >> scmiu
 si >> scmibu
-si >> scmic
 si >> scmta
-si >> scmmmpa
-si >> scmpar
