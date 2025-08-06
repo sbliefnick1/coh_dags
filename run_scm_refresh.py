@@ -38,21 +38,5 @@ scmi = PythonOperator(
         dag=dag
         )
 
-scmibu = PythonOperator(
-        task_id='refresh_scm_inventory_business_units',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': '1da002a9-25fd-4139-b4d1-e3244ef919fb'},
-        dag=dag
-        )
-
-scmta = PythonOperator(
-        task_id='refresh_scm_transport_activity',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': 'fee39e73-5d2d-480d-9e40-be594d08ed7a'},
-        dag=dag
-        )
-
 
 si >> scmi
-si >> scmibu
-si >> scmta
