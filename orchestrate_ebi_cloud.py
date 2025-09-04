@@ -70,10 +70,17 @@ with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, sche
         command=f'{prefix} refresh_tableau_extracts.py',
     )
 
+    refresh_tableau_cloud_extracts = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
+        task_id='refresh_tableau_cloud_extracts',
+        command=f'{prefix} refresh_tableau_cloud_extracts.py',
+    )
+
     wait_for_sources >> ae_dbt_build
     ae_dbt_build >> ebi_dbt_build
     ae_dbt_build >> ae_dbt_test
     wait_for_ebi_sources >> ebi_dbt_build
     ebi_dbt_build >> refresh_tableau_extracts
+    ebi_dbt_build >> refresh_tableau_cloud_extracts
     ae_dbt_build >> cfin_dbt_build
     ae_dbt_build >> aai_dbt_build
