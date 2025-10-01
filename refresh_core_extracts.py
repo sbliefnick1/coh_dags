@@ -15,17 +15,17 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
 }
 
-with DAG('refresh_core_extracts', default_args=default_args, catchup=False, concurrency=4, schedule_interval='0 16 * * *') as dag:
+with DAG('refresh_core_extracts', default_args=default_args, catchup=False, concurrency=4, schedule_interval='0 3 * * *') as dag:
 
     repo = r'C:\Users\ebitabuser\Documents\ebi-automations'
     enviro = 'dbt_automations'
     python_exe = rf'C:\Users\ebitabuser\AppData\Local\Miniconda3\envs\{enviro}\python.exe'
     prefix = f'cd {repo} && "{python_exe}"'
 
-    run_iip_extracts = SSHOperator(
+    run_interfac = SSHOperator(
         ssh_conn_id='ebi_etl_server',
-        task_id='run_iip_extracts',
-        command=f'{prefix} refresh_iip_time_to_seen_metrics.py',
+        task_id='run_interfacility_transfers_check,
+        command=f'{prefix} interfacility_clarity_to_tableau.py',
     )
 
     run_dbt_common_coverage_refresh = SSHOperator(
@@ -45,8 +45,8 @@ with DAG('refresh_core_extracts', default_args=default_args, catchup=False, conc
         task_id='run_ebi_snowflake_progress_refresh',
         command=f'{prefix} ebi_snowflake_progress.py',
     )
-    
-    run_iip_extracts
+
+    run_interfac
     run_dbt_common_coverage_refresh
     run_ebi_dbt_housekeeping
     run_ebi_snowflake_progress
