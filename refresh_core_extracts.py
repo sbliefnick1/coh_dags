@@ -24,7 +24,7 @@ with DAG('refresh_core_extracts', default_args=default_args, catchup=False, conc
 
     run_interfac = SSHOperator(
         ssh_conn_id='ebi_etl_server',
-        task_id='run_interfacility_transfers_check,
+        task_id='run_interfacility_transfers_check',
         command=f'{prefix} interfacility_clarity_to_tableau.py',
     )
 
