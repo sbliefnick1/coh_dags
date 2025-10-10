@@ -41,14 +41,3 @@ CAES = PythonOperator(
         op_kwargs={'datasource_id': 'b07d75e4-1abf-4085-8ace-f0f9f85b7376'},
         dag=dag
         )
-
-CLU = PythonOperator(
-        task_id='refresh_calabrio_license_usage',
-        python_callable=refresh_tableau_extract,
-        op_kwargs={'datasource_id': 'fc30c9ee-e7be-40fa-a596-6a3f75884be1'},
-        dag=dag
-        )
-
-SURV
-CAB
-CAES
