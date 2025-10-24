@@ -15,7 +15,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
 }
 
-with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, schedule_interval='0 4 * * *') as dag:
+with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, schedule_interval='0 3 * * *') as dag:
 
     repo = r'C:\Users\ebitabuser\Documents\ebi-cloud-orchestration'
     enviro = 'dbt_automations'
