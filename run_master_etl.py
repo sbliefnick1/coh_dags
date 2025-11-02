@@ -68,5 +68,3 @@ with DAG('run_master_etl', default_args=default_args, catchup=False, schedule_in
             dag=dag
         )
         sql_ops[p] = o
-
-    exec_ebi_dim_cpt_logic >> exec_ebi_fact_patient_clarity_logic
