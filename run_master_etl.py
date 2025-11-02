@@ -1,98 +1,72 @@
 from datetime import datetime, timedelta
 
-import pandas as pd
 import pendulum
 from airflow import DAG
-from airflow.operators.email import EmailOperator
-from airflow.operators.python import PythonOperator
 from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
-from auxiliary.outils import refresh_tableau_extract
 
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2018, 9, 12, tzinfo=pendulum.timezone('America/Los_Angeles')),
-    'email': ['sbliefnick@coh.org', 'jharris@coh.org'],
+    'start_date': datetime(2020, 12, 12, tzinfo=pendulum.timezone('America/Los_Angeles')),
+    'email': ['jharris@coh.org'],
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 1,
     'retry_delay': timedelta(minutes=2)
-    }
+}
 
-dag = DAG('run_master_etl', default_args=default_args, catchup=False, schedule_interval='45 5 * * *')
+with DAG('run_master_etl', default_args=default_args, catchup=False, schedule_interval='45 5 * * *') as dag:
+    conn_id = 'ebi_datamart'
+    pool_id = 'ebi_etl_pool'
 
+    sql_ops = {}
 
-def read_json_files(names):
-    return [pd.read_json('/var/nfsshare/etl_deps/dev_{}.json'.format(name)) for name in names]
+    procs = [
+        'ebi_bridge_patient_problem_list_logic',
+        'ebi_dim_bed_clarity_logic',
+        'ebi_dim_care_provider_clarity_logic',
+        'ebi_dim_change_commitments_open_processes_ebuilder_logic',
+        'ebi_dim_coh_stat_tickets_logic',
+        'ebi_dim_cpt_logic',
+        'ebi_dim_department_clarity_logic',
+        'ebi_dim_employee_logic',
+        'ebi_dim_hospital_account_clarity_logic',
+        'ebi_dim_icd_clarity_logic',
+        'ebi_dim_office_of_educational_technology_genius_logic',
+        'ebi_dim_order_clarity_logic',
+        'ebi_dim_patient_clarity_logic',
+        'ebi_dim_patient_satisfaction_survey_logic',
+        'ebi_dim_payor_plan_clarity_logic',
+        'ebi_dim_portfolio_project_logic',
+        'ebi_dim_projects_pms_budgets_ebuilder_logic',
+        'ebi_dim_research_study_clarity_logic',
+        'ebi_dim_research_study_subject_logic',
+        'ebi_dim_retail_food_sales_nextep_logic',
+        'ebi_dim_room_clarity_logic',
+        'ebi_dim_transport_logic',
+        'ebi_dim_workrequests_archibus_logic',
+        'ebi_fact_change_commitments_open_processes_ebuilder_logic',
+        'ebi_fact_coh_stat_tickets_logic',
+        'ebi_fact_office_of_educational_technology_genius_logic',
+        'ebi_fact_patient_clarity_logic',
+        'ebi_fact_patient_satisfaction_comment_clarity_logic',
+        'ebi_fact_portfolio_project_logic',
+        'ebi_fact_portfolio_project_time_record_logic',
+        'ebi_fact_projects_pms_budgets_ebuilder_logic',
+        'ebi_fact_research_study_subject_logic',
+        'ebi_fact_retail_food_sales_nextep_logic',
+        'ebi_fact_workrequests_archibus_logic'
+    ]
 
-
-conn_id = 'ebi_datamart'
-pool_id = 'ebi_etl_pool'
-
-to_read = ['unique_procs', 'no_dep_procs', 'proc_map', 'unique_dep_procs', 'unique_ds', 'ds_map', 'unique_ds_procs']
-unique_procs, no_dep_procs, proc_map, unique_dep_procs, unique_ds, ds_map, unique_ds_procs = read_json_files(to_read)
-
-# create a sql operator for each procedure
-sql_ops = {}
-for p in unique_procs.procs:
-    o = MsSqlOperator(
+    for p in procs:
+        o = MsSqlOperator(
             sql='exec {};'.format(p),
             task_id='exec_{}'.format(p),
             autocommit=True,
             mssql_conn_id=conn_id,
             pool=pool_id,
             dag=dag
-            )
-    sql_ops[p] = o
+        )
+        sql_ops[p] = o
 
-# create a python operator for each tableau datasource
-python_ops = {}
-for ds in unique_ds.ds_name:
-    ds_id = unique_ds.loc[unique_ds.ds_name == ds, 'id'].values[0]
-    if ds == 'pb_tdl_transactions':
-        weight = 0
-    elif 'appointment' in ds:
-        weight = 2
-    else:
-        weight = 1
-    o = PythonOperator(
-            task_id='refresh_{}'.format(ds),
-            python_callable=refresh_tableau_extract,
-            op_kwargs={'datasource_id': ds_id},
-            priority_weight=weight,
-            dag=dag
-            )
-    python_ops[ds] = o
-
-# set procedures downstream from all their dependencies
-for p in unique_dep_procs.procs:
-    for t in proc_map.loc[proc_map.proc_name == p].dependency_name.values[0]:
-        sql_ops[t + '_logic'] >> sql_ops[p]
-
-# set ds refreshes downstream from all their procedure dependencies
-for ds in unique_ds.ds_name:
-    for p in ds_map.loc[ds_map.ds_name == ds].proc_name.values[0]:
-        sql_ops[p] >> python_ops[ds]
-
-# create sensor to wait for etl dependencies to be in json
-# deps = ExternalTaskSensor(
-#        external_dag_id='get_etl_deps',
-#        external_task_id='query_and_save_deps',
-#        task_id='wait_for_dependencies_file',
-#        dag=dag
-#        )
-
-# for p in no_dep_procs.proc_name:
-# deps >> sql_ops[p]
-
-# create final email task
-email = EmailOperator(task_id='email_edw',
-                      to=['bdilsizian@coh.org', 'rdwivedi@coh.org', 'fgriarte@coh.org', 'mkaza@coh.org',
-                          'ddeaville@coh.org', 'wtam@coh.org', 'elee@coh.org', 'fturrubiartes@coh.org'],
-                      cc=['sbliefnick@coh.org'],
-                      subject='EBI ETL {{ next_ds }} Complete',
-                      html_content='-',
-                      dag=dag)
-
-for ds in python_ops:
-    python_ops[ds] >> email
+    sql_ops['exec_ebi_dim_cpt_logic'] >> sql_ops['exec_ebi_fact_patient_clarity_logic']
