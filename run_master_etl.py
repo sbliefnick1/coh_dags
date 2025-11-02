@@ -27,7 +27,6 @@ with DAG('run_master_etl', default_args=default_args, catchup=False, schedule_in
         'ebi_dim_care_provider_clarity_logic',
         'ebi_dim_change_commitments_open_processes_ebuilder_logic',
         'ebi_dim_coh_stat_tickets_logic',
-        'ebi_dim_cpt_logic',
         'ebi_dim_department_clarity_logic',
         'ebi_dim_employee_logic',
         'ebi_dim_hospital_account_clarity_logic',
@@ -68,5 +67,3 @@ with DAG('run_master_etl', default_args=default_args, catchup=False, schedule_in
             dag=dag
         )
         sql_ops[p] = o
-
-    sql_ops['exec_ebi_dim_cpt_logic'] >> sql_ops['exec_ebi_fact_patient_clarity_logic']
