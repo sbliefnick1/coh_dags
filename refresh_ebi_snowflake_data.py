@@ -17,15 +17,31 @@ default_args = {
 
 with DAG('refresh_ebi_snowflake_data', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
 
-    repo = r'C:\Users\ebitabuser\Documents\ebi-data-engineering\supplemental'
+    repo = r'C:\Users\ebitabuser\Documents\ebi-etl'
     enviro = 'ebi_data_engineering'
     python_exe = rf'C:\Users\ebitabuser\AppData\Local\Miniconda3\envs\{enviro}\python.exe'
     prefix = f'cd {repo} && "{python_exe}"'
 
     rvu = SSHOperator(
         ssh_conn_id='ebi_etl_server',
-        task_id='rvus_to_snowflake',
+        task_id='load_rvus',
         command=f'{prefix} rvus.py',
     )
 
-    rvu
+    tab_vws = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
+        task_id='load_tableau_metadata_views',
+        command=f'{prefix} tableau_metadata_views.py',
+    )
+
+    tab_wbs = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
+        task_id='load_tableau_metadata_workbooks',
+        command=f'{prefix} tableau_metadata_workbooks.py',
+    )
+
+    tab_ds = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
+        task_id='load_tableau_metadata_published_data_sources',
+        command=f'{prefix} tableau_metadata_published_data_sources.py',
+    )
