@@ -15,7 +15,7 @@ default_args = {
     'retry_delay': timedelta(minutes=2)
     }
 
-with DAG('refresh_ebi_snowflake_data', default_args=default_args, catchup=False, schedule_interval='0 20 * * *') as dag:
+with DAG('refresh_ebi_snowflake_data', default_args=default_args, concurrency=1, catchup=False, schedule_interval='0 20 * * *') as dag:
 
     repo = r'C:\Users\ebitabuser\Documents\ebi-etl'
     enviro = 'ebi_data_engineering'
