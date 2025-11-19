@@ -45,3 +45,21 @@ with DAG('refresh_ebi_snowflake_data', default_args=default_args, concurrency=1,
         task_id='load_tableau_metadata_published_data_sources',
         command=f'{prefix} tableau_metadata_published_data_sources.py',
     )
+
+    tab_adm_evnts = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
+        task_id='load_tableau_admin_insights_ts_events',
+        command=f'{prefix} tableau_admin_insights_ts_events.py',
+    )
+
+    tab_adm_perms = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
+        task_id='load_tableau_admin_insights_permissions',
+        command=f'{prefix} tableau_admin_insights_permissions.py',
+    )
+
+    tab_adm_sc = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
+        task_id='load_tableau_admin_insights_site_content',
+        command=f'{prefix} tableau_admin_insights_site_content.py',
+    )
