@@ -100,56 +100,9 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
         pool=pool_id,
     )
 
-    oc_daily_extract = PythonOperator(
-        task_id='refresh_oc_daily_financials_extract',
-        python_callable=refresh_ds,
-        op_kwargs={
-            'tableau_server': server,
-            'tableau_authentication': auth,
-            'ds_luid': 'bfacbd49-df60-4dfa-aa4f-24006fb8952a'
-        },
-        priority_weight=100,
-    )
-
-    acces_ops_extract = PythonOperator(
-        task_id='refresh_access_operations_scorecard_extract',
-        python_callable=refresh_ds,
-        op_kwargs={
-            'tableau_server': server,
-            'tableau_authentication': auth,
-            'ds_luid': '97d0cf7d-eafb-4cca-a031-7b5c1d8ad799'
-        },
-        priority_weight=100,
-    )
-
-    daily_stats_extract = PythonOperator(
-        task_id='refresh_daily_stats_extract',
-        python_callable=refresh_ds,
-        op_kwargs={
-            'tableau_server': server,
-            'tableau_authentication': auth,
-            'ds_luid': '2ee01bc5-22d1-45a3-98c9-36f97eee617d'
-        },
-        priority_weight=100,
-    )
-
-    cfin_daily_flash_extract = PythonOperator(
-        task_id='refresh_cfin_daily_flash_extract',
-        python_callable=refresh_ds,
-        op_kwargs={
-            'tableau_server': server,
-            'tableau_authentication': auth,
-            'ds_luid': 'fcfcba9e-023b-446f-929c-afc037c74b90'
-        },
-        priority_weight=100,
-    )
-
     
     check_dbt >> base_run
     base_run >> instance_run >> collection_run
 
-    collection_run >> oc_daily_extract
-    collection_run >> acces_ops_extract
-    collection_run >> cfin_daily_flash_extract
     collection_run >> qrrm_monthly
-    oc_daily_extract >> daily_stats_extract
+
