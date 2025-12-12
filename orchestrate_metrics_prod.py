@@ -7,7 +7,6 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
 from airflow.sensors.sql import SqlSensor
 from auxiliary.outils import get_json_secret
-import tableauserverclient as TSC
 import requests
 import time
 
@@ -23,20 +22,12 @@ default_args = {
 }
 
 with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, schedule_interval='0 4 * * *') as dag:
-
-    ebi = get_json_secret('ebi_db_conn')['db_connections']['fi_dm_ebi']
-    auth = TSC.TableauAuth(ebi['user'].split(sep='\\')[1], ebi['password'])
-    server = TSC.Server('https://ebi.coh.org', use_server_version=True)
     
     conn_id = 'ebi_datamart'
     pool_id = 'ebi_etl_pool'
     
     base_url = 'https://vpxrstudio.coh.org/content/f14d3e1b-b477-4660-ad17-c95b88a1bd09'
     token = Variable.get('metrics_api_token')
-
-    def refresh_ds(tableau_server, tableau_authentication, ds_luid):
-        with server.auth.sign_in(tableau_authentication):
-            server.datasources.refresh(ds_luid)
     
     def refresh_node(node_url, api_token):
         resp = requests.put(
@@ -105,4 +96,5 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
     base_run >> instance_run >> collection_run
 
     collection_run >> qrrm_monthly
+
 
