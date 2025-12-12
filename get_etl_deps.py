@@ -36,7 +36,6 @@ def query_and_save(db_engine):
 
 query_and_save_deps = PythonOperator(task_id='query_and_save_deps',
                                      python_callable=query_and_save,
-                                     op_kwargs={'db_engine': ppw_engine},
                                      dag=dag)
 
 query_and_save_deps
