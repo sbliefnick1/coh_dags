@@ -40,6 +40,12 @@ with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, sche
         command=f'{prefix} ae_dbt_build.py',
     )
 
+    ae_dbt_clone = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
+        task_id='ae_dbt_clone',
+        command=f'{prefix} ae_dbt_clone.py',
+    )
+
     ae_dbt_test = SSHOperator(
         ssh_conn_id='ebi_etl_server',
         task_id='ae_dbt_test',
@@ -72,6 +78,7 @@ with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, sche
 
     wait_for_sources >> ae_dbt_build
     ae_dbt_build >> ebi_dbt_build
+    ae_dbt_build >> ae_dbt_clone
     ae_dbt_build >> ae_dbt_test
     wait_for_ebi_sources >> ebi_dbt_build
     ebi_dbt_build >> refresh_tableau_cloud_extracts
