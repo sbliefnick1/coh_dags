@@ -77,10 +77,10 @@ with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, sche
     )
 
     wait_for_sources >> ae_dbt_build
-    ae_dbt_build >> ebi_dbt_build
-    ae_dbt_build >> ae_dbt_clone
     ae_dbt_build >> ae_dbt_test
+    ae_dbt_build >> ae_dbt_clone
+    ae_dbt_clone >> ebi_dbt_build
     wait_for_ebi_sources >> ebi_dbt_build
     ebi_dbt_build >> refresh_tableau_cloud_extracts
-    ae_dbt_build >> cfin_dbt_build
-    ae_dbt_build >> aai_dbt_build
+    ae_dbt_clone >> cfin_dbt_build
+    ae_dbt_clone >> aai_dbt_build
