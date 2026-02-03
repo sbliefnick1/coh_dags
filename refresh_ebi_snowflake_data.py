@@ -22,7 +22,7 @@ with DAG('refresh_ebi_snowflake_data', default_args=default_args, concurrency=1,
     repo = r'C:\Users\ebitabuser\Documents\ebi-etl'
     enviro = 'ebi_data_engineering'
     python_exe = rf'C:\Users\ebitabuser\AppData\Local\Miniconda3\envs\{enviro}\python.exe'
-    prefix = f'cd {repo} && "{python_exe} -m ebi_etl --tasks"'
+    prefix = f'cd {repo} && "{python_exe}" -m ebi_etl --tasks'
 
     git = SSHOperator(
         ssh_conn_id='ebi_etl_server',
