@@ -72,6 +72,12 @@ with DAG('refresh_ebi_snowflake_data', default_args=default_args, concurrency=1,
         command=f'{prefix} tableau_admin_insights_site_content',
     )
 
+    sqr_archive = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
+        task_id='load_sqr_run_control_archive',
+        command=f'{prefix} sqr_run_control_archive',
+    )
+
     git >> rvu
     git >> tab_vws
     git >> tab_wbs
@@ -79,3 +85,4 @@ with DAG('refresh_ebi_snowflake_data', default_args=default_args, concurrency=1,
     git >> tab_adm_evnts
     git >> tab_adm_perms
     git >> tab_adm_sc
+    git >> sqr_archive
