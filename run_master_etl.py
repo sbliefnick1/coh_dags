@@ -44,6 +44,7 @@ with DAG('run_master_etl', default_args=default_args, catchup=False, schedule_in
         'ebi_dim_room_clarity_logic',
         'ebi_dim_transport_logic',
         'ebi_dim_workrequests_archibus_logic',
+        'ebi_dim_coh_stat_tickets_logic',
         'ebi_fact_change_commitments_open_processes_ebuilder_logic',
         'ebi_fact_office_of_educational_technology_genius_logic',
         'ebi_fact_patient_clarity_logic',
@@ -52,7 +53,8 @@ with DAG('run_master_etl', default_args=default_args, catchup=False, schedule_in
         'ebi_fact_projects_pms_budgets_ebuilder_logic',
         'ebi_fact_research_study_subject_logic',
         'ebi_fact_retail_food_sales_nextep_logic',
-        'ebi_fact_workrequests_archibus_logic'
+        'ebi_fact_workrequests_archibus_logic',
+        'ebi_fact_coh_stat_tickets_logic',
     ]
 
     for p in procs:
