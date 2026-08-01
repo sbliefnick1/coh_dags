@@ -37,7 +37,7 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
 
     def run_metric_type(type):
     # run same command for each metrics type with different type parameter
-        return f'{prefix} python refresh_metrics.py --type {type} --environment prod'
+        return f'{prefix} refresh_metrics.py --type {type} --environment prod'
 
 
     check_dbt = SqlSensor(
