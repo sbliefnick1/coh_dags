@@ -30,12 +30,6 @@ with DAG('refresh_ebi_snowflake_data', default_args=default_args, concurrency=1,
         command=f'cd {repo} && git pull',
     )
 
-    rvu = SSHOperator(
-        ssh_conn_id='ebi_etl_server',
-        task_id='load_rvus',
-        command=f'{prefix} rvus',
-    )
-
     tab_vws = SSHOperator(
         ssh_conn_id='ebi_etl_server',
         task_id='load_tableau_metadata_views',
@@ -72,7 +66,6 @@ with DAG('refresh_ebi_snowflake_data', default_args=default_args, concurrency=1,
         command=f'{prefix} tableau_admin_insights_site_content',
     )
 
-    git >> rvu
     git >> tab_vws
     git >> tab_wbs
     git >> tab_ds
