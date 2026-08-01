@@ -3,7 +3,7 @@ from datetime import datetime
 import pendulum
 from airflow import DAG
 from airflow.models import Variable
-from airflow.operators.python import PythonOperator
+from airflow.providers.ssh.operators.ssh import SSHOperator
 from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
 from airflow.sensors.sql import SqlSensor
 from auxiliary.outils import get_json_secret
@@ -26,24 +26,18 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
     conn_id = 'ebi_datamart'
     pool_id = 'ebi_etl_pool'
     
-    base_url = 'https://vpxrstudio.coh.org/content/f14d3e1b-b477-4660-ad17-c95b88a1bd09'
-    token = Variable.get('metrics_api_token')
-    
-    def refresh_node(node_url, api_token):
-        resp = requests.put(
-            node_url,
-            headers={'x-access-token': api_token},
-            verify=False,
-        )
-        print(f'Sending PUT request to {node_url}')
-        print(resp.content)
-        if resp.status_code != 200:
-            raise ValueError(f'PUT operation failed with response')
-        time.sleep(5)
+    repo = r'C:\Users\ebitabuser\Documents\metrics-cli'
+    enviro = 'metrics_cli'
+    python_exe = rf'C:\Users\ebitabuser\AppData\Local\Miniconda3\envs\{enviro}\python.exe'
+    prefix = f'cd {repo} && "{python_exe}"'
 
     def check_date(dbt_date):
     # check that max dbt run was today
         return datetime.today().strftime('%Y-%m-%d') == dbt_date.strftime('%Y-%m-%d')
+
+    def run_metric_type(type):
+    # run same command for each metrics type with different type parameter
+        return f'{prefix} python refresh_metrics.py --type {type} --environment prod'
 
 
     check_dbt = SqlSensor(
@@ -53,34 +47,22 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
         success=check_date,
     )
     
-    base_run = PythonOperator(
+    base_run = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
         task_id='run_base_metrics',
-        python_callable=refresh_node,
-        op_kwargs={
-            'node_url': f'{base_url}/refresh/base/prod/all',
-            'api_token': token
-        },
-        pool='metrics_pool',
+        command=run_metric_type('base'),
     )
 
-    instance_run = PythonOperator(
+    instance_run = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
         task_id='run_instance_metrics',
-        python_callable=refresh_node,
-        op_kwargs={
-            'node_url': f'{base_url}/refresh/instance/prod/all',
-            'api_token': token
-        },
-        pool='metrics_pool',
+        command=run_metric_type('instance'),
     )
 
-    collection_run = PythonOperator(
+    collection_run = SSHOperator(
+        ssh_conn_id='ebi_etl_server',
         task_id='run_collection_metrics',
-        python_callable=refresh_node,
-        op_kwargs={
-            'node_url': f'{base_url}/refresh/collection/prod/all',
-            'api_token': token
-        },
-        pool='metrics_pool',
+        command=run_metric_type('collection'),
     )
 
     qrrm_monthly = MsSqlOperator(
@@ -92,9 +74,4 @@ with DAG('orchestrate_metrics_prod', default_args=default_args, catchup=False, s
     )
 
     
-    check_dbt >> base_run
-    base_run >> instance_run >> collection_run
-
-    collection_run >> qrrm_monthly
-
-
+    check_dbt >> base_run >> instance_run >> collection_run >> qrrm_monthly
