@@ -84,3 +84,4 @@ with DAG('orchestrate_ebi_cloud', default_args=default_args, catchup=False, sche
     ae_dbt_build >> cfin_dbt_build
     cfin_dbt_build >> refresh_cfin_tableau_cloud_extracts
     ae_dbt_build >> aai_dbt_build
+    refresh_tableau_cloud_extracts >> refresh_cfin_tableau_cloud_extracts
